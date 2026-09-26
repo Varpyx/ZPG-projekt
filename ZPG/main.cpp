@@ -4,7 +4,10 @@
  * File: main.cpp
  * Description:  Fixed Function Pipeline.
  */
-
+ //Include GLAD  
+ //Only define this in one file
+#define GLAD_GL_IMPLEMENTATION
+#include <glad/gl.h>
  //Include GLFW  
 #include <GLFW/glfw3.h>  
 
@@ -18,6 +21,12 @@
 //Include the standard C++ headers  
 #include <stdlib.h>
 #include <stdio.h>
+#include <fstream>
+#include <string>
+#include <iterator>
+#include <iostream>
+#include <vector>
+#include "Models/suzi_smooth.h"
 
 int direction = 1;
 
@@ -48,7 +57,49 @@ static void button_callback(GLFWwindow* window, int button, int action, int mode
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
 }
 
+GLuint createShaderFromFile(GLenum shaderType, const char* shaderFile)
+{
+	// Creates an empty shader
+	GLuint shaderID = glCreateShader(shaderType);
 
+	if (shaderID == 0)
+	{
+		std::cout << "Unable to create shader" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	//Loading the contents of a file into a variable
+	std::ifstream file(shaderFile);
+	if (!file.is_open())
+	{
+		std::cout << "Unable to open file " << shaderFile << std::endl;
+		glDeleteShader(shaderID);
+		exit(-1);
+	}
+	std::string shaderCode((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+	// Set the shader source code
+	const char* source = shaderCode.c_str();
+	glShaderSource(shaderID, 1, &source, nullptr);
+
+	// Compile the shader source code
+	glCompileShader(shaderID);
+
+	// Check specialization/compilation status
+	GLint success;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		char infoLog[1024];
+		glGetShaderInfoLog(shaderID, sizeof(infoLog), nullptr, infoLog);
+		std::cout
+			<< "Shader failed:\n"
+			<< infoLog << std::endl;
+		glDeleteShader(shaderID);
+		exit(1);
+	}
+	return shaderID;
+}
 
 //GLM test
 
@@ -73,7 +124,7 @@ int main(void)
 	// Initialize GLFW
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
-	window = glfwCreateWindow(640, 480, "ZPG", NULL, NULL);
+	window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -81,6 +132,21 @@ int main(void)
 	}
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
+
+	// Initialize GLAD and load OpenGL function pointers
+	if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress))
+	{
+		printf("GLAD initialization failed\n");
+		return -1;
+	}
+	// Get version info
+	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+	printf("Vendor %s\n", glGetString(GL_VENDOR));
+	printf("Renderer %s\n", glGetString(GL_RENDERER));
+	printf("GLSL %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	int major, minor, revision;
+	glfwGetVersion(&major, &minor, &revision);
+	printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
 	// Set GLFW callback functions
 	glfwSetErrorCallback(error_callback);
@@ -97,6 +163,39 @@ int main(void)
 
 	glfwSetWindowSizeCallback(window, window_size_callback);
 
+	float points[] = {
+	0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+	};
+
+	//vertex buffer object (VBO)
+	GLuint VBO = 0;
+	glGenBuffers(1, &VBO); // generate the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(suziSmooth), suziSmooth, GL_STATIC_DRAW);
+
+	//Vertex Array Object (VAO)
+	GLuint VAO = 0;
+	glGenVertexArrays(1, &VAO); //generate the VAO
+	glBindVertexArray(VAO); //bind the VAO
+	glEnableVertexAttribArray(0); //enable vertex attributes
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// index, number of components, data type, normalized, vertex stride, offset
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+
+	// Create and compile the vertex and fragment shaders
+	GLuint vertexShader = createShaderFromFile(GL_VERTEX_SHADER, "shaders/basic.vert");
+	GLuint fragmentShader = createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/basic.frag");
+
+	//Create and link the shader program 
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, fragmentShader);
+	glAttachShader(shaderProgram, vertexShader);
+	glLinkProgram(shaderProgram);
+
 	// Get framebuffer size and set the viewport
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -110,46 +209,16 @@ int main(void)
 
 	double last_time = glfwGetTime();
 	float current_angle = 0.0f;
-
+	glEnable(GL_DEPTH_TEST);//Do depth comparisons and update the depth buffer.
 	while (!glfwWindowShouldClose(window))
 	{
-		// Clear color buffer
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Clear color and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
 
-		// ModelView matrix
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		//počitani delta time
-		double current_time = glfwGetTime();
-		double delta_time = current_time - last_time;
-		last_time = current_time;
-
-		current_angle += direction * 50.0f * (float)delta_time;
-
-		//posun středu na 3. vrchol
-		glTranslatef(0.6f, 0.6f, 0.0f);
-		glRotatef(current_angle, 0.f, 0.f, 1.f);
-
-		//posun zpět na střed
-		glTranslatef(-0.6f, -0.6f, 0.0f);
-
-		// Draw a triangle
-		glBegin(GL_QUADS);
-
-		glColor3f(1.f, 0.f, 0.f);
-		glVertex3f(-0.6f, -0.6f, 0.f);
-
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(0.6f, -0.6f, 0.f);
-
-		glColor3f(1.f, 1.f, 0.f);
-		glVertex3f(0.6f, 0.6f, 0.f);
-
-		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(-0.6f, 0.6f, 0.f);
-
-		glEnd();
+		// Draw a triangles
+		glDrawArrays(GL_TRIANGLES, 0, 2904); //mode,first,count
 
 		// Display the rendered frame and process events
 		glfwSwapBuffers(window);
