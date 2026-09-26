@@ -27,6 +27,7 @@
 #include <iostream>
 #include <vector>
 #include "Models/suzi_smooth.h"
+#include "Models/sphere.h"
 
 int direction = 1;
 
@@ -163,12 +164,6 @@ int main(void)
 
 	glfwSetWindowSizeCallback(window, window_size_callback);
 
-	float points[] = {
-	0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-	};
-
 	//vertex buffer object (VBO)
 	GLuint VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
@@ -196,6 +191,41 @@ int main(void)
 	glAttachShader(shaderProgram, vertexShader);
 	glLinkProgram(shaderProgram);
 
+	float points[] = {
+	0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+	0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
+	0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+	0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	GLuint VBO1 = 0;
+	glGenBuffers(1, &VBO1); // generate the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(sphere), sphere, GL_STATIC_DRAW);
+
+	GLuint VAO1 = 0;
+	glGenVertexArrays(1, &VAO1); //generate the VAO
+	glBindVertexArray(VAO1); //bind the VAO
+	glEnableVertexAttribArray(0); //enable vertex attributes
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+
+	// Create and compile the vertex and fragment shaders
+	GLuint vertexShader2 = createShaderFromFile(GL_VERTEX_SHADER, "shaders/basic2.vert");
+	GLuint fragmentShader2 = createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/basic2.frag");
+
+	//Create and link the shader program 
+	GLuint shaderProgram2 = glCreateProgram();
+	glAttachShader(shaderProgram2, fragmentShader2);
+	glAttachShader(shaderProgram2, vertexShader2);
+	glLinkProgram(shaderProgram2);
+
 	// Get framebuffer size and set the viewport
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -219,6 +249,11 @@ int main(void)
 
 		// Draw a triangles
 		glDrawArrays(GL_TRIANGLES, 0, 2904); //mode,first,count
+
+		glUseProgram(shaderProgram2);
+		glBindVertexArray(VAO1);
+		glDrawArrays(GL_TRIANGLES, 0, 2880); //mode,first,count
+
 
 		// Display the rendered frame and process events
 		glfwSwapBuffers(window);
