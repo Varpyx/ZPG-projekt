@@ -1,8 +1,7 @@
 #include "DrawableObject.h"
 
 DrawableObject::DrawableObject(Model model, const Shader& shader)
-	: model_(model)
-	, shader_(&shader)
+	: model_(model), shader_(&shader)
 {
 }
 

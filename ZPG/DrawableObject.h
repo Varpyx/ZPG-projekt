@@ -7,7 +7,6 @@ class DrawableObject
 {
 public:
 	DrawableObject(Model model, const Shader& shader);
-
 	void draw() const;
 
 private:

@@ -10,14 +10,8 @@ class Application
 {
 public:
 	Application() = default;
-
-	// Creates the window, the OpenGL context and the callbacks.
 	void initialization();
-
-	// Compiles the shaders and builds every model in the scene.
 	void createScene();
-
-	// Renders until the window is closed.
 	void run();
 
 private:

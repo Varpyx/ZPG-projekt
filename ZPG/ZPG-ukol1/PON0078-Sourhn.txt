@@ -1,0 +1,6 @@
+1. Splněno - použita knihovna GLAD, vytvořen vertex a fragment shader a pomocí VBO+VAO vykreslený trojúhelník 
+2. Splněno - při chybě v shaderu se aplikace nepustí
+3. Splněno - do points doplněn 2. trojuhelník 
+4. Splněno - vykreslena suzi 
+5. Splněno - vykreslena suzi, bushes a kulička 
+6. Splněno - použití ..\Libraries
