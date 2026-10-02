@@ -6,13 +6,20 @@ ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragm
 	return &programs_.back();
 }
 
-void Scene::addDrawableObject(Model model, ShaderProgram* shaderProgram)
+void Scene::addDrawableObject(Model model, ShaderProgram* shaderProgram,
+	const glm::vec3& color, float scale)
 {
-	objects_.push_back(DrawableObject(model, shaderProgram));
+	objects_.push_back(DrawableObject(model, shaderProgram, color, scale));
 }
 
-void Scene::draw() const
+void Scene::update(float deltaTime)
 {
-	for (const DrawableObject& object : objects_)
+	for (DrawableObject& object : objects_)
+		object.update(deltaTime);
+}
+
+void Scene::draw()
+{
+	for (DrawableObject& object : objects_)
 		object.draw();
 }

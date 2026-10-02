@@ -18,16 +18,6 @@
 
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-		printf("space \n");
-	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
-}
-
 static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
 
 static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
@@ -41,6 +31,35 @@ static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cu
 
 static void button_callback(GLFWwindow* window, int button, int action, int mode) {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+}
+
+void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
+{
+	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
+	if (!application)
+		return;
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+
+	// Cislovnice 1..9 prepinaji sceny
+	if (action == GLFW_PRESS || action == GLFW_REPEAT)
+	{
+		if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)
+			application->switchScene(static_cast<size_t>(key - GLFW_KEY_1));
+	}
+}
+
+void Application::switchScene(size_t index)
+{
+	if (index >= scenes_.size())
+	{
+		printf("Scena %zu neexistuje\n", index + 1);
+		return;
+	}
+
+	activeScene_ = index;
+	printf("Scena %zu\n", activeScene_ + 1);
 }
 
 void Application::initialization()
@@ -77,7 +96,9 @@ void Application::initialization()
 	// Set GLFW callback functions
 	glfwSetErrorCallback(error_callback);
 
-	glfwSetKeyCallback(window_, key_callback);
+	// Callback se dostane k instanci Application pres user pointer
+	glfwSetWindowUserPointer(window_, this);
+	glfwSetKeyCallback(window_, Application::keyCallback);
 
 	glfwSetCursorPosCallback(window_, cursor_callback);
 
@@ -98,27 +119,54 @@ void Application::initialization()
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Application::createScene()
+void Application::createScenes()
 {
-	// Create and link the shader programs
-	ShaderProgram* shader_  = scene_.addShaderProgram("shaders/basic.vert",  "shaders/basic.frag");
-	ShaderProgram* shader2_ = scene_.addShaderProgram("shaders/basic2.vert", "shaders/basic2.frag");
-	ShaderProgram* shader3_ = scene_.addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
+	// reserve, aby se nepremistily programy, na ktere ukazuji DrawableObjecty
+	scenes_.reserve(3);
 
-	// 6 floats per vertex, so the count is the array size divided by 6
-	scene_.addDrawableObject(Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader_);
-	scene_.addDrawableObject(Model(sphere, 2880), shader2_);
-	scene_.addDrawableObject(Model(bushes, 8730), shader3_);
+	// Scena 1: suzi
+	Scene* scene1 = &scenes_.emplace_back();
+	ShaderProgram* shader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	scene1->addDrawableObject(
+		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader1,
+		glm::vec3(1.0f, 0.7f, 0.2f), 0.4f);
+
+	// Scena 2: koule
+	Scene* scene2 = &scenes_.emplace_back();
+	ShaderProgram* shader2 = scene2->addShaderProgram("shaders/basic2.vert", "shaders/basic2.frag");
+	scene2->addDrawableObject(
+		Model(sphere, 2880), shader2,
+		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f);
+
+	// Scena 3: kere
+	Scene* scene3 = &scenes_.emplace_back();
+	ShaderProgram* shader3 = scene3->addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
+	scene3->addDrawableObject(
+		Model(bushes, 8730), shader3,
+		glm::vec3(0.6f, 1.0f, 0.5f), 0.4f);
+
+	printf("Vytvoreno %zu scen, prepinej klavesami 1-%zu\n", scenes_.size(), scenes_.size());
 }
 
 void Application::run()
 {
+	if (scenes_.empty())
+		return;
+
+	double lastTime = glfwGetTime();
+
 	while (!glfwWindowShouldClose(window_))
 	{
+		double currentTime = glfwGetTime();
+		float deltaTime = static_cast<float>(currentTime - lastTime);
+		lastTime = currentTime;
+
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		scene_.draw();
+		Scene& scene = scenes_[activeScene_];
+		scene.update(deltaTime);
+		scene.draw();
 
 		// Display the rendered frame and process events
 		glfwSwapBuffers(window_);

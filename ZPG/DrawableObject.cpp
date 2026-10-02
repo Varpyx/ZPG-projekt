@@ -1,14 +1,30 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram)
-	: model_(model), shaderProgram_(shaderProgram)
+// Include GLM
+#include <glm/gtc/constants.hpp>
+
+DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram,
+	const glm::vec3& color, float scale)
+	: model_(model), shaderProgram_(shaderProgram), color_(color)
 {
+	transformation_.setScale(scale);
 }
 
-void DrawableObject::draw() const
+void DrawableObject::update(float deltaTime)
 {
-	if (shaderProgram_ && shaderProgram_->use())
-	{
-		model_.draw();
-	}
+	transformation_.rotatePlaneXY(deltaTime * glm::radians(45.0f));
+}
+
+void DrawableObject::draw()
+{
+	if (!shaderProgram_ || !shaderProgram_->use())
+		return;
+
+	shaderProgram_->setUniform("scale", transformation_.getScale());
+	shaderProgram_->setUniform("offset", transformation_.getOffset());
+	shaderProgram_->setUniform("angleY", transformation_.getAngleY());
+	shaderProgram_->setUniform("anglePlaneXY", transformation_.getAnglePlaneXY());
+	shaderProgram_->setUniform("fragmentColor", color_);
+
+	model_.draw();
 }
