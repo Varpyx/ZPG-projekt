@@ -1,15 +1,17 @@
 #pragma once
 
 #include "Model.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
+#include "Transformation.h"
 
 class DrawableObject
 {
 public:
-	DrawableObject(Model model, const Shader& shader);
+	DrawableObject(Model model, ShaderProgram* shaderProgram);
 	void draw() const;
 
 private:
 	Model model_;
-	const Shader* shader_ = nullptr;
+	Transformation transformation_;
+	ShaderProgram* shaderProgram_ = nullptr;
 };

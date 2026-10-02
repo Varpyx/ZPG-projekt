@@ -1,12 +1,15 @@
 #pragma once
 
+// Include GLAD
+#include <glad/gl.h>
+
 class Shader
 {
 public:
 	Shader() = default;
-	Shader(const char* vertexFile, const char* fragmentFile);
-	void use() const;
+	Shader(GLenum type, const char* file);
+	GLuint getId() const { return id_; }
 
 private:
-	unsigned int id_ = 0;
+	GLuint id_ = 0;
 };

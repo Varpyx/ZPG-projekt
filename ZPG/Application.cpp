@@ -1,6 +1,9 @@
 // Include GLAD
+// Implementace GLADu je mimo include guard, takze se musi undefinovat,
+// jinak se vygeneruje znovu pri kazdem dalsim include v hlavickach.
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
+#undef GLAD_GL_IMPLEMENTATION
 
 // Include GLFW
 #define GLFW_INCLUDE_NONE
@@ -98,15 +101,14 @@ void Application::initialization()
 void Application::createScene()
 {
 	// Create and link the shader programs
-	shader_  = Shader("shaders/basic.vert",  "shaders/basic.frag");
-	shader2_ = Shader("shaders/basic2.vert", "shaders/basic2.frag");
-	shader3_ = Shader("shaders/basic3.vert", "shaders/basic3.frag");
-
+	ShaderProgram* shader_  = scene_.addShaderProgram("shaders/basic.vert",  "shaders/basic.frag");
+	ShaderProgram* shader2_ = scene_.addShaderProgram("shaders/basic2.vert", "shaders/basic2.frag");
+	ShaderProgram* shader3_ = scene_.addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
 
 	// 6 floats per vertex, so the count is the array size divided by 6
-	objects_.push_back(DrawableObject(Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader_));
-	objects_.push_back(DrawableObject(Model(sphere, 2880), shader2_));
-	objects_.push_back(DrawableObject(Model(bushes, 8730), shader3_));
+	scene_.addDrawableObject(Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader_);
+	scene_.addDrawableObject(Model(sphere, 2880), shader2_);
+	scene_.addDrawableObject(Model(bushes, 8730), shader3_);
 }
 
 void Application::run()
@@ -116,8 +118,7 @@ void Application::run()
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (const DrawableObject& object : objects_)
-			object.draw();
+		scene_.draw();
 
 		// Display the rendered frame and process events
 		glfwSwapBuffers(window_);

@@ -7,7 +7,7 @@ Model::Model(const float* data, unsigned int vertexCount)
 	: vertexCount_(vertexCount)
 {
 	// vertex buffer object (VBO)
-	unsigned int VBO = 0;
+	GLuint VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount_ * 6 * sizeof(float), data, GL_STATIC_DRAW);

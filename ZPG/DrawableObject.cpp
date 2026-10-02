@@ -1,12 +1,14 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(Model model, const Shader& shader)
-	: model_(model), shader_(&shader)
+DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram)
+	: model_(model), shaderProgram_(shaderProgram)
 {
 }
 
 void DrawableObject::draw() const
 {
-	shader_->use();
-	model_.draw();
+	if (shaderProgram_ && shaderProgram_->use())
+	{
+		model_.draw();
+	}
 }

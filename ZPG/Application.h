@@ -1,8 +1,6 @@
 #pragma once
 
-#include "DrawableObject.h"
-
-#include <vector>
+#include "Scene.h"
 
 struct GLFWwindow;
 
@@ -16,8 +14,5 @@ public:
 
 private:
 	GLFWwindow* window_ = nullptr;
-
-	Shader shader_, shader2_, shader3_;
-
-	std::vector<DrawableObject> objects_;
+	Scene scene_;
 };

@@ -1,5 +1,8 @@
 #pragma once
 
+// Include GLAD
+#include <glad/gl.h>
+
 class Model
 {
 public:
@@ -7,6 +10,6 @@ public:
 	void draw() const;
 
 private:
-	unsigned int vao_ = 0;
+	GLuint vao_ = 0;
 	unsigned int vertexCount_ = 0;
 };

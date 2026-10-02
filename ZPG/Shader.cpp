@@ -10,10 +10,10 @@
 #include <iterator>
 
 // Compiles one shader of the given type and returns its id
-static GLuint createShaderFromFile(GLenum shaderType, const char* shaderFile)
+static GLuint createShaderFromFile(GLenum type, const char* shaderFile)
 {
 	// Creates an empty shader
-	unsigned int shaderID = glCreateShader(shaderType);
+	GLuint shaderID = glCreateShader(type);
 
 	if (shaderID == 0)
 	{
@@ -29,8 +29,8 @@ static GLuint createShaderFromFile(GLenum shaderType, const char* shaderFile)
 		glDeleteShader(shaderID);
 		exit(-1);
 	}
-	std::string shaderCode((std::istreambuf_iterator<char>(file)), 
-	std::istreambuf_iterator<char>());
+	std::string shaderCode((std::istreambuf_iterator<char>(file)),
+		std::istreambuf_iterator<char>());
 
 	// Set the shader source code
 	const char* source = shaderCode.c_str();
@@ -40,7 +40,7 @@ static GLuint createShaderFromFile(GLenum shaderType, const char* shaderFile)
 	glCompileShader(shaderID);
 
 	// Check specialization/compilation status
-	GLint success;
+	int success;
 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
@@ -55,20 +55,7 @@ static GLuint createShaderFromFile(GLenum shaderType, const char* shaderFile)
 	return shaderID;
 }
 
-Shader::Shader(const char* vertexFile, const char* fragmentFile)
+Shader::Shader(GLenum type, const char* file)
 {
-	// Create and compile the vertex and fragment shaders
-	GLuint vertexShader = createShaderFromFile(GL_VERTEX_SHADER, vertexFile);
-	GLuint fragmentShader = createShaderFromFile(GL_FRAGMENT_SHADER, fragmentFile);
-
-	// Create and link the shader program
-	id_ = glCreateProgram();
-	glAttachShader(id_, fragmentShader);
-	glAttachShader(id_, vertexShader);
-	glLinkProgram(id_);
-}
-
-void Shader::use() const
-{
-	glUseProgram(id_);
+	id_ = createShaderFromFile(type, file);
 }
