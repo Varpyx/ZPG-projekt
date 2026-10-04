@@ -7,9 +7,9 @@ ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragm
 }
 
 void Scene::addDrawableObject(Model model, ShaderProgram* shaderProgram,
-	const glm::vec3& color, float scale)
+	const glm::vec3& color, float scale, const glm::vec3& offset)
 {
-	objects_.push_back(DrawableObject(model, shaderProgram, color, scale));
+	objects_.push_back(DrawableObject(model, shaderProgram, color, scale, offset));
 }
 
 void Scene::update(float deltaTime)

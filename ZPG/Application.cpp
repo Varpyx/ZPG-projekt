@@ -13,6 +13,7 @@
 #include "Models/suzi_smooth.h"
 #include "Models/sphere.h"
 #include "Models/bushes.h"
+#include "Models/login.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -122,7 +123,7 @@ void Application::initialization()
 void Application::createScenes()
 {
 	// reserve, aby se nepremistily programy, na ktere ukazuji DrawableObjecty
-	scenes_.reserve(3);
+	scenes_.reserve(4);
 
 	// Scena 1: suzi
 	Scene* scene1 = &scenes_.emplace_back();
@@ -141,9 +142,20 @@ void Application::createScenes()
 	// Scena 3: kere
 	Scene* scene3 = &scenes_.emplace_back();
 	ShaderProgram* shader3 = scene3->addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
-	scene3->addDrawableObject(
-		Model(bushes, 8730), shader3,
-		glm::vec3(0.6f, 1.0f, 0.5f), 0.4f);
+
+	float offsetX = -0.9f;
+	for(int i = 0; i < 20; i++)
+	{
+		scene3->addDrawableObject(Model(bushes, 8730), shader3,	glm::vec3(0.6f, 1.0f, 0.5f), 0.4f, glm::vec3(offsetX, 0.1f, 0.1f));
+		offsetX += 0.1f;
+	}
+
+	//Scena 4: login
+	Scene* scene4 = &scenes_.emplace_back();
+	ShaderProgram* shader4 = scene4->addShaderProgram("shaders/login.vert", "shaders/login.frag");
+	scene4->addDrawableObject(
+		Model(login, sizeof(login) / (6 * sizeof(float))), shader4,
+		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	printf("Vytvoreno %zu scen, prepinej klavesami 1-%zu\n", scenes_.size(), scenes_.size());
 }

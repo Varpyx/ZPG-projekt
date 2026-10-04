@@ -19,6 +19,7 @@ public:
 	void rotatePlaneXY(float alpha);
 	// zmena meritka
 	void setScale(float scale);
+	void setOffset(const glm::vec3& offset) { offset_ = offset; }
 
 	void reset();
 
