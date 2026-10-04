@@ -1,0 +1,32 @@
+﻿@startuml
+title ZPG Projekt - Class Diagram
+
+class Application {
+}
+class Application {
+}
+class DrawableObject {
+}
+class DrawableObject {
+}
+class Model {
+}
+class Model {
+}
+class Scene {
+}
+class Scene {
+}
+class Shader {
+}
+class Shader {
+}
+class ShaderProgram {
+}
+class ShaderProgram {
+}
+class Transformation {
+}
+class Transformation {
+}
+@enduml

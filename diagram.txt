@@ -1,0 +1,584 @@
+﻿=== Application.cpp ===
+Application: // Include GLAD
+Application: // Implementace GLADu je mimo include guard, takze se musi undefinovat,
+Application: // jinak se vygeneruje znovu pri kazdem dalsim include v hlavickach.
+Application: #define GLAD_GL_IMPLEMENTATION
+Application: #include <glad/gl.h>
+Application: #undef GLAD_GL_IMPLEMENTATION
+Application: 
+Application: // Include GLFW
+Application: #define GLFW_INCLUDE_NONE
+Application: #include <GLFW/glfw3.h>
+Application: 
+Application: #include "Application.h"
+Application: #include "Models/suzi_smooth.h"
+Application: #include "Models/sphere.h"
+Application: #include "Models/bushes.h"
+Application: #include "Models/login.h"
+Application: #include "Models/tree.h"
+Application: #include <stdlib.h>
+Application: #include <stdio.h>
+Application: 
+Application: static void error_callback(int error, const char* description) { fputs(description, stderr); }
+Application: 
+Application: static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
+Application: 
+Application: static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
+Application: 
+Application: static void window_size_callback(GLFWwindow* window, int width, int height) {
+Application: 	printf("resize %d, %d \n", width, height);
+Application: 	glViewport(0, 0, width, height);
+Application: }
+Application: 
+Application: static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cursor_callback \n"); }
+Application: 
+Application: static void button_callback(GLFWwindow* window, int button, int action, int mode) {
+Application: 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+Application: }
+Application: 
+Application: void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
+Application: {
+Application: 	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
+Application: 	if (!application)
+Application: 		return;
+Application: 
+Application: 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+Application: 		glfwSetWindowShouldClose(window, GLFW_TRUE);
+Application: 
+Application: 	// Nums 1-9 for switching scenes
+Application: 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
+Application: 	{
+Application: 		if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)
+Application: 		{
+Application: 			application->switchScene(static_cast<size_t>(key - GLFW_KEY_1));
+Application: 			return;
+Application: 		}
+Application: 	}
+Application: }
+Application: 
+Application: void Application::switchScene(size_t index)
+Application: {
+Application: 	if (index >= scenes_.size())
+Application: 	{
+Application: 		printf("Scene %zu doesnt exist\n", index + 1);
+Application: 		return;
+Application: 	}
+Application: 
+Application: 	activeScene_ = index;
+Application: 	printf("Scene %zu\n", activeScene_ + 1);
+Application: }
+Application: 
+Application: void Application::initialization()
+Application: {
+Application: 	// Initialize GLFW
+Application: 	if (!glfwInit())
+Application: 		exit(EXIT_FAILURE);
+Application: 
+Application: 	window_ = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
+Application: 	if (!window_)
+Application: 	{
+Application: 		glfwTerminate();
+Application: 		exit(EXIT_FAILURE);
+=== Application.h ===
+Application: #pragma once
+Application: 
+Application: #include "Scene.h"
+Application: 
+Application: #include <cstddef>
+Application: #include <vector>
+Application: 
+Application: struct GLFWwindow;
+Application: 
+Application: class Application
+Application: {
+Application: public:
+Application: 	Application() = default;
+Application: 	void initialization();
+Application: 	void createScenes();
+Application: 	void run();
+Application: 
+Application: private:
+Application: 	static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods);
+Application: 	void switchScene(size_t index);
+Application: 	void processInput(float deltaTime);
+Application: 
+Application: 	GLFWwindow* window_ = nullptr;
+Application: 	std::vector<Scene> scenes_;
+Application: 	size_t activeScene_ = 0;
+Application: };
+=== DrawableObject.cpp ===
+DrawableObject: #include "DrawableObject.h"
+DrawableObject: 
+DrawableObject: // Include GLM
+DrawableObject: #include <glm/gtc/constants.hpp>
+DrawableObject: 
+DrawableObject: DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram,
+DrawableObject: 	const glm::vec3& color, float scale, const glm::vec3& offset)
+DrawableObject: 	: model_(model), shaderProgram_(shaderProgram), color_(color)
+DrawableObject: {
+DrawableObject: 	transformation_.setScale(scale);
+DrawableObject: 	transformation_.setOffset(offset);
+DrawableObject: }
+DrawableObject: 
+DrawableObject: void DrawableObject::update(float deltaTime)
+DrawableObject: {
+DrawableObject: 	transformation_.rotateY(deltaTime * glm::radians(45.0f));
+DrawableObject: }
+DrawableObject: 
+DrawableObject: void DrawableObject::draw()
+DrawableObject: {
+DrawableObject: 	if (!shaderProgram_ || !shaderProgram_->use())
+DrawableObject: 		return;
+DrawableObject: 
+DrawableObject: 	shaderProgram_->setUniform("scale", transformation_.getScale());
+DrawableObject: 	shaderProgram_->setUniform("offset", transformation_.getOffset());
+DrawableObject: 	shaderProgram_->setUniform("angleY", transformation_.getAngleY());
+DrawableObject: 	shaderProgram_->setUniform("anglePlaneXY", transformation_.getAnglePlaneXY());
+DrawableObject: 	shaderProgram_->setUniform("fragmentColor", color_);
+DrawableObject: 
+DrawableObject: 	model_.draw();
+DrawableObject: }
+=== DrawableObject.h ===
+DrawableObject: #pragma once
+DrawableObject: 
+DrawableObject: #include "Model.h"
+DrawableObject: #include "ShaderProgram.h"
+DrawableObject: #include "Transformation.h"
+DrawableObject: 
+DrawableObject: // Include GLM
+DrawableObject: #include <glm/glm.hpp>
+DrawableObject: 
+DrawableObject: class DrawableObject
+DrawableObject: {
+DrawableObject: public:
+DrawableObject: 	DrawableObject(Model model, ShaderProgram* shaderProgram,
+DrawableObject: 		const glm::vec3& color = glm::vec3(1.0f), float scale = 1.0f, const glm::vec3& offset = glm::vec3(0.0f));
+DrawableObject: 
+DrawableObject: 	void update(float deltaTime);
+DrawableObject: 	void draw();
+DrawableObject: 
+DrawableObject: 	Transformation& getTransformation() { return transformation_; }
+DrawableObject: 	const Transformation& getTransformation() const { return transformation_; }
+DrawableObject: 
+DrawableObject: private:
+DrawableObject: 	Model model_;
+DrawableObject: 	Transformation transformation_;
+DrawableObject: 	ShaderProgram* shaderProgram_ = nullptr;
+DrawableObject: 	glm::vec3 color_;
+DrawableObject: };
+=== main.cpp ===
+main: /**
+main:  * @file main.cpp
+main:  *
+main:  * @brief Main function
+main:  *
+main:  * @author ...
+main:  **/
+main: 
+main: #include "Application.h"
+main: 
+main: int main(void)
+main: {
+main: 	Application app;
+main: 	app.initialization();	// OpenGL inicialization
+main: 	app.createScenes();
+main: 	app.run();				// Rendering
+main: 
+main: 	return 0;
+main: }
+=== Model.cpp ===
+Model: #include "Model.h"
+Model: 
+Model: // Include GLAD
+Model: #include <glad/gl.h>
+Model: 
+Model: Model::Model(const float* data, unsigned int vertexCount)
+Model: 	: vertexCount_(vertexCount)
+Model: {
+Model: 	// vertex buffer object (VBO)
+Model: 	GLuint VBO = 0;
+Model: 	glGenBuffers(1, &VBO); // generate the VBO
+Model: 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+Model: 	glBufferData(GL_ARRAY_BUFFER, vertexCount_ * 6 * sizeof(float), data, GL_STATIC_DRAW);
+Model: 
+Model: 	//Vertex Array Object (VAO)
+Model: 	glGenVertexArrays(1, &vao_); //generate the VAO
+Model: 	glBindVertexArray(vao_); //bind the VAO
+Model: 	glEnableVertexAttribArray(0); //enable vertex attributes
+Model: 	glEnableVertexAttribArray(1);
+Model: 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+Model: 	// index, number of components, data type, normalized, vertex stride, offset
+Model: 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
+Model: 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+Model: }
+Model: 
+Model: void Model::draw() const
+Model: {
+Model: 	glBindVertexArray(vao_);
+Model: 
+Model: 	// Draw a triangles
+Model: 	glDrawArrays(GL_TRIANGLES, 0, vertexCount_); //mode,first,count
+Model: }
+=== Model.h ===
+Model: #pragma once
+Model: 
+Model: // Include GLAD
+Model: #include <glad/gl.h>
+Model: 
+Model: class Model
+Model: {
+Model: public:
+Model: 	Model(const float* data, unsigned int vertexCount);
+Model: 	void draw() const;
+Model: 
+Model: private:
+Model: 	GLuint vao_ = 0;
+Model: 	unsigned int vertexCount_ = 0;
+Model: };
+=== Scene.cpp ===
+Scene: #include "Scene.h"
+Scene: 
+Scene: ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragmentFile)
+Scene: {
+Scene: 	programs_.push_back(ShaderProgram(vertexFile, fragmentFile));
+Scene: 	return &programs_.back();
+Scene: }
+Scene: 
+Scene: void Scene::addDrawableObject(Model model, ShaderProgram* shaderProgram,
+Scene: 	const glm::vec3& color, float scale, const glm::vec3& offset)
+Scene: {
+Scene: 	objects_.push_back(DrawableObject(model, shaderProgram, color, scale, offset));
+Scene: }
+Scene: 
+Scene: void Scene::update(float deltaTime)
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.update(deltaTime);
+Scene: }
+Scene: 
+Scene: void Scene::draw()
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.draw();
+Scene: }
+Scene: 
+Scene: void Scene::translateAll(const glm::vec3& delta)
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.getTransformation().translate(delta);
+Scene: }
+Scene: 
+Scene: void Scene::rotateYAll(float alpha)
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.getTransformation().rotateY(alpha);
+Scene: }
+Scene: 
+Scene: void Scene::rotatePlaneXYAll(float alpha)
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.getTransformation().rotatePlaneXY(alpha);
+Scene: }
+Scene: 
+Scene: void Scene::scaleAll(float deltaScale)
+Scene: {
+Scene: 	for (DrawableObject& object : objects_)
+Scene: 		object.getTransformation().addScale(deltaScale);
+Scene: }
+=== Scene.h ===
+Scene: #pragma once
+Scene: 
+Scene: #include "DrawableObject.h"
+Scene: #include "ShaderProgram.h"
+Scene: 
+Scene: // Include GLM
+Scene: #include <glm/glm.hpp>
+Scene: 
+Scene: #include <deque>
+Scene: #include <vector>
+Scene: 
+Scene: class Scene
+Scene: {
+Scene: public:
+Scene: 	ShaderProgram* addShaderProgram(const char* vertexFile, const char* fragmentFile);
+Scene: 	void addDrawableObject(Model model, ShaderProgram* shaderProgram,
+Scene: 		const glm::vec3& color = glm::vec3(1.0f), float scale = 1.0f, const glm::vec3& offset = glm::vec3(0.2f));
+Scene: 
+Scene: 	void update(float deltaTime);
+Scene: 	void draw();
+Scene: 
+Scene: 	// Hromadne transformace pro vsechny objekty na obrazovce
+Scene: 	void translateAll(const glm::vec3& delta);
+Scene: 	void rotateYAll(float alpha);
+Scene: 	void rotatePlaneXYAll(float alpha);
+Scene: 	void scaleAll(float deltaScale);
+Scene: 
+Scene: private:
+Scene: 	// deque, ne vector: pri push_back neprevede existujici prvky,
+Scene: 	// takze ukazatele v DrawableObject zustavaji platne
+Scene: 	std::deque<ShaderProgram> programs_;
+Scene: 	std::vector<DrawableObject> objects_;
+Scene: };
+=== Shader.cpp ===
+Shader: #include "Shader.h"
+Shader: 
+Shader: // Include GLAD
+Shader: #include <glad/gl.h>
+Shader: 
+Shader: #include <stdlib.h>
+Shader: #include <fstream>
+Shader: #include <string>
+Shader: #include <iostream>
+Shader: #include <iterator>
+Shader: 
+Shader: // Compiles one shader of the given type and returns its id
+Shader: static GLuint createShaderFromFile(GLenum type, const char* shaderFile)
+Shader: {
+Shader: 	// Creates an empty shader
+Shader: 	GLuint shaderID = glCreateShader(type);
+Shader: 
+Shader: 	if (shaderID == 0)
+Shader: 	{
+Shader: 		std::cout << "Unable to create shader" << std::endl;
+Shader: 		exit(EXIT_FAILURE);
+Shader: 	}
+Shader: 
+Shader: 	//Loading the contents of a file into a variable
+Shader: 	std::ifstream file(shaderFile);
+Shader: 	if (!file.is_open())
+Shader: 	{
+Shader: 		std::cout << "Unable to open file " << shaderFile << std::endl;
+Shader: 		glDeleteShader(shaderID);
+Shader: 		exit(-1);
+Shader: 	}
+Shader: 	std::string shaderCode((std::istreambuf_iterator<char>(file)),
+Shader: 		std::istreambuf_iterator<char>());
+Shader: 
+Shader: 	// Set the shader source code
+Shader: 	const char* source = shaderCode.c_str();
+Shader: 	glShaderSource(shaderID, 1, &source, nullptr);
+Shader: 
+Shader: 	// Compile the shader source code
+Shader: 	glCompileShader(shaderID);
+Shader: 
+Shader: 	// Check specialization/compilation status
+Shader: 	int success;
+Shader: 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
+Shader: 	if (!success)
+Shader: 	{
+Shader: 		char infoLog[1024];
+Shader: 		glGetShaderInfoLog(shaderID, sizeof(infoLog), nullptr, infoLog);
+Shader: 		std::cout
+Shader: 			<< "Shader failed:\n"
+Shader: 			<< infoLog << std::endl;
+Shader: 		glDeleteShader(shaderID);
+Shader: 		exit(1);
+Shader: 	}
+Shader: 	return shaderID;
+Shader: }
+Shader: 
+Shader: Shader::Shader(GLenum type, const char* file)
+Shader: {
+Shader: 	id_ = createShaderFromFile(type, file);
+Shader: }
+=== Shader.h ===
+Shader: #pragma once
+Shader: 
+Shader: // Include GLAD
+Shader: #include <glad/gl.h>
+Shader: 
+Shader: class Shader
+Shader: {
+Shader: public:
+Shader: 	Shader() = default;
+Shader: 	Shader(GLenum type, const char* file);
+Shader: 	GLuint getId() const { return id_; }
+Shader: 
+Shader: private:
+Shader: 	GLuint id_ = 0;
+Shader: };
+=== ShaderProgram.cpp ===
+ShaderProgram: #include "ShaderProgram.h"
+ShaderProgram: 
+ShaderProgram: // Include GLAD
+ShaderProgram: #include <glad/gl.h>
+ShaderProgram: 
+ShaderProgram: #include <iostream>
+ShaderProgram: 
+ShaderProgram: ShaderProgram::ShaderProgram(const char* vertexFile, const char* fragmentFile)
+ShaderProgram: 	: vertexShader_(GL_VERTEX_SHADER, vertexFile),
+ShaderProgram: 	fragmentShader_(GL_FRAGMENT_SHADER, fragmentFile)
+ShaderProgram: {
+ShaderProgram: 	// Create and link the shader program
+ShaderProgram: 	id_ = glCreateProgram();
+ShaderProgram: 	glAttachShader(id_, vertexShader_.getId());
+ShaderProgram: 	glAttachShader(id_, fragmentShader_.getId());
+ShaderProgram: 	glLinkProgram(id_);
+ShaderProgram: 
+ShaderProgram: 	// Check linking status
+ShaderProgram: 	int success;
+ShaderProgram: 	glGetProgramiv(id_, GL_LINK_STATUS, &success);
+ShaderProgram: 	if (!success)
+ShaderProgram: 	{
+ShaderProgram: 		char infoLog[1024];
+ShaderProgram: 		glGetProgramInfoLog(id_, sizeof(infoLog), nullptr, infoLog);
+ShaderProgram: 		std::cout
+ShaderProgram: 			<< "Shader program failed:\n"
+ShaderProgram: 			<< infoLog << std::endl;
+ShaderProgram: 	}
+ShaderProgram: }
+ShaderProgram: 
+ShaderProgram: bool ShaderProgram::use() const
+ShaderProgram: {
+ShaderProgram: 	if (id_ == 0)
+ShaderProgram: 		return false;
+ShaderProgram: 
+ShaderProgram: 	glUseProgram(id_);
+ShaderProgram: 	return true;
+ShaderProgram: }
+ShaderProgram: 
+ShaderProgram: GLint ShaderProgram::uniformLocation(const char* name)
+ShaderProgram: {
+ShaderProgram: 	auto it = uniformLocations_.find(name);
+ShaderProgram: 	if (it != uniformLocations_.end())
+ShaderProgram: 		return it->second;
+ShaderProgram: 
+ShaderProgram: 	// -1 znamena, ze uniform v shader programu neni (pouzivaji ho vsechny shadery)
+ShaderProgram: 	GLint location = glGetUniformLocation(id_, name);
+ShaderProgram: 	if (location == -1)
+ShaderProgram: 		std::cout << "Uniform '" << name << "' nebyl v shader programu nalezena" << std::endl;
+ShaderProgram: 
+ShaderProgram: 	uniformLocations_.emplace(name, location);
+ShaderProgram: 	return location;
+ShaderProgram: }
+ShaderProgram: 
+ShaderProgram: // Pozor: tady zadani uvadi glUseProgram(0) na konci. V tomhle pripade by to
+ShaderProgram: // rozbilo kresleni - setUniform se vola pred model_.draw() a bez navazaneho
+ShaderProgram: // programu by glDrawArrays v core profilu vyhodil GL_INVALID_OPERATION.
+ShaderProgram: 
+ShaderProgram: void ShaderProgram::setUniform(const char* name, float value)
+ShaderProgram: {
+ShaderProgram: 	GLint location = uniformLocation(name);
+ShaderProgram: 	if (location == -1)
+ShaderProgram: 		return;
+ShaderProgram: 
+ShaderProgram: 	glUseProgram(id_);
+ShaderProgram: 	glUniform1f(location, value);
+ShaderProgram: }
+ShaderProgram: 
+ShaderProgram: void ShaderProgram::setUniform(const char* name, int value)
+ShaderProgram: {
+ShaderProgram: 	GLint location = uniformLocation(name);
+ShaderProgram: 	if (location == -1)
+ShaderProgram: 		return;
+ShaderProgram: 
+ShaderProgram: 	glUseProgram(id_);
+ShaderProgram: 	glUniform1i(location, value);
+ShaderProgram: }
+ShaderProgram: 
+ShaderProgram: void ShaderProgram::setUniform(const char* name, const glm::vec3& value)
+ShaderProgram: {
+=== ShaderProgram.h ===
+ShaderProgram: #pragma once
+ShaderProgram: 
+ShaderProgram: // Include GLAD
+ShaderProgram: #include <glad/gl.h>
+ShaderProgram: 
+ShaderProgram: // Include GLM
+ShaderProgram: #include <glm/glm.hpp>
+ShaderProgram: 
+ShaderProgram: #include "Shader.h"
+ShaderProgram: 
+ShaderProgram: #include <string>
+ShaderProgram: #include <unordered_map>
+ShaderProgram: 
+ShaderProgram: class ShaderProgram
+ShaderProgram: {
+ShaderProgram: public:
+ShaderProgram: 	ShaderProgram(const char* vertexFile, const char* fragmentFile);
+ShaderProgram: 	bool use() const;
+ShaderProgram: 
+ShaderProgram: 	void setUniform(const char* name, float value);
+ShaderProgram: 	void setUniform(const char* name, int value);
+ShaderProgram: 	void setUniform(const char* name, const glm::vec3& value);
+ShaderProgram: 	void setUniform(const char* name, const glm::mat4& value);
+ShaderProgram: 
+ShaderProgram: private:
+ShaderProgram: 	// Vrati location uniformu, nebo -1 pokud v shader programu neni.
+ShaderProgram: 	// Location se hleda jen jednou, vysledek se cachuje.
+ShaderProgram: 	GLint uniformLocation(const char* name);
+ShaderProgram: 
+ShaderProgram: 	Shader vertexShader_;
+ShaderProgram: 	Shader fragmentShader_;
+ShaderProgram: 	GLuint id_ = 0;
+ShaderProgram: 	std::unordered_map<std::string, GLint> uniformLocations_;
+ShaderProgram: };
+=== Transformation.cpp ===
+Transformation: #include "Transformation.h"
+Transformation: 
+Transformation: void Transformation::translate(const glm::vec3& delta)
+Transformation: {
+Transformation: 	offset_ += delta;
+Transformation: }
+Transformation: 
+Transformation: void Transformation::rotateY(float alpha)
+Transformation: {
+Transformation: 	angleY_ += alpha;
+Transformation: }
+Transformation: 
+Transformation: void Transformation::rotatePlaneXY(float alpha)
+Transformation: {
+Transformation: 	anglePlaneXY_ += alpha;
+Transformation: }
+Transformation: 
+Transformation: void Transformation::setScale(float scale)
+Transformation: {
+Transformation: 	scale_ = scale;
+Transformation: 	if (scale_ < 0.01f) scale_ = 0.01f;
+Transformation: }
+Transformation: 
+Transformation: void Transformation::reset()
+Transformation: {
+Transformation: 	offset_ = glm::vec3(0.0f);
+Transformation: 	angleY_ = 0.0f;
+Transformation: 	anglePlaneXY_ = 0.0f;
+Transformation: 	scale_ = 1.0f;
+Transformation: }
+=== Transformation.h ===
+Transformation: #pragma once
+Transformation: 
+Transformation: // Include GLM
+Transformation: #include <glm/glm.hpp>
+Transformation: 
+Transformation: // Transformace pocitane pomoci rovnic (bez matic).
+Transformation: // Samotny vypocet dela vertex shader, tato trida drzi jen parametry,
+Transformation: // ktere se posilaji jako uniformni promenne.
+Transformation: class Transformation
+Transformation: {
+Transformation: public:
+Transformation: 	Transformation() = default;
+Transformation: 
+Transformation: 	// posun (translace)
+Transformation: 	void translate(const glm::vec3& delta);
+Transformation: 	// rotace v prostoru kolem osy y
+Transformation: 	void rotateY(float alpha);
+Transformation: 	// rotace v rovine xy kolem pocatku, proti smeru hodinovych rucicek
+Transformation: 	void rotatePlaneXY(float alpha);
+Transformation: 	// zmena meritka
+Transformation: 	void setScale(float scale);
+Transformation: 	void setOffset(const glm::vec3& offset) { offset_ = offset; }
+Transformation: 	void addScale(float deltaScale) { scale_ += deltaScale; if (scale_ < 0.01f) scale_ = 0.01f; }
+Transformation: 
+Transformation: 	void reset();
+Transformation: 
+Transformation: 	const glm::vec3& getOffset() const { return offset_; }
+Transformation: 	float getAngleY() const { return angleY_; }
+Transformation: 	float getAnglePlaneXY() const { return anglePlaneXY_; }
+Transformation: 	float getScale() const { return scale_; }
+Transformation: 
+Transformation: private:
+Transformation: 	glm::vec3 offset_ = glm::vec3(0.0f);
+Transformation: 	float angleY_ = 0.0f;
+Transformation: 	float anglePlaneXY_ = 0.0f;
+Transformation: 	float scale_ = 1.0f;
+Transformation: };

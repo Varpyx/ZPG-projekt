@@ -23,8 +23,7 @@ public:
 	void setUniform(const char* name, const glm::mat4& value);
 
 private:
-	// Vrati location uniformu, nebo -1 pokud v shader programu neni.
-	// Location se hleda jen jednou, vysledek se cachuje.
+	// helper function to get uniform location and cache it
 	GLint uniformLocation(const char* name);
 
 	Shader vertexShader_;

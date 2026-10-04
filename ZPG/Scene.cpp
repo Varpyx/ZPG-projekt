@@ -23,3 +23,27 @@ void Scene::draw()
 	for (DrawableObject& object : objects_)
 		object.draw();
 }
+
+void Scene::translateAll(const glm::vec3& delta)
+{
+	for (DrawableObject& object : objects_)
+		object.getTransformation().translate(delta);
+}
+
+void Scene::rotateYAll(float alpha)
+{
+	for (DrawableObject& object : objects_)
+		object.getTransformation().rotateY(alpha);
+}
+
+void Scene::rotatePlaneXYAll(float alpha)
+{
+	for (DrawableObject& object : objects_)
+		object.getTransformation().rotatePlaneXY(alpha);
+}
+
+void Scene::scaleAll(float deltaScale)
+{
+	for (DrawableObject& object : objects_)
+		object.getTransformation().addScale(deltaScale);
+}

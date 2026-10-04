@@ -1,0 +1,8 @@
+1. Splněno - přidána třída Transform, transformace - posun, scale a rotace se provadí ve vertex shaderu
+2. Splněno - vytvořeny přetížené metody v ShaderProgram classe
+3. Splněno - vytvořena třída Scene, v Application přidáno přepínání scén v metodě keyCallback 1-9
+4. Splněno - sceny => Suzi, kulička, les + keře + slunce, login
+5. Splněno - 3. scéna z bodu 4
+6. Splněno - main je krátký, obsahuje pouze vytvoření Application a volaní 3 jejich metod
+7. Splněno - vytvořeno podle návodu, přidám do dolního pravého rohu všech scén 
+8. Splněno - rozdělení na objektový kod prodle slajdů z přednášky

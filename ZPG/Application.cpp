@@ -1,6 +1,4 @@
 // Include GLAD
-// Implementace GLADu je mimo include guard, takze se musi undefinovat,
-// jinak se vygeneruje znovu pri kazdem dalsim include v hlavickach.
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
 #undef GLAD_GL_IMPLEMENTATION
@@ -14,6 +12,7 @@
 #include "Models/sphere.h"
 #include "Models/bushes.h"
 #include "Models/login.h"
+#include "Models/tree.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -43,11 +42,14 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int ac
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 
-	// Cislovnice 1..9 prepinaji sceny
+	// Nums 1-9 for switching scenes
 	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
 		if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)
+		{
 			application->switchScene(static_cast<size_t>(key - GLFW_KEY_1));
+			return;
+		}
 	}
 }
 
@@ -55,12 +57,12 @@ void Application::switchScene(size_t index)
 {
 	if (index >= scenes_.size())
 	{
-		printf("Scena %zu neexistuje\n", index + 1);
+		printf("Scene %zu doesnt exist\n", index + 1);
 		return;
 	}
 
 	activeScene_ = index;
-	printf("Scena %zu\n", activeScene_ + 1);
+	printf("Scene %zu\n", activeScene_ + 1);
 }
 
 void Application::initialization()
@@ -122,7 +124,7 @@ void Application::initialization()
 
 void Application::createScenes()
 {
-	// reserve, aby se nepremistily programy, na ktere ukazuji DrawableObjecty
+	// reserve - preallocate memory for 4 scenes to avoid reallocations
 	scenes_.reserve(4);
 
 	// Scena 1: suzi
@@ -131,33 +133,90 @@ void Application::createScenes()
 	scene1->addDrawableObject(
 		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader1,
 		glm::vec3(1.0f, 0.7f, 0.2f), 0.4f);
+	scene1->addDrawableObject(
+		Model(login, sizeof(login) / (6 * sizeof(float))), shader1,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// Scena 2: koule
+	// Scena 2: sphere
 	Scene* scene2 = &scenes_.emplace_back();
 	ShaderProgram* shader2 = scene2->addShaderProgram("shaders/basic2.vert", "shaders/basic2.frag");
 	scene2->addDrawableObject(
 		Model(sphere, 2880), shader2,
 		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f);
+	scene2->addDrawableObject(
+		Model(login, sizeof(login) / (6 * sizeof(float))), shader2,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// Scena 3: kere
+	// Scena 3: bushes and trees
 	Scene* scene3 = &scenes_.emplace_back();
 	ShaderProgram* shader3 = scene3->addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
 
 	float offsetX = -0.9f;
-	for(int i = 0; i < 20; i++)
+	float offsetY = -0.7f;
+	for(int i = 0; i < 12; i++)
 	{
-		scene3->addDrawableObject(Model(bushes, 8730), shader3,	glm::vec3(0.6f, 1.0f, 0.5f), 0.4f, glm::vec3(offsetX, 0.1f, 0.1f));
-		offsetX += 0.1f;
+		scene3->addDrawableObject(Model(bushes, 8730), shader2,	glm::vec3(0.6f, 1.0f, 0.5f), 0.3f, glm::vec3(offsetX, offsetY, 0.1f));
+		scene3->addDrawableObject(Model(tree, 92814), shader2, glm::vec3(0.6f, 1.0f, 0.5f), 0.05f, glm::vec3(offsetX, offsetY + 0.6, 0.1f));
+		offsetX += 0.15f;
+		if (i % 2 == 0) {
+			offsetY += 0.1f;
+		} else {
+			offsetY -= 0.1f;
+		}
 	}
+	scene3->addDrawableObject(Model(sphere, 2880), shader3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(0.7f, 0.7f, 0.1f));
+	scene3->addDrawableObject(
+		Model(login, sizeof(login) / (6 * sizeof(float))), shader3,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	//Scena 4: login
 	Scene* scene4 = &scenes_.emplace_back();
-	ShaderProgram* shader4 = scene4->addShaderProgram("shaders/login.vert", "shaders/login.frag");
+	ShaderProgram* shader4 = scene4->addShaderProgram("shaders/login.vert", "shaders/basic2.frag");
 	scene4->addDrawableObject(
 		Model(login, sizeof(login) / (6 * sizeof(float))), shader4,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
-	printf("Vytvoreno %zu scen, prepinej klavesami 1-%zu\n", scenes_.size(), scenes_.size());
+	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
+}
+
+void Application::processInput(float deltaTime)
+{
+	if (scenes_.empty())
+		return;
+
+	Scene& scene = scenes_[activeScene_];
+
+	const float moveSpeed = 200.0f;
+	const float rotSpeed = 2.0f;
+	const float scaleSpeed = 1.5f;
+
+	glm::vec3 move(0.0f);
+	if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) move.y += 0.01f;
+	if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) move.y -= 0.01f;
+	if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) move.x -= 0.01f;
+	if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) move.x += 0.01f;
+	if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) move.z += 0.01f;
+	if (glfwGetKey(window_, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) move.z -= 0.01f;
+	if (glm::length(move) > 0.0f)
+		scene.translateAll(move * moveSpeed * deltaTime);
+
+	float rotY = 0.0f;
+	if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS) rotY -= 1.0f;
+	if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) rotY += 1.0f;
+	if (rotY != 0.0f)
+		scene.rotateYAll(rotY * rotSpeed * deltaTime);
+
+	float rotXY = 0.0f;
+	if (glfwGetKey(window_, GLFW_KEY_Z) == GLFW_PRESS) rotXY -= 1.0f;
+	if (glfwGetKey(window_, GLFW_KEY_C) == GLFW_PRESS) rotXY += 1.0f;
+	if (rotXY != 0.0f)
+		scene.rotatePlaneXYAll(rotXY * rotSpeed * deltaTime);
+
+	float scaleDelta = 0.0f;
+	if (glfwGetKey(window_, GLFW_KEY_R) == GLFW_PRESS) scaleDelta += 1.0f;
+	if (glfwGetKey(window_, GLFW_KEY_F) == GLFW_PRESS) scaleDelta -= 1.0f;
+	if (scaleDelta != 0.0f)
+		scene.scaleAll(scaleDelta * scaleSpeed * deltaTime);
 }
 
 void Application::run()
@@ -165,7 +224,7 @@ void Application::run()
 	if (scenes_.empty())
 		return;
 
-	double lastTime = glfwGetTime();
+		double lastTime = glfwGetTime();
 
 	while (!glfwWindowShouldClose(window_))
 	{
@@ -173,11 +232,13 @@ void Application::run()
 		float deltaTime = static_cast<float>(currentTime - lastTime);
 		lastTime = currentTime;
 
+		processInput(deltaTime);
+
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Scene& scene = scenes_[activeScene_];
-		scene.update(deltaTime);
+		//scene.update(deltaTime);
 		scene.draw();
 
 		// Display the rendered frame and process events

@@ -19,9 +19,13 @@ public:
 	void update(float deltaTime);
 	void draw();
 
+	// transformations applied to all objects in the scene
+	void translateAll(const glm::vec3& delta);
+	void rotateYAll(float alpha);
+	void rotatePlaneXYAll(float alpha);
+	void scaleAll(float deltaScale);
+
 private:
-	// deque, ne vector: pri push_back neprevede existujici prvky,
-	// takze ukazatele v DrawableObject zustavaji platne
 	std::deque<ShaderProgram> programs_;
 	std::vector<DrawableObject> objects_;
 };

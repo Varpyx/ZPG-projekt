@@ -16,6 +16,9 @@ public:
 	void update(float deltaTime);
 	void draw();
 
+	Transformation& getTransformation() { return transformation_; }
+	const Transformation& getTransformation() const { return transformation_; }
+
 private:
 	Model model_;
 	Transformation transformation_;

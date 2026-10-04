@@ -43,7 +43,7 @@ GLint ShaderProgram::uniformLocation(const char* name)
 	if (it != uniformLocations_.end())
 		return it->second;
 
-	// -1 znamena, ze uniform v shader programu neni (pouzivaji ho vsechny shadery)
+	// -1 if uniform is not found
 	GLint location = glGetUniformLocation(id_, name);
 	if (location == -1)
 		std::cout << "Uniform '" << name << "' nebyl v shader programu nalezena" << std::endl;
@@ -51,10 +51,6 @@ GLint ShaderProgram::uniformLocation(const char* name)
 	uniformLocations_.emplace(name, location);
 	return location;
 }
-
-// Pozor: tady zadani uvadi glUseProgram(0) na konci. V tomhle pripade by to
-// rozbilo kresleni - setUniform se vola pred model_.draw() a bez navazaneho
-// programu by glDrawArrays v core profilu vyhodil GL_INVALID_OPERATION.
 
 void ShaderProgram::setUniform(const char* name, float value)
 {

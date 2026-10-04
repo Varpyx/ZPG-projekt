@@ -18,6 +18,7 @@ void Transformation::rotatePlaneXY(float alpha)
 void Transformation::setScale(float scale)
 {
 	scale_ = scale;
+	if (scale_ < 0.01f) scale_ = 0.01f;
 }
 
 void Transformation::reset()
