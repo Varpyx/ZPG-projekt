@@ -7,13 +7,14 @@ uniform float scale;
 uniform vec3 offset;
 uniform float angleY;
 uniform float anglePlaneXY;
+uniform mat4 modelMatrix;
 
 out vec3 vertexColor;
 
 void main()
 {
     //change scale
-    vec3 p = position * scale;
+    /*vec3 p = position * scale;
 
     //rotate around y axis
     float c = cos(angleY);
@@ -30,8 +31,8 @@ void main()
     // y' =  x*sin(a) + y*cos(a)
     p = vec3(c*p.x - s*p.y, s*p.x + c*p.y, p.z);
 
-    p += offset;
+    p += offset;*/
 
     vertexColor = color;
-    gl_Position = vec4(p, 1.0);
+    gl_Position = modelMatrix * vec4(position, 1.0);
 }

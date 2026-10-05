@@ -23,10 +23,12 @@ public:
 	float getAngleY() const { return angleY_; }
 	float getAnglePlaneXY() const { return anglePlaneXY_; }
 	float getScale() const { return scale_; }
+	glm::mat4 getModelMatrix();
 
 private:
 	glm::vec3 offset_ = glm::vec3(0.0f);
-	float angleY_ = 0.0f;
-	float anglePlaneXY_ = 0.0f;
+	float angleY_ = 180.0f;
+	float anglePlaneXY_ = 30.0f;
 	float scale_ = 1.0f;
+	glm::mat4 M = glm::mat4(1.0f);
 };

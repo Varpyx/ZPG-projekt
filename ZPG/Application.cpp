@@ -139,7 +139,7 @@ void Application::createScenes()
 
 	// Scena 2: sphere
 	Scene* scene2 = &scenes_.emplace_back();
-	ShaderProgram* shader2 = scene2->addShaderProgram("shaders/basic2.vert", "shaders/basic2.frag");
+	ShaderProgram* shader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	scene2->addDrawableObject(
 		Model(sphere, 2880), shader2,
 		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f);

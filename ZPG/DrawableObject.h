@@ -15,6 +15,7 @@ public:
 
 	void update(float deltaTime);
 	void draw();
+	void draw2();
 
 	Transformation& getTransformation() { return transformation_; }
 	const Transformation& getTransformation() const { return transformation_; }

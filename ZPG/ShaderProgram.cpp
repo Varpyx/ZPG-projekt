@@ -2,7 +2,7 @@
 
 // Include GLAD
 #include <glad/gl.h>
-
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 ShaderProgram::ShaderProgram(const char* vertexFile, const char* fragmentFile)
@@ -89,5 +89,5 @@ void ShaderProgram::setUniform(const char* name, const glm::mat4& value)
 		return;
 
 	glUseProgram(id_);
-	glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
