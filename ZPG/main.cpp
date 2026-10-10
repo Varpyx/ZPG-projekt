@@ -3,7 +3,7 @@
  *
  * @brief Main function
  *
- * @author ...
+ * @author Michal Poncza
  **/
 
 #include "Application.h"

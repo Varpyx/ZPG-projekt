@@ -13,6 +13,7 @@
 #include "Models/bushes.h"
 #include "Models/login.h"
 #include "Models/tree.h"
+#include "Models/login2.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -129,34 +130,38 @@ void Application::createScenes()
 
 	// Scena 1: suzi
 	Scene* scene1 = &scenes_.emplace_back();
-	ShaderProgram* shader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene1->addDrawableObject(
-		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), shader1,
+		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), mesh1,
 		glm::vec3(1.0f, 0.7f, 0.2f), 0.4f);
 	scene1->addDrawableObject(
-		Model(login, sizeof(login) / (6 * sizeof(float))), shader1,
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader1,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	// Scena 2: sphere
 	Scene* scene2 = &scenes_.emplace_back();
-	ShaderProgram* shader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene2->addDrawableObject(
-		Model(sphere, 2880), shader2,
+		Model(sphere, 2880), mesh2,
 		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f);
 	scene2->addDrawableObject(
-		Model(login, sizeof(login) / (6 * sizeof(float))), shader2,
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader2,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	// Scena 3: bushes and trees
 	Scene* scene3 = &scenes_.emplace_back();
-	ShaderProgram* shader3 = scene3->addShaderProgram("shaders/basic3.vert", "shaders/basic3.frag");
+	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
+	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
 	float offsetX = -0.9f;
 	float offsetY = -0.7f;
 	for(int i = 0; i < 12; i++)
 	{
-		scene3->addDrawableObject(Model(bushes, 8730), shader2,	glm::vec3(0.6f, 1.0f, 0.5f), 0.3f, glm::vec3(offsetX, offsetY, 0.1f));
-		scene3->addDrawableObject(Model(tree, 92814), shader2, glm::vec3(0.6f, 1.0f, 0.5f), 0.05f, glm::vec3(offsetX, offsetY + 0.6, 0.1f));
+		scene3->addDrawableObject(Model(bushes, 8730), mesh3, glm::vec3(0.6f, 1.0f, 0.5f), 0.3f, glm::vec3(offsetX, offsetY, 0.1f));
+		scene3->addDrawableObject(Model(tree, 92814), mesh3, glm::vec3(0.6f, 1.0f, 0.5f), 0.05f, glm::vec3(offsetX, offsetY + 0.6, 0.1f));
 		offsetX += 0.15f;
 		if (i % 2 == 0) {
 			offsetY += 0.1f;
@@ -164,16 +169,16 @@ void Application::createScenes()
 			offsetY -= 0.1f;
 		}
 	}
-	scene3->addDrawableObject(Model(sphere, 2880), shader3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(0.7f, 0.7f, 0.1f));
+	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(0.7f, 0.7f, 0.1f));
 	scene3->addDrawableObject(
-		Model(login, sizeof(login) / (6 * sizeof(float))), shader3,
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader3,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	//Scena 4: login
 	Scene* scene4 = &scenes_.emplace_back();
-	ShaderProgram* shader4 = scene4->addShaderProgram("shaders/login.vert", "shaders/basic2.frag");
+	ShaderProgram* loginShader4 = scene4->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene4->addDrawableObject(
-		Model(login, sizeof(login) / (6 * sizeof(float))), shader4,
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader4,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
@@ -181,6 +186,7 @@ void Application::createScenes()
 
 void Application::processInput(float deltaTime)
 {
+	/*
 	if (scenes_.empty())
 		return;
 
@@ -216,7 +222,7 @@ void Application::processInput(float deltaTime)
 	if (glfwGetKey(window_, GLFW_KEY_R) == GLFW_PRESS) scaleDelta += 1.0f;
 	if (glfwGetKey(window_, GLFW_KEY_F) == GLFW_PRESS) scaleDelta -= 1.0f;
 	if (scaleDelta != 0.0f)
-		scene.scaleAll(scaleDelta * scaleSpeed * deltaTime);
+		scene.scaleAll(scaleDelta * scaleSpeed * deltaTime);*/
 }
 
 void Application::run()
@@ -232,13 +238,13 @@ void Application::run()
 		float deltaTime = static_cast<float>(currentTime - lastTime);
 		lastTime = currentTime;
 
-		processInput(deltaTime);
+		//processInput(deltaTime);
 
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Scene& scene = scenes_[activeScene_];
-		//scene.update(deltaTime);
+		scene.update(deltaTime);
 		scene.draw();
 
 		// Display the rendered frame and process events

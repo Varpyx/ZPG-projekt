@@ -8,9 +8,6 @@
 
 #include "Shader.h"
 
-#include <string>
-#include <unordered_map>
-
 class ShaderProgram
 {
 public:
@@ -23,11 +20,7 @@ public:
 	void setUniform(const char* name, const glm::mat4& value);
 
 private:
-	// helper function to get uniform location and cache it
-	GLint uniformLocation(const char* name);
-
 	Shader vertexShader_;
 	Shader fragmentShader_;
 	GLuint id_ = 0;
-	std::unordered_map<std::string, GLint> uniformLocations_;
 };

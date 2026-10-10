@@ -33,8 +33,8 @@ glm::mat4 Transformation::getModelMatrix()
 {
 	glm::mat4 M = glm::mat4(1.0f);
 	M = glm::translate(M, offset_);
-	M = glm::rotate(M, glm::radians(anglePlaneXY_), glm::vec3(0.0f, 0.0f, 1.0f));
-	M = glm::rotate(M, glm::radians(angleY_), glm::vec3(0.0f, 1.0f, 0.0f));
+	//M = glm::rotate(M, glm::radians(anglePlaneXY_), glm::vec3(0.0f, 0.0f, 1.0f));
+	//M = glm::rotate(M, glm::radians(angleY_), glm::vec3(0.0f, 1.0f, 0.0f));
 	M = glm::scale(M, glm::vec3(scale_));
 	return M;
 }

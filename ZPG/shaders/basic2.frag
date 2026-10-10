@@ -7,5 +7,5 @@ out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(fragmentColor*vertexColor, 1.0);
+    FragColor = vec4(fragmentColor, 1.0);
 }
