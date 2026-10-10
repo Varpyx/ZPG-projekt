@@ -1,0 +1,7 @@
+1. Splněno - transformace pracují s maticemi, shader přijímá jednu matici
+2. Splněno - DrawableObject obsahuje metody přidaní transformace nebo rovnou už kombinací
+3. Splněno - Pomocí volaní metody update se mění např posun, rotace v čase. Lze nastavit nulový spped nebo velocity pro staticky posun
+4. Splněno - Dostaneme 2 různé vystupy - nasobení matic neni komutativní, proto záleží na pořadí.
+5. Splněno - Vytvořena Abstraktní třída Transform ze které dědí Translation, Rotate, Scale a CompositeTransformation který obsahuje kombinace jednotlivých transformaci (ukalda je do vektoru)
+6. Splněno - nahodně vygenerovano 12 keřů a stromů - nahodna generace pozice x a y, rotace. Použito skládání transformací
+7. Splněno - Slunce je pevně ve středu, nastavena pouze rotace kolem osy Y. Zemi musime nejdřív orotovat a až poté posunout a scalovat. Tyto transformace jsem si uložil a s měsícem na ně navázal - orotoval a posunu ho vůči zemi, scaloval. Zěmě obíha kolem Slunce a měsíc kolem Slunce a zároveň Země

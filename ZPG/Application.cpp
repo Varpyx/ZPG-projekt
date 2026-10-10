@@ -150,7 +150,7 @@ void Application::createScenes()
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene2->addDrawableObject(
 		Model(sphere, 2880), mesh2,
-		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f);
+		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f, glm::vec3(0.3f, 0.0f, 0.0f));
 	scene2->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader2,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
