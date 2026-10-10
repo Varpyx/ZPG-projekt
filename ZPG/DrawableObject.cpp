@@ -9,7 +9,7 @@ DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram,
 {
 	transformation_ = std::make_unique<CompositeTransformation>();
 	transformation_->addTransformation(std::make_unique<Translation>(offset, velocity));
-	transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, speed));
+	//transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, speed));
 	transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, speed));
 	transformation_->addTransformation(std::make_unique<Scale>(scale));
 }

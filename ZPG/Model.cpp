@@ -3,14 +3,14 @@
 // Include GLAD
 #include <glad/gl.h>
 
-Model::Model(const float* data, unsigned int vertexCount)
+Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerVertex)
 	: vertexCount_(vertexCount)
 {
 	// vertex buffer object (VBO)
 	GLuint VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertexCount_ * 6 * sizeof(float), data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount_ * floatPerVertex * sizeof(float), data, GL_STATIC_DRAW);
 
 	//Vertex Array Object (VAO)
 	glGenVertexArrays(1, &vao_); //generate the VAO
@@ -19,8 +19,8 @@ Model::Model(const float* data, unsigned int vertexCount)
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	// index, number of components, data type, normalized, vertex stride, offset
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(3 * sizeof(float)));
 }
 
 void Model::draw() const

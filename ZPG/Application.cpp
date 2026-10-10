@@ -200,9 +200,35 @@ void Application::createScenes()
 	ShaderProgram* mesh5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
 
-	scene5->addDrawableObject(
-		Model(sun, 11520), mesh5,
-		glm::vec3(1.0f, 1.0f, 1.0f), 0.4f, glm::vec3(0.0f, 0.0f, 0.0f));
+	DrawableObject& Sun = scene5->addDrawableObject(
+		Model(sun, 11520, 9), mesh5,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
+
+	
+	DrawableObject& Earth = scene5->addDrawableObject(
+		Model(earth, 11520, 9), mesh5,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	auto et = std::make_unique<CompositeTransformation>();
+	et->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 10.0f));
+	et->addTransformation(std::make_unique<Translation>(glm::vec3(-0.7f, 0.0f, 0.0f)));
+	et->addTransformation(std::make_unique<Scale>(0.1f));
+	Earth.setTransformation(std::move(et));
+
+	DrawableObject& Moon = scene5->addDrawableObject(
+		Model(moon, 11520, 9), mesh5,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.05f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	auto earthPom = std::make_unique<CompositeTransformation>();
+	earthPom->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 10.0f));
+	earthPom->addTransformation(std::make_unique<Translation>(glm::vec3(-0.7f, 0.0f, 0.0f)));
+
+	auto mt = std::make_unique<CompositeTransformation>();
+	mt->addTransformation(std::move(earthPom));
+	mt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 60.0f));
+	mt->addTransformation(std::make_unique<Translation>(glm::vec3(-0.2f, 0.0f, 0.0f)));
+	mt->addTransformation(std::make_unique<Scale>(0.05f));
+	Moon.setTransformation(std::move(mt));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
