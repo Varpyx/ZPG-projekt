@@ -1,40 +1,40 @@
 #include "Transformation.h"
 #include <glm/gtc/matrix_transform.hpp>
-void Transformation::translate(const glm::vec3& delta)
+
+glm::mat4 Translation::getModelMatrix()
 {
-	offset_ += delta;
+	return glm::translate(glm::mat4(1.0f), offset_);
 }
 
-void Transformation::rotateY(float alpha)
+glm::mat4 Rotation::getModelMatrix()
 {
-	angleY_ += alpha;
+	return glm::rotate(glm::mat4(1.0f), glm::radians(angle_), axis_);
 }
 
-void Transformation::rotatePlaneXY(float alpha)
+glm::mat4 Scale::getModelMatrix()
 {
-	anglePlaneXY_ += alpha;
+	return glm::scale(glm::mat4(1.0f), glm::vec3(scale_));
 }
 
-void Transformation::setScale(float scale)
+void CompositeTransformation::addTransformation(std::unique_ptr<Transformation> transformation)
 {
-	scale_ = scale;
-	if (scale_ < 0.01f) scale_ = 0.01f;
+	transformations_.push_back(std::move(transformation));
 }
 
-void Transformation::reset()
+glm::mat4 CompositeTransformation::getModelMatrix()
 {
-	offset_ = glm::vec3(0.0f);
-	angleY_ = 0.0f;
-	anglePlaneXY_ = 0.0f;
-	scale_ = 1.0f;
+	glm::mat4 modelMatrix(1.0f);
+	for (const auto& transformation : transformations_)
+	{
+		modelMatrix = modelMatrix * transformation->getModelMatrix();
+	}
+	return modelMatrix;
 }
 
-glm::mat4 Transformation::getModelMatrix()
+void CompositeTransformation::update(float deltaTime)
 {
-	glm::mat4 M = glm::mat4(1.0f);
-	M = glm::translate(M, offset_);
-	//M = glm::rotate(M, glm::radians(anglePlaneXY_), glm::vec3(0.0f, 0.0f, 1.0f));
-	//M = glm::rotate(M, glm::radians(angleY_), glm::vec3(0.0f, 1.0f, 0.0f));
-	M = glm::scale(M, glm::vec3(scale_));
-	return M;
+	for (const auto& transformation : transformations_)
+	{
+		transformation->update(deltaTime);
+	}
 }

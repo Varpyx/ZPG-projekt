@@ -14,8 +14,12 @@
 #include "Models/login.h"
 #include "Models/tree.h"
 #include "Models/login2.h"
+#include "Models//sun.h"
+#include "Models/earth.h"	
+#include "Models/moon.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstdlib>
 
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
 
@@ -125,8 +129,9 @@ void Application::initialization()
 
 void Application::createScenes()
 {
+
 	// reserve - preallocate memory for 4 scenes to avoid reallocations
-	scenes_.reserve(4);
+	scenes_.reserve(5);
 
 	// Scena 1: suzi
 	Scene* scene1 = &scenes_.emplace_back();
@@ -134,7 +139,7 @@ void Application::createScenes()
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene1->addDrawableObject(
 		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), mesh1,
-		glm::vec3(1.0f, 0.7f, 0.2f), 0.4f);
+		glm::vec3(1.0f, 0.7f, 0.2f), 0.4f, glm::vec3(0.0f), 15.0f, glm::vec3(0.1f, 0.0f, 0.0f));
 	scene1->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader1,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
@@ -156,18 +161,27 @@ void Application::createScenes()
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
-	float offsetX = -0.9f;
-	float offsetY = -0.7f;
-	for(int i = 0; i < 12; i++)
+	srand(3);
+	for(int i = 0; i < 20; i++)
 	{
-		scene3->addDrawableObject(Model(bushes, 8730), mesh3, glm::vec3(0.6f, 1.0f, 0.5f), 0.3f, glm::vec3(offsetX, offsetY, 0.1f));
-		scene3->addDrawableObject(Model(tree, 92814), mesh3, glm::vec3(0.6f, 1.0f, 0.5f), 0.05f, glm::vec3(offsetX, offsetY + 0.6, 0.1f));
-		offsetX += 0.15f;
-		if (i % 2 == 0) {
-			offsetY += 0.1f;
-		} else {
-			offsetY -= 0.1f;
-		}
+		float bx = -0.7f + 2.0f * rand() / RAND_MAX;
+		float by = -0.9f + 1.2f * rand() / RAND_MAX;
+		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730), mesh3, glm::vec3(0.6f, 1.0f, 0.5f));
+		auto bt = std::make_unique<CompositeTransformation>();
+		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, by, 0.1f)));
+		bt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
+		bt->addTransformation(std::make_unique<Scale>(0.3f));
+		bush.setTransformation(std::move(bt));
+
+		bx = -0.9f + 2.0f * rand() / RAND_MAX;
+		by = -0.9f + 1.2f * rand() / RAND_MAX;
+		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), mesh3, glm::vec3(0.6f, 1.0f, 0.5f));
+		auto tt = std::make_unique<CompositeTransformation>();
+		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, by, 0.1f)));
+		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
+		tt->addTransformation(std::make_unique<Scale>(0.05f));
+		trees.setTransformation(std::move(tt));
+		
 	}
 	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(0.7f, 0.7f, 0.1f));
 	scene3->addDrawableObject(
@@ -180,6 +194,15 @@ void Application::createScenes()
 	scene4->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader4,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	//Scene 5: planets
+	Scene* scene5 = &scenes_.emplace_back();
+	ShaderProgram* mesh5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
+
+	scene5->addDrawableObject(
+		Model(sun, 11520), mesh5,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.4f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
