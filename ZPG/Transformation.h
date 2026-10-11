@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 
+//Michal Poncza
 class Transformation
 {
 public:
@@ -38,6 +39,7 @@ public:
 		: axis_(axis), angle_(angle), speed_(speed) {};
 	glm::mat4 getModelMatrix() override;
 	void update(float deltaTime) override { angle_ += speed_ * deltaTime; }
+
 	void setAngle(float angle) { angle_ = angle; }
 	void setSpeed(float speed) { speed_ = speed; }
 	float getAngle() const { return angle_; }
@@ -55,6 +57,7 @@ public:
 		: scale_(scale) {
 	};
 	glm::mat4 getModelMatrix() override;
+
 	void setScale(float scale) { scale_ = scale; }
 	float getScale() { return scale_; }
 private:

@@ -8,6 +8,7 @@
 
 #include <vector>
 
+//Michal Poncza
 class Scene
 {
 public:

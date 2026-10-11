@@ -9,7 +9,7 @@
 #include <iostream>
 #include <iterator>
 
-// Compiles one shader of the given type and returns its id
+// example code from LMS
 static GLuint createShaderFromFile(GLenum type, const char* shaderFile)
 {
 	// Creates an empty shader

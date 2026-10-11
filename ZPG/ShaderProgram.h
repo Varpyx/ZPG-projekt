@@ -5,9 +5,9 @@
 
 // Include GLM
 #include <glm/glm.hpp>
-
 #include "Shader.h"
 
+//Michal Poncza
 class ShaderProgram
 {
 public:

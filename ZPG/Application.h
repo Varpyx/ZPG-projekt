@@ -7,6 +7,7 @@
 
 struct GLFWwindow;
 
+//Michal Poncza
 class Application
 {
 public:
@@ -18,7 +19,6 @@ public:
 private:
 	static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods);
 	void switchScene(size_t index);
-	void processInput(float deltaTime);
 
 	GLFWwindow* window_ = nullptr;
 	std::vector<Scene> scenes_;

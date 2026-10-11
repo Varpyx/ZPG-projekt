@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <cstdlib>
 
+//fuctions from example code
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
 
 static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
@@ -38,6 +39,7 @@ static void button_callback(GLFWwindow* window, int button, int action, int mode
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
 }
 
+//Michal Poncza
 void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
 {
 	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
@@ -130,7 +132,7 @@ void Application::initialization()
 void Application::createScenes()
 {
 
-	// reserve - preallocate memory for 4 scenes to avoid reallocations
+	// reserve - preallocate memory for 5 scenes to avoid reallocations
 	scenes_.reserve(5);
 
 	// Scena 1: suzi
@@ -233,46 +235,6 @@ void Application::createScenes()
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
 
-void Application::processInput(float deltaTime)
-{
-	/*
-	if (scenes_.empty())
-		return;
-
-	Scene& scene = scenes_[activeScene_];
-
-	const float moveSpeed = 200.0f;
-	const float rotSpeed = 2.0f;
-	const float scaleSpeed = 1.5f;
-
-	glm::vec3 move(0.0f);
-	if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) move.y += 0.01f;
-	if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) move.y -= 0.01f;
-	if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) move.x -= 0.01f;
-	if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) move.x += 0.01f;
-	if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) move.z += 0.01f;
-	if (glfwGetKey(window_, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) move.z -= 0.01f;
-	if (glm::length(move) > 0.0f)
-		scene.translateAll(move * moveSpeed * deltaTime);
-
-	float rotY = 0.0f;
-	if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS) rotY -= 1.0f;
-	if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) rotY += 1.0f;
-	if (rotY != 0.0f)
-		scene.rotateYAll(rotY * rotSpeed * deltaTime);
-
-	float rotXY = 0.0f;
-	if (glfwGetKey(window_, GLFW_KEY_Z) == GLFW_PRESS) rotXY -= 1.0f;
-	if (glfwGetKey(window_, GLFW_KEY_C) == GLFW_PRESS) rotXY += 1.0f;
-	if (rotXY != 0.0f)
-		scene.rotatePlaneXYAll(rotXY * rotSpeed * deltaTime);
-
-	float scaleDelta = 0.0f;
-	if (glfwGetKey(window_, GLFW_KEY_R) == GLFW_PRESS) scaleDelta += 1.0f;
-	if (glfwGetKey(window_, GLFW_KEY_F) == GLFW_PRESS) scaleDelta -= 1.0f;
-	if (scaleDelta != 0.0f)
-		scene.scaleAll(scaleDelta * scaleSpeed * deltaTime);*/
-}
 
 void Application::run()
 {
@@ -286,8 +248,6 @@ void Application::run()
 		double currentTime = glfwGetTime();
 		float deltaTime = static_cast<float>(currentTime - lastTime);
 		lastTime = currentTime;
-
-		//processInput(deltaTime);
 
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

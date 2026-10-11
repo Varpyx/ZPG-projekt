@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+//Michal Poncza
 class DrawableObject
 {
 public:

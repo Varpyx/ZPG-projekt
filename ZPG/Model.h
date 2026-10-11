@@ -3,6 +3,7 @@
 // Include GLAD
 #include <glad/gl.h>
 
+//Michal Poncza
 class Model
 {
 public:
