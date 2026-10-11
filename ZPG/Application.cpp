@@ -214,6 +214,7 @@ void Application::createScenes()
 	auto et = std::make_unique<CompositeTransformation>();
 	et->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 10.0f));
 	et->addTransformation(std::make_unique<Translation>(glm::vec3(-0.7f, 0.0f, 0.0f)));
+	et->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 100.0f));
 	et->addTransformation(std::make_unique<Scale>(0.1f));
 	Earth.setTransformation(std::move(et));
 
@@ -229,9 +230,13 @@ void Application::createScenes()
 	mt->addTransformation(std::move(earthPom));
 	mt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 60.0f));
 	mt->addTransformation(std::make_unique<Translation>(glm::vec3(-0.2f, 0.0f, 0.0f)));
+	mt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 50.0f));
 	mt->addTransformation(std::make_unique<Scale>(0.05f));
 	Moon.setTransformation(std::move(mt));
 
+	scene5->addDrawableObject(
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), login5,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
 
