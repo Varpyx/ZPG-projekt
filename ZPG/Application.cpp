@@ -17,6 +17,7 @@
 #include "Models//sun.h"
 #include "Models/earth.h"	
 #include "Models/moon.h"
+#include "Models/clock.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstdlib>
@@ -133,7 +134,7 @@ void Application::createScenes()
 {
 
 	// reserve - preallocate memory for 5 scenes to avoid reallocations
-	scenes_.reserve(5);
+	scenes_.reserve(6);
 
 	// Scena 1: suzi
 	Scene* scene1 = &scenes_.emplace_back();
@@ -238,6 +239,18 @@ void Application::createScenes()
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), login5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
+
+	Scene* scene6 = &scenes_.emplace_back();
+	ShaderProgram* clock6 = scene6->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
+	ShaderProgram* login6 = scene6->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
+
+	scene6->addDrawableObject(
+		Model(login2, sizeof(login2) / (6 * sizeof(float))), login6,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
+
+	scene6->addDrawableObject(
+		Model(clockModel, 44826, 9), clock6,
+		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 

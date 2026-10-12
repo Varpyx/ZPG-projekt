@@ -16,11 +16,19 @@ Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerV
 	glGenVertexArrays(1, &vao_); //generate the VAO
 	glBindVertexArray(vao_); //bind the VAO
 	glEnableVertexAttribArray(0); //enable vertex attributes
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	// index, number of components, data type, normalized, vertex stride, offset
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+
+	if (floatPerVertex >= 6) {
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	}
+
+	if (floatPerVertex >= 9) {
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,floatPerVertex * sizeof(float),(GLvoid*)(6 * sizeof(float)));
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
 
 void Model::draw() const
