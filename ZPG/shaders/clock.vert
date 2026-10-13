@@ -23,14 +23,14 @@ void main()
         float s = sin(angleSeconds);
         pos.x = position.x * c - position.y * s;
         pos.y = position.x * s + position.y * c;
-    } else if (color == vec3(0.0, 0.0, 1.0)){ //minutes
-        float c = cos(angleMinutes);
-        float s = sin(angleMinutes);
-        pos.x = position.x * c - position.y * s;
-        pos.y = position.x * s + position.y * c;
-    } else if (color == vec3(0.0, 1.0, 0.0)){ //hours
+    } else if (color == vec3(0.0, 0.0, 1.0)){ //hours
         float c = cos(angleHours);
         float s = sin(angleHours);
+        pos.x = position.x * c - position.y * s;
+        pos.y = position.x * s + position.y * c;
+    } else if (color == vec3(0.0, 1.0, 0.0)){ //minutes
+        float c = cos(angleMinutes);
+        float s = sin(angleMinutes);
         pos.x = position.x * c - position.y * s;
         pos.y = position.x * s + position.y * c;
     }

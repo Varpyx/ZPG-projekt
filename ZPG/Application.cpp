@@ -32,12 +32,29 @@ static void window_iconify_callback(GLFWwindow* window, int iconified) { printf(
 static void window_size_callback(GLFWwindow* window, int width, int height) {
 	printf("resize %d, %d \n", width, height);
 	glViewport(0, 0, width, height);
+
+	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
+	if (application) {
+		application->onWindowResize(width, height);
+	}
 }
 
 static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cursor_callback \n"); }
 
 static void button_callback(GLFWwindow* window, int button, int action, int mode) {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+}
+
+void Application::onWindowResize(int width, int height)
+{
+	if (height < 0) {
+		return;
+	}
+
+	float aspect = static_cast<float>(width) / static_cast<float>(height);
+	for (auto& scene : scenes_) {
+		scene->getCamera().setAspect(aspect);
+	}
 }
 
 //Michal Poncza
@@ -132,12 +149,13 @@ void Application::initialization()
 
 void Application::createScenes()
 {
+	int w = 800, h = 600;
+	glfwGetFramebufferSize(window_, &w, &h);
+	float aspect = (h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 4.0f / 3.0f;
 
-	// reserve - preallocate memory for 5 scenes to avoid reallocations
-	scenes_.reserve(6);
-
-	// Scena 1: suzi
-	Scene* scene1 = &scenes_.emplace_back();
+	// Scene 1: suzi
+	Scene* scene1 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
 	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene1->addDrawableObject(
@@ -148,7 +166,8 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	// Scena 2: sphere
-	Scene* scene2 = &scenes_.emplace_back();
+	Scene* scene2 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene2->addDrawableObject(
@@ -159,7 +178,8 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	// Scena 3: bushes and trees
-	Scene* scene3 = &scenes_.emplace_back();
+	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -192,14 +212,16 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
 	//Scena 4: login
-	Scene* scene4 = &scenes_.emplace_back();
+	Scene* scene4 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
 	ShaderProgram* loginShader4 = scene4->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene4->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader4,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	//Scene 5: planets
-	Scene* scene5 = &scenes_.emplace_back();
+	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
 
@@ -240,7 +262,8 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 
-	Scene* scene6 = &scenes_.emplace_back();
+	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(
+		Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* clock6 = scene6->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 	ShaderProgram* login6 = scene6->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
@@ -270,7 +293,7 @@ void Application::run()
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Scene& scene = scenes_[activeScene_];
+		Scene& scene = *scenes_[activeScene_];
 		scene.update(deltaTime);
 		scene.draw();
 

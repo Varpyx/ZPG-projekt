@@ -37,13 +37,10 @@ glm::mat4 DrawableObject::getModelMatrix()
 	return transformation_->getModelMatrix();
 }
 
-void DrawableObject::draw()
+void DrawableObject::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	if (!shaderProgram_ || !shaderProgram_->use())
 		return;
-
-	glm::mat4 viewMatrix = glm::mat4(1.0f);
-	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 
 	//viewMatrix = glm::lookAt(glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//projectionMatrix = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.0f);
