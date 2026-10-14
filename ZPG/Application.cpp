@@ -282,13 +282,23 @@ void Application::run()
 	if (scenes_.empty())
 		return;
 
-		double lastTime = glfwGetTime();
-
+	double lastTime = glfwGetTime();
+	float speed = 2.5f;
 	while (!glfwWindowShouldClose(window_))
 	{
 		double currentTime = glfwGetTime();
 		float deltaTime = static_cast<float>(currentTime - lastTime);
 		lastTime = currentTime;
+
+		Camera& cam = scenes_[activeScene_]->getCamera();
+		       
+		const float d = speed * deltaTime;
+		if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) cam.toFront(d);
+		if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) cam.toBack(d);
+		if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) cam.toLeft(d);
+		if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) cam.toRight(d);
+		if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) cam.toUp(d);
+		if (glfwGetKey(window_, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) cam.toDown(d);
 
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -17,6 +17,13 @@ public:
 
     void setAspect(float aspect) { aspect_ = aspect; }
 
+    void toFront(float d) { eye_ += target_ * d; }
+    void toBack(float d) { eye_ -= target_ * d; }
+    void toRight(float d) { eye_ += glm::normalize(glm::cross(target_, up_)) * d; }
+    void toLeft(float d) { eye_ -= glm::normalize(glm::cross(target_, up_)) * d; }
+	void toUp(float d) { eye_ += up_ * d; }
+	void toDown(float d) { eye_ -= up_ * d; }
+
 private:
     glm::vec3 eye_;
     glm::vec3 target_;
