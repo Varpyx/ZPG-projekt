@@ -27,7 +27,7 @@ static void error_callback(int error, const char* description) { fputs(descripti
 
 static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
 
-static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
+static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n");}
 
 static void window_size_callback(GLFWwindow* window, int width, int height) {
 	printf("resize %d, %d \n", width, height);
@@ -39,7 +39,28 @@ static void window_size_callback(GLFWwindow* window, int width, int height) {
 	}
 }
 
-static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cursor_callback \n"); }
+static void cursor_callback(GLFWwindow* window, double x, double y) { 
+	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
+	if (application) {
+		application->onCursorPos(x, y);
+	}
+}
+void Application::onCursorPos(double x, double y) {
+	if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		float xoffset = static_cast<float>(x - lastX_);
+		float yoffset = static_cast<float>(y - lastY_);
+
+		lastX_ = x;
+		lastY_ = y;
+
+		Camera& cam = scenes_[activeScene_]->getCamera();
+		cam.processMouse(xoffset, yoffset);
+	} else {
+		lastX_ = x;
+		lastY_ = y;
+	}
+}
 
 static void button_callback(GLFWwindow* window, int button, int action, int mode) {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
@@ -263,7 +284,7 @@ void Application::createScenes()
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 
 	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+		Camera(glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3(0.0f, 0.0f, 1.0f), aspect))).get();
 	ShaderProgram* clock6 = scene6->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 	ShaderProgram* login6 = scene6->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 

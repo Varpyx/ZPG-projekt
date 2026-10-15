@@ -24,6 +24,8 @@ public:
 	void toUp(float d) { eye_ += up_ * d; }
 	void toDown(float d) { eye_ -= up_ * d; }
 
+    void processMouse(float x, float y);
+
 private:
     glm::vec3 eye_;
     glm::vec3 target_;
@@ -33,4 +35,8 @@ private:
     float aspect_;
     float near_;
     float far_;
+
+    float fi_; 
+	float alpha_;
+	float sens_ = 0.1f;
 };

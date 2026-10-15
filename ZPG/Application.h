@@ -18,6 +18,7 @@ public:
 	void run();
 
 	void onWindowResize(int width, int height);
+	void onCursorPos(double x, double y);
 
 private:
 	static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods);
@@ -26,4 +27,7 @@ private:
 	GLFWwindow* window_ = nullptr;
 	std::vector<std::unique_ptr<Scene>> scenes_;
 	size_t activeScene_ = 0;
+
+	double lastX_ = 400.0;
+	double lastY_ = 300.0;
 };
