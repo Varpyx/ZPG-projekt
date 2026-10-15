@@ -284,7 +284,7 @@ void Application::createScenes()
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 
 	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3(0.0f, 0.0f, 1.0f), aspect))).get();
+		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* clock6 = scene6->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 	ShaderProgram* login6 = scene6->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
@@ -292,9 +292,10 @@ void Application::createScenes()
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), login6,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	scene6->addDrawableObject(
+	DrawableObject& clock = scene6->addDrawableObject(
 		Model(clockModel, 44826, 9), clock6,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	clock.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 }
 
 

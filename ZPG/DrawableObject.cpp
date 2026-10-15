@@ -42,8 +42,6 @@ void DrawableObject::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	if (!shaderProgram_ || !shaderProgram_->use())
 		return;
 
-	//viewMatrix = glm::lookAt(glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//projectionMatrix = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
 	//getting the time
 	std::time_t t = std::time(nullptr);
@@ -57,9 +55,9 @@ void DrawableObject::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 
 	// --- 2. VÝPOÈET ÚHLÙ (radiány do mínusu pro rotaci po smìru hodin) ---
 	float pi = glm::pi<float>();
-	float angleSeconds = -seconds * (2.0f * pi / 60.0f);
-	float angleMinutes = -minutes * (2.0f * pi / 60.0f);
-	float angleHours = -hours * (2.0f * pi / 12.0f);
+	float angleSeconds = seconds * (2.0f * pi / 60.0f);
+	float angleMinutes = minutes * (2.0f * pi / 60.0f);
+	float angleHours = hours * (2.0f * pi / 12.0f);
 
 	shaderProgram_->setUniform("angleSeconds", angleSeconds);
 	shaderProgram_->setUniform("angleMinutes", angleMinutes);

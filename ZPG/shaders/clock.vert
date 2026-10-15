@@ -16,24 +16,34 @@ out vec3 vertexColor;
 
 void main()
 {
+    //we are doing SCALE(-1,1,1) hardcoded
     vec3 pos = position;
+    pos.x = -pos.x;
 
+    //we are using tempX and tempY so we dont change our pos.x that is scaled
     if (color == vec3(1.0, 0.0, 0.0)){ //seconds
         float c = cos(angleSeconds);
         float s = sin(angleSeconds);
-        pos.x = position.x * c - position.y * s;
-        pos.y = position.x * s + position.y * c;
+        float tempX = pos.x * c - pos.y * s;
+        float tempY = pos.x * s + pos.y * c;
+        pos.x = tempX;
+        pos.y = tempY;
     } else if (color == vec3(0.0, 0.0, 1.0)){ //hours
         float c = cos(angleHours);
         float s = sin(angleHours);
-        pos.x = position.x * c - position.y * s;
-        pos.y = position.x * s + position.y * c;
+        float tempX = pos.x * c - pos.y * s;
+        float tempY = pos.x * s + pos.y * c;
+        pos.x = tempX;
+        pos.y = tempY;
     } else if (color == vec3(0.0, 1.0, 0.0)){ //minutes
         float c = cos(angleMinutes);
         float s = sin(angleMinutes);
-        pos.x = position.x * c - position.y * s;
-        pos.y = position.x * s + position.y * c;
+        float tempX = pos.x * c - pos.y * s;
+        float tempY = pos.x * s + pos.y * c;
+        pos.x = tempX;
+        pos.y = tempY;
     }
+
     vertexColor = color;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0);
 
