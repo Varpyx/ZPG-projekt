@@ -18,6 +18,7 @@
 #include "Models/earth.h"	
 #include "Models/moon.h"
 #include "Models/clock.h"
+#include "Models/plain.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstdlib>
@@ -36,6 +37,18 @@ static void window_size_callback(GLFWwindow* window, int width, int height) {
 	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
 	if (application) {
 		application->onWindowResize(width, height);
+	}
+}
+
+void Application::onWindowResize(int width, int height)
+{
+	if (height < 0) {
+		return;
+	}
+
+	float aspect = static_cast<float>(width) / static_cast<float>(height);
+	for (auto& scene : scenes_) {
+		scene->getCamera().setAspect(aspect);
 	}
 }
 
@@ -66,17 +79,6 @@ static void button_callback(GLFWwindow* window, int button, int action, int mode
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
 }
 
-void Application::onWindowResize(int width, int height)
-{
-	if (height < 0) {
-		return;
-	}
-
-	float aspect = static_cast<float>(width) / static_cast<float>(height);
-	for (auto& scene : scenes_) {
-		scene->getCamera().setAspect(aspect);
-	}
-}
 
 //Michal Poncza
 void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
@@ -200,37 +202,50 @@ void Application::createScenes()
 
 	// Scena 3: bushes and trees
 	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+		Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
+	ShaderProgram* treeShader = scene3->addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+	ShaderProgram* clock3 = scene3->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 
 	srand(3);
-	for(int i = 0; i < 20; i++)
+	for(int i = 0; i < 180; i++)
 	{
-		float bx = -0.7f + 2.0f * rand() / RAND_MAX;
-		float by = -0.9f + 1.2f * rand() / RAND_MAX;
+		float bx = 7.0f * rand() / RAND_MAX;
+		float bz = 7.0f * rand() / RAND_MAX;
 		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730), mesh3, glm::vec3(0.6f, 1.0f, 0.5f));
 		auto bt = std::make_unique<CompositeTransformation>();
-		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, by, 0.1f)));
+		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		bt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
 		bt->addTransformation(std::make_unique<Scale>(0.3f));
 		bush.setTransformation(std::move(bt));
 
-		bx = -0.9f + 2.0f * rand() / RAND_MAX;
-		by = -0.9f + 1.2f * rand() / RAND_MAX;
-		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), mesh3, glm::vec3(0.6f, 1.0f, 0.5f));
+		bx = 7.0f * rand() / RAND_MAX;
+		bz = 7.0f * rand() / RAND_MAX;
+		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), treeShader, glm::vec3(0.6f, 1.0f, 0.5f));
 		auto tt = std::make_unique<CompositeTransformation>();
-		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, by, 0.1f)));
+		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
 		tt->addTransformation(std::make_unique<Scale>(0.05f));
 		trees.setTransformation(std::move(tt));
 		
 	}
-	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(0.7f, 0.7f, 0.1f));
+	scene3->addDrawableObject(Model(plain, sizeof(plain) / (6 * sizeof(float))), flat3, glm::vec3(0.45f, 0.29f, 0.13f), 10.0f, glm::vec3(0.0f, 0.1f, 0.0f));
+
+	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(3.0f, 1.0f, -3.0f));
 	scene3->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader3,
-		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
+	DrawableObject& clock1 = scene3->addDrawableObject(
+		Model(clockModel, 44826, 9), clock3,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.05f, glm::vec3(2.0f, 0.3f, -4.0f));
+	clock1.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
+
+	DrawableObject& clock2 = scene3->addDrawableObject(
+		Model(clockModel, 44826, 9), clock3,
+		glm::vec3(1.0f, 1.0f, 1.0f), 0.06f, glm::vec3(3.4f, 0.3f, -3.8f));
+	clock2.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 
 	//Scena 4: login
 	Scene* scene4 = scenes_.emplace_back(std::make_unique<Scene>(

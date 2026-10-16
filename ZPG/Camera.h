@@ -1,7 +1,10 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/ext/scalar_constants.hpp>
+#include "ICameraObserver.h"
+#include <vector>
 
+class ICameraObserver;
 class Camera
 {
 public:
@@ -12,19 +15,21 @@ public:
         float nearPlane = 0.1f,
         float farPlane = 100.0f);
 
-    glm::mat4 getViewMatrix() const;
-    glm::mat4 getProjectionMatrix() const;
+    glm::mat4 getViewMatrix();
+    glm::mat4 getProjectionMatrix();
 
     void setAspect(float aspect) { aspect_ = aspect; }
 
-    void toFront(float d) { eye_ += target_ * d; }
-    void toBack(float d) { eye_ -= target_ * d; }
-    void toRight(float d) { eye_ += glm::normalize(glm::cross(target_, up_)) * d; }
-    void toLeft(float d) { eye_ -= glm::normalize(glm::cross(target_, up_)) * d; }
-	void toUp(float d) { eye_ += up_ * d; }
-	void toDown(float d) { eye_ -= up_ * d; }
+    void toFront(float d) { eye_ += target_ * d; notifyObservers(); }
+    void toBack(float d) { eye_ -= target_ * d; notifyObservers();}
+    void toRight(float d) { eye_ += glm::normalize(glm::cross(target_, up_)) * d; notifyObservers();}
+    void toLeft(float d) { eye_ -= glm::normalize(glm::cross(target_, up_)) * d; notifyObservers();}
+	void toUp(float d) { eye_ += up_ * d; notifyObservers();}
+	void toDown(float d) { eye_ -= up_ * d; notifyObservers();}
 
     void processMouse(float x, float y);
+    void addObserver(ICameraObserver* observer);
+	void notifyObservers();
 
 private:
     glm::vec3 eye_;
@@ -39,4 +44,6 @@ private:
     float fi_; 
 	float alpha_;
 	float sens_ = 0.1f;
+
+	std::vector<ICameraObserver*> observers_;
 };

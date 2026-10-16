@@ -9,12 +9,12 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& target, float aspect, floa
 
 }
 
-glm::mat4 Camera::getViewMatrix() const
+glm::mat4 Camera::getViewMatrix()
 {
     return glm::lookAt(eye_, eye_ + target_, up_);
 }
 
-glm::mat4 Camera::getProjectionMatrix() const
+glm::mat4 Camera::getProjectionMatrix()
 {
     return glm::perspective(fov_, aspect_, near_, far_);
 }
@@ -35,5 +35,19 @@ void Camera::processMouse(float x, float y)
     target_.y = std::cos(radAlpha);
 
     target_ = glm::normalize(target_);
+    notifyObservers();
+}
 
+void Camera::addObserver(ICameraObserver* observer)
+{
+	observers_.push_back(observer);
+	observer->onCameraChanged(getViewMatrix(), getProjectionMatrix());
+}
+
+void Camera::notifyObservers()
+{
+    for(ICameraObserver* observer : observers_)
+    {
+        observer->onCameraChanged(getViewMatrix(), getProjectionMatrix());
+	}
 }

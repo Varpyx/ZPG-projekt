@@ -37,12 +37,12 @@ glm::mat4 DrawableObject::getModelMatrix()
 	return transformation_->getModelMatrix();
 }
 
-void DrawableObject::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void DrawableObject::draw()
 {
 	if (!shaderProgram_ || !shaderProgram_->use())
 		return;
 
-
+	shaderProgram_->updateCameraUniforms();
 	//getting the time
 	std::time_t t = std::time(nullptr);
 	std::tm now; // Vytvoøíme normální promìnnou (už to není ukazatel)
@@ -64,8 +64,6 @@ void DrawableObject::draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	shaderProgram_->setUniform("angleHours", angleHours);
 
 	shaderProgram_->setUniform("modelMatrix", getModelMatrix());
-	shaderProgram_->setUniform("viewMatrix", viewMatrix);
-	shaderProgram_->setUniform("projectionMatrix", projectionMatrix);
 	shaderProgram_->setUniform("fragmentColor", color_);
 
 	model_.draw();

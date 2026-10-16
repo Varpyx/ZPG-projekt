@@ -2,7 +2,6 @@
 
 uniform vec3 fragmentColor;
 
-in vec3 vertexColor;
 out vec4 FragColor;
 
 void main()

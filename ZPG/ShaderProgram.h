@@ -6,13 +6,17 @@
 // Include GLM
 #include <glm/glm.hpp>
 #include "Shader.h"
+#include "ICameraObserver.h"
 
 //Michal Poncza
-class ShaderProgram
+class ShaderProgram : public ICameraObserver
 {
 public:
 	ShaderProgram(const char* vertexFile, const char* fragmentFile);
 	bool use() const;
+
+	void onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) override;
+	void updateCameraUniforms();
 
 	void setUniform(const char* name, float value);
 	void setUniform(const char* name, int value);
@@ -23,4 +27,8 @@ private:
 	Shader vertexShader_;
 	Shader fragmentShader_;
 	GLuint id_ = 0;
+
+	glm::mat4 viewMatrix_ = glm::mat4(1.0f);
+	glm::mat4 projectionMatrix_ = glm::mat4(1.0f);
+	bool camChanged_ = true;
 };
