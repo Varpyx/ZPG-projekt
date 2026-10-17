@@ -43,17 +43,18 @@ void DrawableObject::draw()
 		return;
 
 	shaderProgram_->updateCameraUniforms();
+
 	//getting the time
 	std::time_t t = std::time(nullptr);
-	std::tm now; // Vytvoøíme normální promìnnou (už to není ukazatel)
+	std::tm now;
 	localtime_s(&now, &t);
 
-	// Plynulý výpoèet (aby se ruèièka neposunula jen trhnutím každou minutu/hodinu)
+	// calc for the smooth effect
 	float seconds = now.tm_sec;
 	float minutes = now.tm_min + (seconds / 60.0f);
 	float hours = (now.tm_hour % 12) + (minutes / 60.0f);
 
-	// --- 2. VÝPOÈET ÚHLÙ (radiány do mínusu pro rotaci po smìru hodin) ---
+	// calc the angles
 	float pi = glm::pi<float>();
 	float angleSeconds = seconds * (2.0f * pi / 60.0f);
 	float angleMinutes = minutes * (2.0f * pi / 60.0f);

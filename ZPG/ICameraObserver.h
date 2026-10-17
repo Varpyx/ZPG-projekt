@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
+//Michal Poncza
 class ICameraObserver
 {
 public:

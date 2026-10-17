@@ -16,13 +16,15 @@ DrawableObject& Scene::addDrawableObject(Model model, ShaderProgram* shaderProgr
 
 void Scene::update(float deltaTime)
 {
-	for (DrawableObject& object : objects_)
+	for (DrawableObject& object : objects_) {
 		object.update(deltaTime);
+	}
 }
 
 void Scene::draw()
 {
-	for (DrawableObject& object : objects_)
+	for (DrawableObject& object : objects_) {
 		object.draw();
+	}
 }
 

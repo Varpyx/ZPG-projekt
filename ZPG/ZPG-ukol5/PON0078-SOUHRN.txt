@@ -1,0 +1,5 @@
+1. Splněno - Přidána kamera, používá pohlednovou a projekční matici, které se pošlou do vert a vynásobí
+2. Splněno - pohyb WASD + space a ctrl (nahoru/dolů), pravé tlačítko myši odemkne rozhlížení
+3. Splněno - Hodiny vykresleny pomocí jednoho draw callu. V draw se spočítají podle aktualního času uhly a pošlou do vert. Ve vert používame scale (-1,1,1) a nastavime podle barev každé ručičce její barvu a posun. Ve frag už jen hledame barvy a překreslíme na naše požadovane.
+4. Splněno - ve smyčce generujeme 180 stromu, 2 hodiny, login a slunce. Stromy maji nahodnou zelenou
+5. Splněno - vytvořena třída ICameraObserver, shader program z ní dědí, Camera má vektor těchto posluchačů. při jakekoliv změně se zavola metoda ktera dá vědět shader programu že se něco změnilo. 

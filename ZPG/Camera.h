@@ -4,16 +4,12 @@
 #include "ICameraObserver.h"
 #include <vector>
 
-class ICameraObserver;
+//Michal Poncza
 class Camera
 {
 public:
-    Camera(const glm::vec3& eye = glm::vec3(0.0f, 0.0f, 3.0f),
-        const glm::vec3& target = glm::vec3(0.0f, 0.0f, -1.0f),
-        float aspect = 4.0f / 3.0f,
-        float fovRadians = glm::radians(60.0f),
-        float nearPlane = 0.1f,
-        float farPlane = 100.0f);
+    Camera(const glm::vec3& eye = glm::vec3(0.0f, 0.0f, 3.0f), const glm::vec3& target = glm::vec3(0.0f, 0.0f, -1.0f),float aspect = 4.0f / 3.0f,
+        float fovRadians = glm::radians(60.0f), float nearPlane = 0.1f, float farPlane = 100.0f);
 
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
@@ -43,7 +39,7 @@ private:
 
     float fi_; 
 	float alpha_;
-	float sens_ = 0.1f;
+	float sens_ = 0.2f;
 
 	std::vector<ICameraObserver*> observers_;
 };

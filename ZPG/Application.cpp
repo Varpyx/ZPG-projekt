@@ -177,8 +177,7 @@ void Application::createScenes()
 	float aspect = (h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 4.0f / 3.0f;
 
 	// Scene 1: suzi
-	Scene* scene1 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
+	Scene* scene1 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
 	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene1->addDrawableObject(
@@ -188,9 +187,8 @@ void Application::createScenes()
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader1,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// Scena 2: sphere
-	Scene* scene2 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+	// Scene 2: sphere
+	Scene* scene2 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene2->addDrawableObject(
@@ -200,9 +198,8 @@ void Application::createScenes()
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader2,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// Scena 3: bushes and trees
-	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+	// Scene 3: bushes and trees
+	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -223,7 +220,14 @@ void Application::createScenes()
 
 		bx = 7.0f * rand() / RAND_MAX;
 		bz = 7.0f * rand() / RAND_MAX;
-		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), treeShader, glm::vec3(0.6f, 1.0f, 0.5f));
+
+		//get random green
+		float r = 0.2f + 0.3f * (rand() / (float)RAND_MAX); // 0.2 - 0.5
+		float g = 0.6f + 0.4f * (rand() / (float)RAND_MAX); // 0.6 - 1.0
+		float b = 0.1f + 0.2f * (rand() / (float)RAND_MAX); // 0.1 - 0.3
+		glm::vec3 randomGreen(r, g, b);
+
+		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), treeShader, randomGreen);
 		auto tt = std::make_unique<CompositeTransformation>();
 		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
@@ -247,17 +251,15 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.06f, glm::vec3(3.4f, 0.3f, -3.8f));
 	clock2.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 
-	//Scena 4: login
-	Scene* scene4 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
+	//Scene 4: login
+	Scene* scene4 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();	
 	ShaderProgram* loginShader4 = scene4->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	scene4->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader4,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	//Scene 5: planets
-	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
 
@@ -296,10 +298,9 @@ void Application::createScenes()
 	scene5->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), login5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
-	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 
-	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(
-		Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+	//scene 6: clock
+	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* clock6 = scene6->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 	ShaderProgram* login6 = scene6->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
@@ -311,6 +312,8 @@ void Application::createScenes()
 		Model(clockModel, 44826, 9), clock6,
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 	clock.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
+	
+	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
 
 
