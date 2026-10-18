@@ -30,4 +30,5 @@ private:
 
 	double lastX_ = 400.0;
 	double lastY_ = 300.0;
+	float aspect_ = 4.0f / 3.0f;
 };
