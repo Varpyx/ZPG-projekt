@@ -16,7 +16,7 @@ void main()
 {
     worldPos = vec3(modelMatrix* vec4(vp, 1.0));
     //worldNorm = vn.xyz / vn.w;
-    worldNorm = vn;
+    worldNorm = mat3(modelMatrix) * vn;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vp, 1.0);
 
 }

@@ -317,22 +317,22 @@ void Application::createScenes()
 	glm::vec3 cameraDir = glm::normalize(targetPos - cameraPos);
 
 	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
-
+	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f));
 	ShaderProgram* ball7 = scene7->addShaderProgram("shaders/ball.vert", "shaders/ball.frag");
 
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	Scene* scene8 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
-
+	scene8->addLight(glm::vec3(0.0f, 2.0f, 0.0f));
 	ShaderProgram* ball8 = scene8->addShaderProgram("shaders/phong.vert", "shaders/phong.frag");
 
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }

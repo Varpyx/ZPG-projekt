@@ -67,15 +67,6 @@ void DrawableObject::draw()
 	shaderProgram_->setUniform("modelMatrix", getModelMatrix());
 	shaderProgram_->setUniform("fragmentColor", color_);
 
-
-	glm::vec3 lightDir = glm::vec3(0.0f, 0.0f, 0.0f);              
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); 
-	glm::vec4 ambientColor = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-
-	shaderProgram_->setUniform("lightPos", lightDir);
-	shaderProgram_->setUniform("lightColor", lightColor);
-	shaderProgram_->setUniform("ambient", ambientColor);
-
 	model_.draw();
 }
 
