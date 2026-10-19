@@ -256,17 +256,18 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	//Scene 5: planets
-	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
-	ShaderProgram* mesh5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
+	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
+	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/planets.vert", "shaders/planets.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
 
 	DrawableObject& Sun = scene5->addDrawableObject(
-		Model(sun, 11520, 9), mesh5,
+		Model(sun, 11520, 9), planets5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
 
 	
 	DrawableObject& Earth = scene5->addDrawableObject(
-		Model(earth, 11520, 9), mesh5,
+		Model(earth, 11520, 9), planets5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto et = std::make_unique<CompositeTransformation>();
@@ -277,7 +278,7 @@ void Application::createScenes()
 	Earth.setTransformation(std::move(et));
 
 	DrawableObject& Moon = scene5->addDrawableObject(
-		Model(moon, 11520, 9), mesh5,
+		Model(moon, 11520, 9), planets5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.05f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto earthPom = std::make_unique<CompositeTransformation>();
