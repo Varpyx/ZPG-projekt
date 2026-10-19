@@ -26,7 +26,7 @@ public:
     void processMouse(float x, float y);
     void addObserver(ICameraObserver* observer);
 	void notifyObservers();
-
+    glm::vec3 getCameraPosition() { return eye_; }
 private:
     glm::vec3 eye_;
     glm::vec3 target_;

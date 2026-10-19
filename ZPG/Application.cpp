@@ -310,6 +310,30 @@ void Application::createScenes()
 		glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 	clock.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 	
+
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f); 
+
+	glm::vec3 cameraDir = glm::normalize(targetPos - cameraPos);
+
+	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
+
+	ShaderProgram* ball7 = scene7->addShaderProgram("shaders/ball.vert", "shaders/ball.frag");
+
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+
+	Scene* scene8 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
+
+	ShaderProgram* ball8 = scene8->addShaderProgram("shaders/phong.vert", "shaders/phong.frag");
+
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
+	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(1.0f, 0.6f, 0.0f), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
 
@@ -321,6 +345,7 @@ void Application::run()
 
 	double lastTime = glfwGetTime();
 	float speed = 2.5f;
+	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window_))
 	{
 		double currentTime = glfwGetTime();

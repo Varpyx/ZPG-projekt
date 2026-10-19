@@ -41,13 +41,13 @@ void Camera::processMouse(float x, float y)
 void Camera::addObserver(ICameraObserver* observer)
 {
 	observers_.push_back(observer);
-	observer->onCameraChanged(getViewMatrix(), getProjectionMatrix());
+	observer->onCameraChanged(getViewMatrix(), getProjectionMatrix(), getCameraPosition());
 }
 
 void Camera::notifyObservers()
 {
     for(ICameraObserver* observer : observers_)
     {
-        observer->onCameraChanged(getViewMatrix(), getProjectionMatrix());
+        observer->onCameraChanged(getViewMatrix(), getProjectionMatrix(), getCameraPosition());
 	}
 }

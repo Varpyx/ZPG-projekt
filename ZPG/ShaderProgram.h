@@ -15,7 +15,7 @@ public:
 	ShaderProgram(const char* vertexFile, const char* fragmentFile);
 	bool use() const;
 
-	void onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) override;
+	void onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix,glm::vec3 cameraPos) override;
 	void updateCameraUniforms();
 
 	void setUniform(const char* name, float value);
@@ -30,5 +30,6 @@ private:
 
 	glm::mat4 viewMatrix_ = glm::mat4(1.0f);
 	glm::mat4 projectionMatrix_ = glm::mat4(1.0f);
+	glm::vec3 cameraPos_ = glm::vec3(0.0f, 0.0f, 3.0f);
 	bool camChanged_ = true;
 };

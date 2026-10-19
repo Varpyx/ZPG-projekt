@@ -37,10 +37,11 @@ bool ShaderProgram::use() const
 	return true;
 }
 
-void ShaderProgram::onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void ShaderProgram::onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3 cameraPos)
 {
 	viewMatrix_ = viewMatrix;
 	projectionMatrix_ = projectionMatrix;
+	cameraPos_ = cameraPos;
 	camChanged_ = true;
 }
 
@@ -50,6 +51,7 @@ void ShaderProgram::updateCameraUniforms()
 	{
 		setUniform("viewMatrix", viewMatrix_);
 		setUniform("projectionMatrix", projectionMatrix_);
+		setUniform("cameraPos", cameraPos_);
 		camChanged_ = false;
 	}
 }
