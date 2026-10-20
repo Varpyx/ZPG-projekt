@@ -14,7 +14,7 @@ public:
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
 
-    void setAspect(float aspect) { aspect_ = aspect; }
+    void setAspect(float aspect) { aspect_ = aspect; notifyObservers();}
 
     void toFront(float d) { eye_ += target_ * d; notifyObservers(); }
     void toBack(float d) { eye_ -= target_ * d; notifyObservers();}

@@ -257,12 +257,13 @@ void Application::createScenes()
 
 	//Scene 5: planets
 	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
-	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/planets.vert", "shaders/planets.frag");
+	ShaderProgram* planets_mesh = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
 
 	DrawableObject& Sun = scene5->addDrawableObject(
-		Model(sun, 11520, 9), planets5,
+		Model(sun, 11520, 9), planets_mesh,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.2f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
 
 	
@@ -319,7 +320,7 @@ void Application::createScenes()
 
 	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
 	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f));
-	ShaderProgram* ball7 = scene7->addShaderProgram("shaders/ball.vert", "shaders/ball.frag");
+	ShaderProgram* ball7 = scene7->addShaderProgram("shaders/light.vert", "shaders/ball.frag");
 
 	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
 	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -327,8 +328,8 @@ void Application::createScenes()
 	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	Scene* scene8 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
-	scene8->addLight(glm::vec3(0.0f, 2.0f, 0.0f));
-	ShaderProgram* ball8 = scene8->addShaderProgram("shaders/phong.vert", "shaders/phong.frag");
+	scene8->addLight(glm::vec3(0.0f, 0.0f, 0.0f));
+	ShaderProgram* ball8 = scene8->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
 
 	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
 	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
