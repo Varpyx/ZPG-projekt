@@ -19,6 +19,7 @@
 #include "Models/moon.h"
 #include "Models/clock.h"
 #include "Models/plain.h"
+#include "Models/ufo.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstdlib>
@@ -261,6 +262,7 @@ void Application::createScenes()
 	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/planets.vert", "shaders/planets.frag");
 	ShaderProgram* planets_mesh = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
+	ShaderProgram* ufo5 = scene5->addShaderProgram("shaders/ufo.vert", "shaders/ufo.frag");
 
 	DrawableObject& Sun = scene5->addDrawableObject(
 		Model(sun, 11520, 9), planets_mesh,
@@ -297,6 +299,17 @@ void Application::createScenes()
 	scene5->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), login5,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
+
+	DrawableObject& Ufo = scene5->addDrawableObject(
+		Model(ufo, sizeof(ufo) / (9 * sizeof(float)), 9), ufo5,
+		glm::vec3(0.4f, 0.5f, 1.0f), 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+	auto ut = std::make_unique<CompositeTransformation>();
+	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 20.0f));
+	ut->addTransformation(std::make_unique<Translation>(glm::vec3(-0.8f, 0.0f, 0.0f)));
+	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 100.0f));
+	ut->addTransformation(std::make_unique<Scale>(0.05f));
+	Ufo.setTransformation(std::move(ut));
 
 	//scene 6: clock
 	Scene* scene6 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
