@@ -7,7 +7,6 @@ out vec4 fragColor;
 uniform vec3 lightPos;   
 uniform vec4 lightColor; 
 uniform vec4 ambient;
-
 uniform vec3 fragmentColor;
 
 void main(void)
@@ -15,7 +14,10 @@ void main(void)
     vec3 lightDir = lightPos - worldPos;
     
     float diff = max(dot(normalize(lightDir), normalize(worldNorm)), 0.0);
-    vec4 objectColor = vec4(fragmentColor, 1.0);
+    vec3 diffuse = diff * lightColor.rgb;
+
+    vec3 amb = ambient.rgb;
     
-    fragColor = ambient + (diff * objectColor * lightColor);
+    vec3 result = (amb + diffuse) * fragmentColor;
+    fragColor = vec4(result, 1.0);
 }

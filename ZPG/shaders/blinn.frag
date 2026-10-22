@@ -1,0 +1,39 @@
+#version 330 core
+
+in vec3 worldPos;
+in vec3 worldNorm;
+out vec4 fragColor;
+
+uniform vec3 lightPos;   
+uniform vec3 cameraPos;
+uniform vec4 lightColor; 
+uniform vec4 ambient;
+
+uniform vec3 fragmentColor;
+
+void main(void)
+{
+    // norm vectors
+    vec3 norm = normalize(worldNorm);
+    vec3 lightDir = normalize(lightPos - worldPos);
+    vec3 viewDir = normalize(cameraPos - worldPos);
+
+    //hlafway vector
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+
+    // diffuse
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor.rgb * fragmentColor;
+
+    // spec
+    float spec = pow(max(dot(halfwayDir, norm), 0.0), 64.0);
+    vec3 specular = spec * lightColor.rgb; 
+
+    // ambient
+    vec3 amb = ambient.rgb * fragmentColor;
+
+    //I = Ia + Id + Is
+    vec3 result = amb + diffuse + specular;
+
+    fragColor = vec4(result, 1.0);
+}

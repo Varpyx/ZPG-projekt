@@ -307,7 +307,7 @@ void Application::createScenes()
 	auto ut = std::make_unique<CompositeTransformation>();
 	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 20.0f));
 	ut->addTransformation(std::make_unique<Translation>(glm::vec3(-0.8f, 0.0f, 0.0f)));
-	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 100.0f));
+	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 100.0f));
 	ut->addTransformation(std::make_unique<Scale>(0.05f));
 	Ufo.setTransformation(std::move(ut));
 
@@ -332,22 +332,16 @@ void Application::createScenes()
 	glm::vec3 cameraDir = glm::normalize(targetPos - cameraPos);
 
 	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
-	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f));
-	ShaderProgram* ball7 = scene7->addShaderProgram("shaders/light.vert", "shaders/ball.frag");
+	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	ShaderProgram* ball1 = scene7->addShaderProgram("shaders/light.vert", "shaders/diffuse.frag");
+	ShaderProgram* ball2 = scene7->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
+	ShaderProgram* ball3 = scene7->addShaderProgram("shaders/light.vert", "shaders/ambient.frag");
+	ShaderProgram* ball4 = scene7->addShaderProgram("shaders/light.vert", "shaders/blinn.frag");
 
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
-	scene7->addDrawableObject(Model(sphere, 2880), ball7, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
-
-	Scene* scene8 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
-	scene8->addLight(glm::vec3(0.0f, 0.0f, 0.0f));
-	ShaderProgram* ball8 = scene8->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
-
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
-	scene8->addDrawableObject(Model(sphere, 2880), ball8, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball1, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball2, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball3, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
+	scene7->addDrawableObject(Model(sphere, 2880), ball4, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }

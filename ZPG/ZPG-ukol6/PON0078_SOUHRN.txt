@@ -1,0 +1,3 @@
+1. Splněno - Vytvořeny 4 různe frag prgramy, pro každé osvětlení
+2. Splněno - Slunce používá konstaní shader, země, měsíc a ufo phongův osvětlovací model.
+3. Splněno - 4 koule ve scéně, každá má jiné osvětlení. Reakce na změnu okna funguje, díky přepočtu aspectu při změně velikosti okna.
