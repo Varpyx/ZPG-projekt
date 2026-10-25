@@ -81,8 +81,7 @@ static void button_callback(GLFWwindow* window, int button, int action, int mode
 }
 
 
-//Michal Poncza
-void Application::keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
+static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
 {
 	Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
 	if (!application)
@@ -150,7 +149,7 @@ void Application::initialization()
 
 	// Callback gets to instance Application bcs of pointer
 	glfwSetWindowUserPointer(window_, this);
-	glfwSetKeyCallback(window_, Application::keyCallback);
+	glfwSetKeyCallback(window_, keyCallback);
 
 	glfwSetCursorPosCallback(window_, cursor_callback);
 
@@ -258,11 +257,11 @@ void Application::createScenes()
 
 	//Scene 5: planets
 	Scene* scene5 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
-	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/planets.vert", "shaders/planets.frag");
 	ShaderProgram* planets_mesh = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");	
-	ShaderProgram* ufo5 = scene5->addShaderProgram("shaders/ufo.vert", "shaders/ufo.frag");
+	ShaderProgram* ufo5 = scene5->addShaderProgram("shaders/ufo.vert", "shaders/phong.frag");
 
 	DrawableObject& Sun = scene5->addDrawableObject(
 		Model(sun, 11520, 9), planets_mesh,
@@ -306,9 +305,9 @@ void Application::createScenes()
 
 	auto ut = std::make_unique<CompositeTransformation>();
 	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 20.0f));
-	ut->addTransformation(std::make_unique<Translation>(glm::vec3(-0.8f, 0.0f, 0.0f)));
+	ut->addTransformation(std::make_unique<Translation>(glm::vec3(0.4f, 0.0f, 0.0f)));
 	ut->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 100.0f));
-	ut->addTransformation(std::make_unique<Scale>(0.05f));
+	ut->addTransformation(std::make_unique<Scale>(0.02f));
 	Ufo.setTransformation(std::move(ut));
 
 	//scene 6: clock
@@ -326,22 +325,20 @@ void Application::createScenes()
 	clock.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 	
 
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f); 
-
-	glm::vec3 cameraDir = glm::normalize(targetPos - cameraPos);
-
-	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(cameraPos, cameraDir, aspect_))).get();
+	//scene 7: light
+	Scene* scene7 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
 	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	ShaderProgram* ball1 = scene7->addShaderProgram("shaders/light.vert", "shaders/diffuse.frag");
 	ShaderProgram* ball2 = scene7->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
 	ShaderProgram* ball3 = scene7->addShaderProgram("shaders/light.vert", "shaders/ambient.frag");
 	ShaderProgram* ball4 = scene7->addShaderProgram("shaders/light.vert", "shaders/blinn.frag");
+	ShaderProgram* login7 = scene7->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
 	scene7->addDrawableObject(Model(sphere, 2880), ball1, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, 1.0f, 0.0f));
 	scene7->addDrawableObject(Model(sphere, 2880), ball2, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(1.0f, 0.0f, 0.0f));
 	scene7->addDrawableObject(Model(sphere, 2880), ball3, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
 	scene7->addDrawableObject(Model(sphere, 2880), ball4, glm::vec3(0.385, 0.647, 0.812), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
+	scene7->addDrawableObject(Model(login2, sizeof(login2) / (6 * sizeof(float))), login7, glm::vec3(1.0f, 1.0f, 1.0f), 0.3f, glm::vec3(1.8f, -0.8f, 0.0f));
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes_.size(), scenes_.size());
 }
