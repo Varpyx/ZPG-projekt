@@ -15,8 +15,9 @@ out vec3 vertexColor;
 void main()
 {
     worldPos = vec3(modelMatrix* vec4(vp, 1.0));
-    //worldNorm = vn.xyz / vn.w;
-    worldNorm = mat3(modelMatrix) * vn;
+    mat3 normalMatrix = mat3(transpose(inverse(modelMatrix)));
+
+    worldNorm = normalize(normalMatrix * vn);
     vertexColor = vc;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vp, 1.0);
 
