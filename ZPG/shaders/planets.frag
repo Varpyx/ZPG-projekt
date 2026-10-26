@@ -20,7 +20,7 @@ void main(void)
 	vec3 viewDir = normalize(cameraPos - worldPos.xyz);
 	vec3 reflectDir = reflect(-lightDir, norm);
 
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1.0);
 
 	float diff = max(dot(norm, lightDir), 0.0);
 

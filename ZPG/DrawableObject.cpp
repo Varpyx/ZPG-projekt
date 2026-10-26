@@ -60,11 +60,19 @@ void DrawableObject::draw()
 	float angleMinutes = minutes * (2.0f * pi / 60.0f);
 	float angleHours = hours * (2.0f * pi / 12.0f);
 
+	glm::mat4 modelMatrix = {
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 5.0f
+	};
+
 	shaderProgram_->setUniform("angleSeconds", angleSeconds);
 	shaderProgram_->setUniform("angleMinutes", angleMinutes);
 	shaderProgram_->setUniform("angleHours", angleHours);
 
 	shaderProgram_->setUniform("modelMatrix", getModelMatrix());
+	//shaderProgram_->setUniform("modelMatrix", modelMatrix);
 	shaderProgram_->setUniform("fragmentColor", color_);
 
 	model_.draw();
