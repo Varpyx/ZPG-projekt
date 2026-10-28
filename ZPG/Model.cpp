@@ -3,7 +3,7 @@
 // Include GLAD
 #include <glad/gl.h>
 
-Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerVertex)
+Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerVertex, bool hasNormal, bool hasColor, bool coloreBeforeNormal)
 	: vertexCount_(vertexCount)
 {
 	// vertex buffer object (VBO)
@@ -16,17 +16,48 @@ Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerV
 	glGenVertexArrays(1, &vao_); //generate the VAO
 	glBindVertexArray(vao_); //bind the VAO
 	glEnableVertexAttribArray(0); //enable vertex attributes
+
+	GLuint offset = 0;
 	// index, number of components, data type, normalized, vertex stride, offset
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)0);
+	offset += 3;
 
-	if (floatPerVertex >= 6) {
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	//color berore normal???
+	if (coloreBeforeNormal) {
+		if (hasColor) {
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(offset * sizeof(float)));
+			offset += 3;
+		}
+		else {
+			glDisableVertexAttribArray(2);
+		}
+
+		if (hasNormal) {
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float),(GLvoid*)(offset * sizeof(float)));
+		}
+		else {
+			glDisableVertexAttribArray(1);
+		}
 	}
+	else {
+		if (hasNormal) {
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(offset * sizeof(float)));
+			offset += 3;
+		}
+		else {
+			glDisableVertexAttribArray(1);
+		}
 
-	if (floatPerVertex >= 9) {
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,floatPerVertex * sizeof(float),(GLvoid*)(6 * sizeof(float)));
+		if (hasColor) {
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float),(GLvoid*)(offset * sizeof(float)));
+		}
+		else {
+			glDisableVertexAttribArray(2);
+		}
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
