@@ -13,6 +13,7 @@ out vec3 worldNorm;
 void main()
 {
     worldPos = vec3(modelMatrix* vec4(vp, 1.0));
+    //worldPos.xyz/worldPos.w; DODělat!!!!
     mat3 normalMatrix = mat3(transpose(inverse(modelMatrix)));
 
     worldNorm = normalize(normalMatrix * vn);

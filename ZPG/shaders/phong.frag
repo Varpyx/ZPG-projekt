@@ -24,11 +24,16 @@ void main(void)
 
     // spec
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1.0);
     vec3 specular = spec * lightColor.rgb; 
 
     // ambient
     vec3 amb = ambient.rgb * fragmentColor;
+
+    // light source on the wrong side?
+    if (dot(norm, lightDir) < 0.0) {
+        specular = vec3(0.0, 0.0, 0.0);
+    }
 
     //I = Ia + Id + Is
     vec3 result = amb + diffuse + specular;

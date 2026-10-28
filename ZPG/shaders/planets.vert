@@ -18,6 +18,7 @@ void main()
     mat3 normalMatrix = mat3(transpose(inverse(modelMatrix)));
 
     worldNorm = normalize(normalMatrix * vn);
+    //worldNorm = vn;
     vertexColor = vc;
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vp, 1.0);
 
