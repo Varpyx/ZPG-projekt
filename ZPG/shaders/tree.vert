@@ -1,27 +1,30 @@
 #version 330 core
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;
+layout (location = 0) in vec3 vp;
+layout (location = 1) in vec3 vn;
+layout (location = 2) in vec3 vc;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform vec3 lightPos;  
 
-uniform vec3 fragmentColor;
-
-out float dist;
+out vec3 worldPos;
+out vec3 worldNorm;
 out vec3 vertexColor;
-out vec3 vertexNormal;
+
 void main()
 {
-    if(gl_VertexID>36443)   
-	vertexColor = fragmentColor;
-    else 
-	vertexColor = vec3(1.f, 0.f, 0.f);
-    vertexNormal = normalize(mat3(modelMatrix) * normal);
+    worldPos = vec3(modelMatrix* vec4(vp, 1.0));
+    //worldPos.xyz/worldPos.w; DODìlat!!!!
+    mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
 
-    dist = length(vec3(modelMatrix * vec4(position, 1.0)) - lightPos);
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+    if(gl_VertexID>36443)   
+	    vertexColor = vc;
+    else 
+	    vertexColor = vec3(1.f, 0.f, 0.f);    
+        worldNorm = normalize(normalMatrix * vn);
+
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vp, 1.0);
 
 }
+    

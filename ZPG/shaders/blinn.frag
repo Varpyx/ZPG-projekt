@@ -29,6 +29,11 @@ void main(void)
     float spec = pow(max(dot(halfwayDir, norm), 0.0), 64.0);
     vec3 specular = spec * lightColor.rgb; 
 
+    // light source on the wrong side?
+    if (dot(norm, lightDir) < 0.0) {
+        specular = vec3(0.0, 0.0, 0.0);
+    }
+
     // ambient
     vec3 amb = ambient.rgb * fragmentColor;
 
