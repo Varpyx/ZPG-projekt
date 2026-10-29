@@ -47,7 +47,7 @@ void main(void)
         specular = vec3(0.0, 0.0, 0.0);
     }
 
-    float att = attenuation(dist, 3.0, 0.9, 0.32);
+    float att = attenuation(dist, 2.0, 0.9, 0.82);
     //I = Ia + Id + Is
     vec3 result = amb + diffuse + specular;
 

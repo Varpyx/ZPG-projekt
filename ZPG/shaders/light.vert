@@ -15,7 +15,6 @@ out vec3 vertexColor;
 void main()
 {
     worldPos = vec3(modelMatrix* vec4(vp, 1.0));
-    //worldPos.xyz/worldPos.w; DODělat!!!!
     mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
 
     vertexColor = vc;

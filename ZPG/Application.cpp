@@ -197,11 +197,13 @@ void Application::createScenes()
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
-	scene3->addLight(glm::vec3(3.0f, 1.0f, -3.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	ShaderProgram* treeShader = scene3->addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+	ShaderProgram* bushShader = scene3->addShaderProgram("shaders/bush.vert", "shaders/tree.frag");
+	ShaderProgram* ambient = scene3->addShaderProgram("shaders/bush.vert", "shaders/diffuse.frag");
 	ShaderProgram* clock3 = scene3->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 
 	srand(3);
@@ -209,7 +211,7 @@ void Application::createScenes()
 	{
 		float bx = 7.0f * rand() / RAND_MAX;
 		float bz = 7.0f * rand() / RAND_MAX;
-		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730), mesh3, glm::vec3(0.6f, 1.0f, 0.5f));
+		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730), bushShader, glm::vec3(0.6f, 1.0f, 0.5f));
 		auto bt = std::make_unique<CompositeTransformation>();
 		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		bt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
@@ -233,9 +235,9 @@ void Application::createScenes()
 		trees.setTransformation(std::move(tt));
 		
 	}
-	scene3->addDrawableObject(Model(plain, sizeof(plain) / (6 * sizeof(float))), flat3, glm::vec3(0.45f, 0.29f, 0.13f), 10.0f, glm::vec3(0.0f, 0.1f, 0.0f));
+	scene3->addDrawableObject(Model(plain, sizeof(plain) / (6 * sizeof(float))), ambient, glm::vec3(0.45f, 0.29f, 0.13f), 10.0f, glm::vec3(0.0f, 0.1f, 0.0f));
 
-	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.2f, glm::vec3(3.0f, 1.0f, -3.0f));
+	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.02f, glm::vec3(3.0f, 0.2f, -3.0f));
 	scene3->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader3,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
