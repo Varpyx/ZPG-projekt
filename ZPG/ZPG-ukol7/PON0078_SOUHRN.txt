@@ -1,0 +1,3 @@
+1. Splněno - Na obrázku 1a jde vidět, že pouhé vynásobení normály modelovou maticí  nestačí. Je to způsobeno použitím scalu a translace - neuniformní změna měřítka. Na obrázku 1b je normála správně převedena do světového prostoru pomocí matice normál transpose(inverse(modelMatrix)), která zachovává kolmost normál i po neuniformní transformaci objektu.
+2. Splněno - Při nastavení mocniny 1 je vidět světlo i zezadu => opraveno ořezaním. Pokud je skalrní součin normály a směru světla < 0 pak nezobrazujeme. Aktualizace perspektivy a viewportu už mám hotovou z minulého ukolu.
+3. Splněno - přidan jen 1 bod světla uprostřed lesa. Na stromy a keře je aplikovan phong, na podlahu pouze difuzní shader. V shaderech je nastaven utlum s rostoucí vzdáleností.

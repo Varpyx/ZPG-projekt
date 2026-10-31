@@ -197,7 +197,7 @@ void Application::createScenes()
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
-	scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+	Light* light3 = scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.02f, 0.02f, 0.02f, 1.0f));
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -211,7 +211,7 @@ void Application::createScenes()
 	{
 		float bx = 7.0f * rand() / RAND_MAX;
 		float bz = 7.0f * rand() / RAND_MAX;
-		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730), bushShader, glm::vec3(0.6f, 1.0f, 0.5f));
+		DrawableObject& bush = scene3->addDrawableObject(Model(bushes, 8730, 6, true, false), bushShader, glm::vec3(0.6f, 1.0f, 0.5f));
 		auto bt = std::make_unique<CompositeTransformation>();
 		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		bt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
@@ -227,7 +227,7 @@ void Application::createScenes()
 		float b = 0.1f + 0.2f * (rand() / (float)RAND_MAX); // 0.1 - 0.3
 		glm::vec3 randomGreen(r, g, b);
 
-		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814), treeShader, randomGreen);
+		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814, 6, true, false), treeShader, randomGreen);
 		auto tt = std::make_unique<CompositeTransformation>();
 		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));

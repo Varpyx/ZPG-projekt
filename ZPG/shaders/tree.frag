@@ -10,8 +10,6 @@ uniform vec3 cameraPos;
 uniform vec4 lightColor; 
 uniform vec4 ambient;
 
-uniform vec3 fragmentColor;
-
 float attenuation(float d, float c, float l, float q)
 {
     // d = distance from the light to the fragment
@@ -47,7 +45,7 @@ void main(void)
         specular = vec3(0.0, 0.0, 0.0);
     }
 
-    float att = attenuation(dist, 2.0, 0.9, 0.82);
+    float att = attenuation(dist, 1.0, 0.8, 0.2);
     //I = Ia + Id + Is
     vec3 result = amb + diffuse + specular;
 
