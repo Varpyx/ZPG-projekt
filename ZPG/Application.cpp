@@ -238,17 +238,12 @@ void Application::createScenes()
 	scene3->addDrawableObject(Model(plain, sizeof(plain) / (6 * sizeof(float))), ambient, glm::vec3(0.45f, 0.29f, 0.13f), 10.0f, glm::vec3(0.0f, 0.1f, 0.0f));
 
 	scene3->addDrawableObject(Model(sphere, 2880), flat3, glm::vec3(1.0f, 0.6f, 0.0f), 0.02f, glm::vec3(3.0f, 0.2f, -3.0f));
-	scene3->addDrawableObject(
-		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader3,
-		glm::vec3(1.0f, 1.0f, 1.0f), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
-	DrawableObject& clock1 = scene3->addDrawableObject(
-		Model(clockModel, 44826, 9), clock3,
-		glm::vec3(1.0f, 1.0f, 1.0f), 0.05f, glm::vec3(2.0f, 0.3f, -4.0f));
+	scene3->addDrawableObject(Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader3, glm::vec3(1.0f, 1.0f, 1.0f), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
+
+	DrawableObject& clock1 = scene3->addDrawableObject(Model(clockModel, 44826, 9), clock3, glm::vec3(1.0f, 1.0f, 1.0f), 0.05f, glm::vec3(2.0f, 0.3f, -4.0f));
 	clock1.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 
-	DrawableObject& clock2 = scene3->addDrawableObject(
-		Model(clockModel, 44826, 9), clock3,
-		glm::vec3(1.0f, 1.0f, 1.0f), 0.06f, glm::vec3(3.4f, 0.3f, -3.8f));
+	DrawableObject& clock2 = scene3->addDrawableObject(Model(clockModel, 44826, 9), clock3, glm::vec3(1.0f, 1.0f, 1.0f), 0.06f, glm::vec3(3.4f, 0.3f, -3.8f));
 	clock2.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
 
 	//Scene 4: login
