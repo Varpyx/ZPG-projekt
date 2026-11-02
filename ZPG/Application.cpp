@@ -7,6 +7,10 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+// Include STB
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "Application.h"
 #include "Models/suzi_smooth.h"
 #include "Models/sphere.h"
@@ -189,19 +193,49 @@ void Application::createScenes()
 	Scene* scene2 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
 	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
-	scene2->addDrawableObject(
-		Model(sphere, 2880), mesh2,
-		glm::vec3(0.4f, 0.6f, 1.0f), 0.4f, glm::vec3(0.3f, 0.0f, 0.0f));
+	//scene2->addDrawableObject(Model(sphere, 2880), mesh2,glm::vec3(0.4f, 0.6f, 1.0f), 0.4f, glm::vec3(0.3f, 0.0f, 0.0f));
 	scene2->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader2,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// UV attribute demo: plain2 has 8 floats per vertex (position, normal, uv)
+	int text_width, text_height, channels;
+	stbi_set_flip_vertically_on_load(true);
+	//unsigned char* data = stbi_load("Textures/toiled.jpg", &text_width, &text_height, &channels, 4);
+	unsigned char* data = stbi_load("Textures/wooden_fence.jpg", &text_width, &text_height, &channels, 4);
+	if (!data) {
+		printf("Chyba: Nepodařilo se načíst texturu! (%s)\n", stbi_failure_reason());
+	}
+	glActiveTexture(GL_TEXTURE0);
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, text_width, text_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	stbi_image_free(data);
+
 	ShaderProgram* uvShader2 = scene2->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
+	//Set texture unit to fragment shader
+	//uvShader2->use();
+	uvShader2->setUniform("textureUnitID", 0);
+
 	DrawableObject& uvPlane = scene2->addDrawableObject(
 		Model(plain2, sizeof(plain2) / (8 * sizeof(float)), 8, true, false, false, true), uvShader2,
 		glm::vec3(1.0f), 0.5f, glm::vec3(0.0f, -0.5f, 0.0f));
 	uvPlane.addTransformation(std::make_unique<Rotation>(glm::vec3(1.0f, 0.0f, 0.0f), -90.0f));
+
+	auto etp = std::make_unique<CompositeTransformation>();
+	etp->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 10.0f));
+	etp->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, 30.0f));
+	etp->addTransformation(std::make_unique<Scale>(0.5f));
+	uvPlane.setTransformation(std::move(etp));
+
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();
