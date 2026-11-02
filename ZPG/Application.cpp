@@ -19,6 +19,7 @@
 #include "Models/moon.h"
 #include "Models/clock.h"
 #include "Models/plain.h"
+#include "Models/plain2.h"
 #include "Models/ufo.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -194,6 +195,13 @@ void Application::createScenes()
 	scene2->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), loginShader2,
 		glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
+
+	// UV attribute demo: plain2 has 8 floats per vertex (position, normal, uv)
+	ShaderProgram* uvShader2 = scene2->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
+	DrawableObject& uvPlane = scene2->addDrawableObject(
+		Model(plain2, sizeof(plain2) / (8 * sizeof(float)), 8, true, false, false, true), uvShader2,
+		glm::vec3(1.0f), 0.5f, glm::vec3(0.0f, -0.5f, 0.0f));
+	uvPlane.addTransformation(std::make_unique<Rotation>(glm::vec3(1.0f, 0.0f, 0.0f), -90.0f));
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes_.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect_))).get();

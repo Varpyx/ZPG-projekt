@@ -3,7 +3,7 @@
 // Include GLAD
 #include <glad/gl.h>
 
-Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerVertex, bool hasNormal, bool hasColor, bool coloreBeforeNormal)
+Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerVertex, bool hasNormal, bool hasColor, bool coloreBeforeNormal, bool hasUV)
 	: vertexCount_(vertexCount)
 {
 	// vertex buffer object (VBO)
@@ -36,6 +36,7 @@ Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerV
 		if (hasNormal) {
 			glEnableVertexAttribArray(1);
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float),(GLvoid*)(offset * sizeof(float)));
+			offset += 3;
 		}
 		else {
 			glDisableVertexAttribArray(1);
@@ -54,12 +55,23 @@ Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerV
 		if (hasColor) {
 			glEnableVertexAttribArray(2);
 			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float),(GLvoid*)(offset * sizeof(float)));
+			offset += 3;
 		}
 		else {
 			glDisableVertexAttribArray(2);
 		}
 	}
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	// uv coordinates (vec2)
+	if (hasUV) {
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, floatPerVertex * sizeof(float), (GLvoid*)(offset * sizeof(float)));
+	}
+	else {
+		glDisableVertexAttribArray(3);
+	}
+
+	glBindVertexArray(0);
 }
 
 void Model::draw() const
