@@ -17,7 +17,13 @@
 #include "Models/plain.h"
 #include "Models/plain2.h"
 #include "Models/ufo.h"
-
+#include "Models/EB408.h"
+#include "Models/SM_Table.h"
+#include "Models/SM_Door.h"
+#include "Models/OrangeChair.h"
+#include "Models/Fiona.h"
+#include "Models/Shrek.h"
+#include "Models/SM_Whiteboard.h"
 
 
 Material SceneBuilder::createMaterial(ShaderProgram* shaderProgram, const char* path, int textureUnit, glm::vec3 color)
@@ -41,12 +47,43 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	Scene* scene1 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
+	ShaderProgram* uvShader1 = scene1->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
+
+	Material ebMaterial = createMaterial(uvShader1, "Textures/T_EB408.png", 0, glm::vec3(1.0f));
+	Material tableMaterial = createMaterial(uvShader1, "Textures/T_Table_BaseColor.png", 0, glm::vec3(1.0f));
+	Material doorMaterial = createMaterial(uvShader1, "Textures/T_door_basecolor.png", 0, glm::vec3(1.0f));
+	Material chairMaterial = createMaterial(uvShader1, "Textures/T_OrangeChair_BaseColor.png", 0, glm::vec3(1.0f));
+	Material shrekMaterial = createMaterial(uvShader1, "Textures/shrek.png", 0, glm::vec3(1.0f));
+	Material fionaMaterial = createMaterial(uvShader1, "Textures/fiona.png", 0, glm::vec3(1.0f));
+	Material boardMaterial = createMaterial(uvShader1, "Textures/T_Whiteboard_BaseColor.png", 0, glm::vec3(1.0f));
+
 	scene1->addDrawableObject(
-		Model(suziSmooth, sizeof(suziSmooth) / (6 * sizeof(float))), createMaterial(mesh1, nullptr, 0, glm::vec3(1.0f, 0.7f, 0.2f)),
-		0.4f, glm::vec3(0.0f), 15.0f, glm::vec3(0.1f, 0.0f, 0.0f));
+		Model(SM_WhiteboardModel, SM_WhiteboardVertexCount, 8, true, false, false, true), boardMaterial,
+		0.1f, glm::vec3(-0.37f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	scene1->addDrawableObject(
+		Model(SM_EB408Model, SM_EB408VertexCount, 8, true, false, false, true), ebMaterial,
+		0.1f, glm::vec3(0.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	scene1->addDrawableObject(
+		Model(SM_TableModel, SM_TableVertexCount, 8, true, false, false, true), tableMaterial,
+		0.1f, glm::vec3(0.0f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	scene1->addDrawableObject(
+		Model(SM_DoorModel, SM_DoorVertexCount, 8, true, false, false, true), doorMaterial,
+		0.001f, glm::vec3(-0.35f, 0.0f, 0.8f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	scene1->addDrawableObject(
+		Model(OrangeChairModel, OrangeChairVertexCount, 8, true, false, false, true), chairMaterial,
+		0.1f, glm::vec3(0.2f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	DrawableObject& shrek = scene1->addDrawableObject(
+		Model(ShrekModel, ShrekVertexCount, 8, true, false, false, true), shrekMaterial,
+		0.1f, glm::vec3(0.2f,0.0f, 0.6f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	shrek.addTransformation(std::make_unique<Rotation>(glm::vec3(1.0f, 0.0f, 0.0f), 90.0f));
+	shrek.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 90.0f));
+	DrawableObject& fiona = scene1->addDrawableObject(
+		Model(FionaModel, FionaVertexCount, 8, true, false, false, true), fionaMaterial,
+		0.1f, glm::vec3(0.0f, 0.0f, 0.3f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	fiona.addTransformation(std::make_unique<Rotation>(glm::vec3(1.0f, 0.0f, 0.0f), 90.0f));
 	scene1->addDrawableObject(
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), createMaterial(loginShader1, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)),
-		0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
+		0.1f, glm::vec3(0.2f, 0.2f, 0.3f));
 
 	scene1->createSkybox(
 		"Textures/cubemap/posx.jpg",
