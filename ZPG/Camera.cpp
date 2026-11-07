@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>   
 
-Camera::Camera(const glm::vec3& eye, const glm::vec3& target, float aspect, float fovRadians, float nearPlane, float farPlane)
+Camera::Camera(glm::vec3 eye, glm::vec3 target, float aspect, float fovRadians, float nearPlane, float farPlane)
     : eye_(eye), target_(glm::normalize(target)), fov_(fovRadians), aspect_(aspect), near_(nearPlane), far_(farPlane)
 {
     alpha_ = 90.0f;

@@ -9,7 +9,7 @@ class Shader
 public:
 	Shader() = default;
 	Shader(GLenum type, const char* file);
-	GLuint getId() const { return id_; }
+	GLuint getId() { return id_; }
 
 private:
 	GLuint id_ = 0;

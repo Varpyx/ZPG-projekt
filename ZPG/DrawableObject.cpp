@@ -7,7 +7,7 @@
 #include <ctime>
 
 DrawableObject::DrawableObject(Model model, Material material,
-	const glm::vec3& color, float scale, const glm::vec3& offset, float speed, const glm::vec3& velocity)
+	float scale, glm::vec3 offset, float speed, glm::vec3 velocity)
 	: model_(model), material_(material)
 {
 	transformation_ = std::make_unique<CompositeTransformation>();
@@ -41,10 +41,10 @@ void DrawableObject::draw()
 {
 	material_.bind();
 
-	ShaderProgram* shaderProgram_ = material_.getShaderProgram();
-	if (!shaderProgram_) return;
+	ShaderProgram* shaderProgram = material_.getShaderProgram();
+	if (!shaderProgram) return;
 
-	shaderProgram_->updateCameraUniforms();
+	shaderProgram->updateCameraUniforms();
 
 	//getting the time
 	std::time_t t = std::time(nullptr);
@@ -52,9 +52,9 @@ void DrawableObject::draw()
 	localtime_s(&now, &t);
 
 	// calc for the smooth effect
-	float seconds = now.tm_sec;
-	float minutes = now.tm_min + (seconds / 60.0f);
-	float hours = (now.tm_hour % 12) + (minutes / 60.0f);
+	float seconds = static_cast<float>(now.tm_sec);
+	float minutes = static_cast<float>(now.tm_min) + (seconds / 60.0f);
+	float hours = static_cast<float>(now.tm_hour % 12) + (minutes / 60.0f);
 
 	// calc the angles
 	float pi = glm::pi<float>();
@@ -62,11 +62,11 @@ void DrawableObject::draw()
 	float angleMinutes = minutes * (2.0f * pi / 60.0f);
 	float angleHours = hours * (2.0f * pi / 12.0f);
 
-	shaderProgram_->setUniform("angleSeconds", angleSeconds);
-	shaderProgram_->setUniform("angleMinutes", angleMinutes);
-	shaderProgram_->setUniform("angleHours", angleHours);
+	shaderProgram->setUniform("angleSeconds", angleSeconds);
+	shaderProgram->setUniform("angleMinutes", angleMinutes);
+	shaderProgram->setUniform("angleHours", angleHours);
 
-	shaderProgram_->setUniform("modelMatrix", getModelMatrix());
+	shaderProgram->setUniform("modelMatrix", getModelMatrix());
 	model_.draw();
 }
 

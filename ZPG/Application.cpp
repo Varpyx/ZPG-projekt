@@ -179,7 +179,7 @@ void Application::run()
 
 		Camera& cam = scenes_[activeScene_]->getCamera();
 		       
-		const float d = speed * deltaTime;
+		float d = speed * deltaTime;
 		if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) cam.toFront(d);
 		if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) cam.toBack(d);
 		if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) cam.toLeft(d);

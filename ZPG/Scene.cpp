@@ -8,13 +8,13 @@ ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragm
 }
 
 DrawableObject& Scene::addDrawableObject(Model model, Material material,
-	const glm::vec3& color, float scale, const glm::vec3& offset, float speed, const glm::vec3& velocity)
+	float scale, glm::vec3 offset, float speed, glm::vec3 velocity)
 {
-	objects_.push_back(DrawableObject(model, material, color, scale, offset, speed, velocity));
+	objects_.push_back(DrawableObject(model, material, scale, offset, speed, velocity));
 	return objects_.back();
 }
 
-Light* Scene::addLight(const glm::vec3& position, const glm::vec4& color, const glm::vec4& ambient)
+Light* Scene::addLight(glm::vec3 position, glm::vec4 color, glm::vec4 ambient)
 {
 	lights_.push_back(std::make_unique<Light>(position, color, ambient));
 	return lights_.back().get();

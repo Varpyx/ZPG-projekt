@@ -7,6 +7,8 @@ Material::Material(ShaderProgram* shaderProgram, glm::vec3 color) : shaderProgra
 
 void Material::setTexture(Texture* texture, int textureUnit)
 {
+	if (!texture) return;
+
 	textureID_ = texture->getID();
 	textureUnit_ = textureUnit;
 }

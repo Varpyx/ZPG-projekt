@@ -12,5 +12,5 @@ public:
 	std::vector<std::unique_ptr<Scene>> buildScenes(float aspect);
 
 private:
-	Material createMaterial(ShaderProgram* shaderProgram, char* path, int textureUnit, glm::vec3 color = glm::vec3(1.0f));
+	Material createMaterial(ShaderProgram* shaderProgram, const char* path, int textureUnit, glm::vec3 color = glm::vec3(1.0f));
 };

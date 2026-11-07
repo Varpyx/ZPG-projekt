@@ -28,7 +28,7 @@ ShaderProgram::ShaderProgram(const char* vertexFile, const char* fragmentFile)
 	}
 }
 
-bool ShaderProgram::use() const
+bool ShaderProgram::use()
 {
 	if (id_ == 0)
 		return false;
@@ -75,7 +75,7 @@ void ShaderProgram::setUniform(const char* name, int value)
 	glUniform1i(location, value);
 }
 
-void ShaderProgram::setUniform(const char* name, const glm::vec3& value)
+void ShaderProgram::setUniform(const char* name, glm::vec3 value)
 {
 	GLint location = glGetUniformLocation(id_, name);
 	if (location == -1)
@@ -84,7 +84,7 @@ void ShaderProgram::setUniform(const char* name, const glm::vec3& value)
 	glUniform3fv(location, 1, &value[0]);
 }
 
-void ShaderProgram::setUniform(const char* name, const glm::mat4& value)
+void ShaderProgram::setUniform(const char* name, glm::mat4 value)
 {
 	GLint location = glGetUniformLocation(id_, name);
 	if (location == -1)
@@ -93,7 +93,7 @@ void ShaderProgram::setUniform(const char* name, const glm::mat4& value)
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void ShaderProgram::setUniform(const char* name, const glm::vec4& value)
+void ShaderProgram::setUniform(const char* name, glm::vec4 value)
 {
 	GLint location = glGetUniformLocation(id_, name);
 	if (location == -1)

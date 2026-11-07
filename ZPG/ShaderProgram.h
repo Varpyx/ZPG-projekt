@@ -13,16 +13,16 @@ class ShaderProgram : public ICameraObserver
 {
 public:
 	ShaderProgram(const char* vertexFile, const char* fragmentFile);
-	bool use() const;
+	bool use();
 
 	void onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix,glm::vec3 cameraPos) override;
 	void updateCameraUniforms();
 
 	void setUniform(const char* name, float value);
 	void setUniform(const char* name, int value);
-	void setUniform(const char* name, const glm::vec3& value);
-	void setUniform(const char* name, const glm::mat4& value);
-	void setUniform(const char* name, const glm::vec4& value);
+	void setUniform(const char* name, glm::vec3 value);
+	void setUniform(const char* name, glm::mat4 value);
+	void setUniform(const char* name, glm::vec4 value);
 
 private:
 	Shader vertexShader_;

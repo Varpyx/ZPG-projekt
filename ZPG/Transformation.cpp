@@ -24,7 +24,7 @@ void CompositeTransformation::addTransformation(std::unique_ptr<Transformation> 
 glm::mat4 CompositeTransformation::getModelMatrix()
 {
 	glm::mat4 modelMatrix(1.0f);
-	for (const auto& transformation : transformations_)
+	for (auto& transformation : transformations_)
 	{
 		modelMatrix = modelMatrix * transformation->getModelMatrix();
 	}
@@ -33,7 +33,7 @@ glm::mat4 CompositeTransformation::getModelMatrix()
 
 void CompositeTransformation::update(float deltaTime)
 {
-	for (const auto& transformation : transformations_)
+	for (auto& transformation : transformations_)
 	{
 		transformation->update(deltaTime);
 	}

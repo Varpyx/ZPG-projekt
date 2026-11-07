@@ -13,7 +13,7 @@ class DrawableObject
 {
 public:
 	DrawableObject(Model model, Material material,
-		const glm::vec3& color = glm::vec3(1.0f), float scale = 1.0f, const glm::vec3& offset = glm::vec3(0.0f), float speed = 0.0f, const glm::vec3& velocity = glm::vec3(0.0f));
+		float scale = 1.0f, glm::vec3 offset = glm::vec3(0.0f), float speed = 0.0f, glm::vec3 velocity = glm::vec3(0.0f));
 	
 	void update(float deltaTime);
 	void draw();

@@ -8,7 +8,7 @@ public:
 
 	Texture(const char* path);
 
-	GLuint getID(){ return textureID_;}
+	GLuint getID() { return textureID_; }
 	int getWidth() { return width_; }
 	int getHeight() { return height_; }
 private:

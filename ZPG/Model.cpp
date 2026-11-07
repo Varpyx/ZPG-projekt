@@ -74,7 +74,7 @@ Model::Model(const float* data, unsigned int vertexCount, unsigned int floatPerV
 	glBindVertexArray(0);
 }
 
-void Model::draw() const
+void Model::draw()
 {
 	glBindVertexArray(vao_);
 
