@@ -1,4 +1,5 @@
 #include "SceneBuilder.h"
+#include "Skybox.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -47,7 +48,15 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 		Model(login2, sizeof(login2) / (6 * sizeof(float))), createMaterial(loginShader1, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)),
 		0.1f, glm::vec3(0.8f, -0.8f, 0.0f));
 
-	// Scene 2: sphere
+	scene1->createSkybox(
+		"Textures/cubemap/posx.jpg",
+		"Textures/cubemap/negx.jpg",
+		"Textures/cubemap/posy.jpg",
+		"Textures/cubemap/negy.jpg",
+		"Textures/cubemap/posz.jpg",
+		"Textures/cubemap/negz.jpg");
+
+	// Scene 2: textures!
 	Scene* scene2 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -58,10 +67,12 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	ShaderProgram* uvShader2 = scene2->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
 	Material uvMaterial = createMaterial(uvShader2, "Textures/wooden_fence.jpg", 0, glm::vec3(1.0f));
+	Material uvMaterial2 = createMaterial(uvShader2, "Textures/toiled.jpg", 0, glm::vec3(1.0f));
 
 	DrawableObject& uvPlane = scene2->addDrawableObject(
 		Model(plain2, sizeof(plain2) / (8 * sizeof(float)), 8, true, false, false, true), uvMaterial,
 		0.5f, glm::vec3(0.0f, -0.5f, 0.0f));
+
 	uvPlane.addTransformation(std::make_unique<Rotation>(glm::vec3(1.0f, 0.0f, 0.0f), -90.0f));
 
 	auto etp = std::make_unique<CompositeTransformation>();
@@ -70,6 +81,9 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	etp->addTransformation(std::make_unique<Scale>(0.5f));
 	uvPlane.setTransformation(std::move(etp));
 
+	DrawableObject& uvPlane2 = scene2->addDrawableObject(
+		Model(plain2, sizeof(plain2) / (8 * sizeof(float)), 8, true, false, false, true), uvMaterial2,
+		0.5f, glm::vec3(0.0f, -0.5f, 0.0f));
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();

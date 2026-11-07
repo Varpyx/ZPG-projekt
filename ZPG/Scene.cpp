@@ -1,5 +1,10 @@
 #include "Scene.h"
 
+Scene::~Scene()
+{
+	delete skybox_;
+}
+
 ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragmentFile)
 {
 	programs_.push_back(std::make_unique<ShaderProgram>(vertexFile, fragmentFile));
@@ -29,6 +34,7 @@ void Scene::update(float deltaTime)
 
 void Scene::draw()
 {
+
 	for(auto& program : programs_) {
 		program->use();
 		
@@ -42,5 +48,18 @@ void Scene::draw()
 	for (DrawableObject& object : objects_) {
 		object.draw();
 	}
+}
+
+void Scene::drawSkybox()
+{
+	if(skybox_) {
+		skybox_->draw(camera_);
+	}
+}
+
+void Scene::createSkybox(const char* posX, const char* negX, const char* posY, const char* negY, const char* posZ, const char* negZ)
+{
+	delete skybox_;
+	skybox_ = new Skybox(posX, negX, posY, negY, posZ, negZ);
 }
 

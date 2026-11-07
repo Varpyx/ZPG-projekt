@@ -54,6 +54,9 @@
     <ClCompile Include="SceneBuilder.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Zdrojové soubory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -140,6 +143,9 @@
     <ClInclude Include="SceneBuilder.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ambient.frag" />
@@ -160,5 +166,7 @@
     <None Include="shaders\tree.vert" />
     <None Include="shaders\uv.frag" />
     <None Include="shaders\uv.vert" />
+    <None Include="shaders\skybox.vert" />
+    <None Include="shaders\skybox.frag" />
   </ItemGroup>
 </Project>

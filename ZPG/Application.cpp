@@ -101,6 +101,23 @@ void Application::switchScene(size_t index)
 	printf("Scene %zu\n", activeScene_ + 1);
 }
 
+void Application::processCameraInput(float deltaTime)
+{
+	if (scenes_.empty()) {
+		return;
+	}
+
+	Camera& cam = scenes_[activeScene_]->getCamera();
+	const float d = moveSpeed_ * deltaTime;
+
+	if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) cam.toFront(d);
+	if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) cam.toBack(d);
+	if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) cam.toLeft(d);
+	if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) cam.toRight(d);
+	if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) cam.toUp(d);
+	if (glfwGetKey(window_, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) cam.toDown(d);
+}
+
 void Application::initialization()
 {
 	// Initialize GLFW
@@ -122,6 +139,8 @@ void Application::initialization()
 		printf("GLAD initialization failed\n");
 		exit(EXIT_FAILURE);
 	}
+
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	// Get version info
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -170,28 +189,23 @@ void Application::run()
 
 	double lastTime = glfwGetTime();
 	float speed = 2.5f;
-	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window_))
 	{
 		double currentTime = glfwGetTime();
 		float deltaTime = static_cast<float>(currentTime - lastTime);
 		lastTime = currentTime;
 
-		Camera& cam = scenes_[activeScene_]->getCamera();
-		       
-		float d = speed * deltaTime;
-		if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) cam.toFront(d);
-		if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) cam.toBack(d);
-		if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) cam.toLeft(d);
-		if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) cam.toRight(d);
-		if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) cam.toUp(d);
-		if (glfwGetKey(window_, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) cam.toDown(d);
-
+		processCameraInput(deltaTime);		     
+		
 		// Clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Scene& scene = *scenes_[activeScene_];
 		scene.update(deltaTime);
+
+		scene.drawSkybox();
+		glClear(GL_DEPTH_BUFFER_BIT); // Clear depth buffer to draw objects in front of skybox
+
 		scene.draw();
 
 		// Display the rendered frame and process events
