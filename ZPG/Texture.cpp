@@ -4,10 +4,10 @@
 #include "Texture.h"
 #include <cstdio>
 
-Texture::Texture(char* path)
+Texture::Texture(const char* path)
 {
 	stbi_set_flip_vertically_on_load(true); //bylo tam channels misto nullptr
-	unsigned char* data = stbi_load("Textures/wooden_fence.jpg", &width_, &height_, nullptr, 4);
+	unsigned char* data = stbi_load(path, &width_, &height_, nullptr, 4);
 	if (!data) {
 		printf("Texture load failed (%s): %s\n", path, stbi_failure_reason());
 		return;

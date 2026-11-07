@@ -7,10 +7,10 @@ ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragm
 	return programs_.back().get();
 }
 
-DrawableObject& Scene::addDrawableObject(Model model, ShaderProgram* shaderProgram,
+DrawableObject& Scene::addDrawableObject(Model model, Material material,
 	const glm::vec3& color, float scale, const glm::vec3& offset, float speed, const glm::vec3& velocity)
 {
-	objects_.push_back(DrawableObject(model, shaderProgram, color, scale, offset, speed, velocity));
+	objects_.push_back(DrawableObject(model, material, color, scale, offset, speed, velocity));
 	return objects_.back();
 }
 

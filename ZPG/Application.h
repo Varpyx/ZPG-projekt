@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <vector>
 #include <memory>
+#include "SceneBuilder.h"
 
 struct GLFWwindow;
 
@@ -24,6 +25,7 @@ private:
     GLFWwindow* window_ = nullptr;  
     std::vector<std::unique_ptr<Scene>> scenes_;  
     size_t activeScene_ = 0;  
+	SceneBuilder sceneBuilder_;
 
     double lastX_ = 400.0;  
     double lastY_ = 300.0;  
