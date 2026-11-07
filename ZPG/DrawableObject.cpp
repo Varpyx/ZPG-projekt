@@ -6,9 +6,9 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <ctime>
 
-DrawableObject::DrawableObject(Model model, ShaderProgram* shaderProgram,
+DrawableObject::DrawableObject(Model model, Material material,
 	const glm::vec3& color, float scale, const glm::vec3& offset, float speed, const glm::vec3& velocity)
-	: model_(model), shaderProgram_(shaderProgram), color_(color)
+	: model_(model), material_(material)
 {
 	transformation_ = std::make_unique<CompositeTransformation>();
 	//transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, speed));
@@ -39,8 +39,10 @@ glm::mat4 DrawableObject::getModelMatrix()
 
 void DrawableObject::draw()
 {
-	if (!shaderProgram_ || !shaderProgram_->use())
-		return;
+	material_.bind();
+
+	ShaderProgram* shaderProgram_ = material_.getShaderProgram();
+	if (!shaderProgram_) return;
 
 	shaderProgram_->updateCameraUniforms();
 
@@ -65,8 +67,6 @@ void DrawableObject::draw()
 	shaderProgram_->setUniform("angleHours", angleHours);
 
 	shaderProgram_->setUniform("modelMatrix", getModelMatrix());
-	shaderProgram_->setUniform("fragmentColor", color_);
-
 	model_.draw();
 }
 

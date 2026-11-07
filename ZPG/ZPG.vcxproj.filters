@@ -45,6 +45,12 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Zdrojové soubory</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Zdrojové soubory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -77,5 +83,76 @@
     <ClInclude Include="Light.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
+    <ClInclude Include="Models\bushes.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\clock.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\earth.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\gift.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\login.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\login2.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\moon.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\plain.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\plain2.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\sphere.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\sun.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\suzi_flat.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\suzi_smooth.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\tree.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\ufo.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\ambient.frag" />
+    <None Include="shaders\basic.frag" />
+    <None Include="shaders\basic.vert" />
+    <None Include="shaders\basic2.frag" />
+    <None Include="shaders\blinn.frag" />
+    <None Include="shaders\blinn_use_color.frag" />
+    <None Include="shaders\bush.vert" />
+    <None Include="shaders\clock.frag" />
+    <None Include="shaders\clock.vert" />
+    <None Include="shaders\diffuse.frag" />
+    <None Include="shaders\light.vert" />
+    <None Include="shaders\login.frag" />
+    <None Include="shaders\phong.frag" />
+    <None Include="shaders\phong_use_color.frag" />
+    <None Include="shaders\tree.frag" />
+    <None Include="shaders\tree.vert" />
+    <None Include="shaders\uv.frag" />
+    <None Include="shaders\uv.vert" />
   </ItemGroup>
 </Project>
