@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <glm/ext/scalar_constants.hpp>
 #include "ICameraObserver.h"
 #include <vector>
 
@@ -14,14 +13,14 @@ public:
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
 
-    void setAspect(float aspect) { aspect_ = aspect; notifyObservers();}
+    void setAspect(float aspect);
 
-    void toFront(float d) { eye_ += target_ * d; notifyObservers(); }
-    void toBack(float d) { eye_ -= target_ * d; notifyObservers();}
-    void toRight(float d) { eye_ += glm::normalize(glm::cross(target_, up_)) * d; notifyObservers();}
-    void toLeft(float d) { eye_ -= glm::normalize(glm::cross(target_, up_)) * d; notifyObservers();}
-	void toUp(float d) { eye_ += up_ * d; notifyObservers();}
-	void toDown(float d) { eye_ -= up_ * d; notifyObservers();}
+    void toFront(float d);
+    void toBack(float d);
+    void toRight(float d);
+    void toLeft(float d);
+    void toUp(float d);
+    void toDown(float d);
 
     void processMouse(float x, float y);
     void addObserver(ICameraObserver* observer);

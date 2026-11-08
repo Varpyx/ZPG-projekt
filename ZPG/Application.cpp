@@ -188,7 +188,6 @@ void Application::run()
 		return;
 
 	double lastTime = glfwGetTime();
-	float speed = 2.5f;
 	while (!glfwWindowShouldClose(window_))
 	{
 		double currentTime = glfwGetTime();

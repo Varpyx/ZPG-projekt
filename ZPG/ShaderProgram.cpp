@@ -1,5 +1,5 @@
 #include "ShaderProgram.h"
-
+#include "Camera.h"
 // Include GLAD
 #include <glad/gl.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -37,11 +37,11 @@ bool ShaderProgram::use()
 	return true;
 }
 
-void ShaderProgram::onCameraChanged(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, glm::vec3 cameraPos)
+void ShaderProgram::onCameraChanged(Camera& camera)
 {
-	viewMatrix_ = viewMatrix;
-	projectionMatrix_ = projectionMatrix;
-	cameraPos_ = cameraPos;
+	viewMatrix_ = camera.getViewMatrix();
+	projectionMatrix_ = camera.getProjectionMatrix();
+	cameraPos_ = camera.getCameraPosition();
 	camChanged_ = true;
 }
 

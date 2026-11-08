@@ -11,9 +11,7 @@ class Camera;
 class Skybox
 {
 public:
-    Skybox(const char* posX, const char* negX,
-        const char* posY, const char* negY,
-        const char* posZ, const char* negZ);
+    Skybox(const char* posX, const char* negX, const char* posY, const char* negY, const char* posZ, const char* negZ);
 
     void draw(Camera& camera);
 

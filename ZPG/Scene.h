@@ -27,9 +27,7 @@ public:
 	void update(float deltaTime);
 	void draw();
 	void drawSkybox();
-	void createSkybox(const char* posX, const char* negX,
-		const char* posY, const char* negY,
-		const char* posZ, const char* negZ);
+	void createSkybox(const char* posX, const char* negX, const char* posY, const char* negY, const char* posZ, const char* negZ);
 
 	Camera& getCamera() { return camera_; }
 

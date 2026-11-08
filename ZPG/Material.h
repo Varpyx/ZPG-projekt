@@ -7,7 +7,7 @@
 class Material
 {
 public:
-	explicit Material(ShaderProgram* shaderProgram, glm::vec3 color = glm::vec3(1.0f));
+	Material(ShaderProgram* shaderProgram, glm::vec3 color = glm::vec3(1.0f));
 
 	void setTexture(Texture* texture, int textureUnit);
 	void bind();

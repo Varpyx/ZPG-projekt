@@ -89,51 +89,6 @@
     <ClInclude Include="Light.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
-    <ClInclude Include="Models\bushes.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\clock.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\earth.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\gift.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\login.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\login2.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\moon.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\plain.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\plain2.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\sphere.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\sun.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\suzi_flat.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\suzi_smooth.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\tree.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
-    <ClInclude Include="Models\ufo.h">
-      <Filter>Hlavičkové soubory</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
@@ -145,6 +100,51 @@
     </ClInclude>
     <ClInclude Include="Skybox.h">
       <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\ufo.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\tree.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\suzi_smooth.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\suzi_flat.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\sun.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\sphere.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\plain2.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\plain.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\moon.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\login2.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\login.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\gift.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\earth.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\clock.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Models\bushes.h">
+      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

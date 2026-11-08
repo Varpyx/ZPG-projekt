@@ -5,7 +5,6 @@
 #include <cstdio>
 
 #include "Camera.h"
-#include <glm/ext/matrix_transform.hpp>
 
 namespace
 {
@@ -73,7 +72,7 @@ Skybox::Skybox(const char* posX, const char* negX,
     unsigned char* data;
     for (int i = 0; i < 6; i++)
     {
-        data = stbi_load(faces[i], &width, &height, &nrChannels, 0);
+        data = stbi_load(faces[i], &width, &height, &nrChannels, 3);
         if (data)
         {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -99,10 +98,7 @@ void Skybox::draw(Camera& camera)
 {
     glDepthMask(GL_FALSE); 
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), camera.getCameraPosition());
-
     shaderProgram_.use();
-    shaderProgram_.setUniform("modelMatrix", model);
     shaderProgram_.setUniform("viewMatrix", camera.getViewMatrix());
     shaderProgram_.setUniform("projectionMatrix", camera.getProjectionMatrix());
     shaderProgram_.setUniform("skybox", 0);

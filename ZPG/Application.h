@@ -27,7 +27,7 @@ private:
     size_t activeScene_ = 0;  
 	SceneBuilder sceneBuilder_;
 
-	float moveSpeed_ = 2.5f;
+	float moveSpeed_ = 1.5f;
     double lastX_ = 400.0;  
     double lastY_ = 300.0;  
     float aspect_ = 4.0f / 3.0f;  
