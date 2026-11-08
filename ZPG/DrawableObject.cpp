@@ -1,5 +1,10 @@
  #include "DrawableObject.h"
 
+#include "Transformation/CompositeTransformation.h"
+#include "Transformation/Rotation.h"
+#include "Transformation/Scale.h"
+#include "Transformation/Translation.h"
+
 // Include GLM
 #include <glm/gtc/constants.hpp>
 #include <glm/ext/matrix_transform.hpp>

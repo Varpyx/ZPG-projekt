@@ -2,7 +2,7 @@
 
 #include "Model.h"
 #include "Material.h"
-#include "Transformation.h"
+#include "Transformation/CompositeTransformation.h"
 
 // Include GLM
 #include <glm/glm.hpp>

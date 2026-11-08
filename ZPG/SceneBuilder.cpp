@@ -25,6 +25,11 @@
 #include "Models/Shrek.h"
 #include "Models/SM_Whiteboard.h"
 
+#include "Transformation/CompositeTransformation.h"
+#include "Transformation/Rotation.h"
+#include "Transformation/Scale.h"
+#include "Transformation/Translation.h"
+
 
 Material SceneBuilder::createMaterial(ShaderProgram* shaderProgram, const char* path, int textureUnit, glm::vec3 color)
 {
@@ -43,7 +48,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 {
 	std::vector<std::unique_ptr<Scene>> scenes;
 
-	// Scene 1: suzi
+	// Scene 1: EB408 with textures!
 	Scene* scene1 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -93,7 +98,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 		"Textures/cubemap/posz.jpg",
 		"Textures/cubemap/negz.jpg");
 
-	// Scene 2: textures!
+	// Scene 2: textures on plain!
 	Scene* scene2 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");

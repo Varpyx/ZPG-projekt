@@ -1,0 +1,4 @@
+1 - Přidana class Texture pro načítaní textur, material v sobě obsahuje Texturu, která je volitelná. Každý model muže mít svou vlastní texturu.
+1c) - Přidana class Skybox - používá skybox.frag a skybox.vert. 
+
+2 - načten model EB408, do třídy dále přidan login, Shrek, Fiona, lavice, židle, tabule a dveře. Na tabuly je znázorněn shininess.

@@ -154,7 +154,10 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Transformation.cpp" />
+    <ClCompile Include="Transformation\Translation.cpp" />
+    <ClCompile Include="Transformation\Rotation.cpp" />
+    <ClCompile Include="Transformation\Scale.cpp" />
+    <ClCompile Include="Transformation\CompositeTransformation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -185,7 +188,11 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Transformation.h" />
+    <ClInclude Include="Transformation\Transformation.h" />
+    <ClInclude Include="Transformation\Translation.h" />
+    <ClInclude Include="Transformation\Rotation.h" />
+    <ClInclude Include="Transformation\Scale.h" />
+    <ClInclude Include="Transformation\CompositeTransformation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ambient.frag" />

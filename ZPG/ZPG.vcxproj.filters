@@ -16,6 +16,9 @@
     <Filter Include="Models">
       <UniqueIdentifier>{A1B2C3D4-0001-4E5F-9A8B-7C6D5E4F3A2B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Transformation">
+      <UniqueIdentifier>{A1B2C3D4-0002-4E5F-9A8B-7C6D5E4F3A2B}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,8 +42,17 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
-    <ClCompile Include="Transformation.cpp">
-      <Filter>Zdrojové soubory</Filter>
+    <ClCompile Include="Transformation\Translation.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation\Rotation.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation\Scale.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation\CompositeTransformation.cpp">
+      <Filter>Transformation</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Zdrojové soubory</Filter>
@@ -77,8 +89,20 @@
     <ClInclude Include="Scene.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
-    <ClInclude Include="Transformation.h">
-      <Filter>Hlavičkové soubory</Filter>
+    <ClInclude Include="Transformation\Transformation.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\Translation.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\Rotation.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\Scale.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\CompositeTransformation.h">
+      <Filter>Transformation</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Hlavičkové soubory</Filter>
