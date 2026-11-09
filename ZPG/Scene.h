@@ -29,6 +29,7 @@ public:
 	void drawSkybox();
 	void createSkybox(const char* posX, const char* negX, const char* posY, const char* negY, const char* posZ, const char* negZ);
 
+	void removeObject(size_t index);
 	Camera& getCamera() { return camera_; }
 
 private:

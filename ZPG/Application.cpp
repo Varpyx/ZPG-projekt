@@ -11,6 +11,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "Models/sphere.h"
 
 //fuctions from example code
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
@@ -65,9 +68,17 @@ void Application::onCursorPos(double x, double y) {
 }
 
 static void button_callback(GLFWwindow* window, int button, int action, int mode) {
-	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
-}
+	if (action == GLFW_PRESS) {
+		printf("button_callback [%d,%d,%d]\n", button, action, mode);
 
+		Application* application = static_cast<Application*>(glfwGetWindowUserPointer(window));
+		if (!application) return;
+
+		if (button == GLFW_MOUSE_BUTTON_LEFT) {
+			application->rightPress();
+		}
+	}
+}
 
 static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, int mods)
 {
@@ -116,6 +127,50 @@ void Application::processCameraInput(float deltaTime)
 	if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) cam.toRight(d);
 	if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) cam.toUp(d);
 	if (glfwGetKey(window_, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) cam.toDown(d);
+}
+
+void Application::rightPress()
+{
+	double xpos, ypos;
+	glfwGetCursorPos(window_, &xpos, &ypos); 
+
+	int width, height;
+	glfwGetFramebufferSize(window_, &width, &height); 
+
+	GLint x = static_cast<GLint>(xpos);
+	GLint y = static_cast<GLint>(ypos);
+
+	int newy = height - y;
+
+	GLbyte color[4];
+	GLfloat depth;
+	GLuint index;
+
+	glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+	glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+	glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+	printf("Clicked on pixel %d, %d, depth %f, stencil index %u\n", x, y, depth, index);
+
+	Scene& currentScene = *scenes_[activeScene_];
+	Camera& camera = currentScene.getCamera();
+
+	if (index > 0) {
+		printf("Selected object ID: %u\n", index);
+		currentScene.removeObject(index - 1);
+	}
+	else {
+		glm::vec3 screenX = glm::vec3(x, newy, depth);
+		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4 projection = camera.getProjectionMatrix();
+		glm::vec4 viewPort = glm::vec4(0, 0, width, height);
+
+		glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+
+		printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+
+		//add new
+	}
 }
 
 void Application::initialization()
@@ -197,7 +252,7 @@ void Application::run()
 		processCameraInput(deltaTime);		     
 		
 		// Clear color and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		Scene& scene = *scenes_[activeScene_];
 		scene.update(deltaTime);

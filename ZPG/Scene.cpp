@@ -45,9 +45,19 @@ void Scene::draw()
 		}
 	}
 
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	int i = 0;
 	for (DrawableObject& object : objects_) {
+		glStencilFunc(GL_ALWAYS, static_cast<GLint>(i + 1), 0xFF); 
+		glStencilMask(0xFF);
+		object.setIndex(i + 1);
 		object.draw();
+		i++;
 	}
+
+	glDisable(GL_STENCIL_TEST);
 }
 
 void Scene::drawSkybox()
@@ -61,5 +71,13 @@ void Scene::createSkybox(const char* posX, const char* negX, const char* posY, c
 {
 	delete skybox_;
 	skybox_ = new Skybox(posX, negX, posY, negY, posZ, negZ);
+}
+
+void Scene::removeObject(size_t index)
+{
+	if (index < objects_.size()) {
+		objects_.erase(objects_.begin() + index);
+		printf("Object at index %zu removed.\n", index);
+	}
 }
 

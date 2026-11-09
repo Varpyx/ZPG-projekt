@@ -23,8 +23,12 @@ public:
 
 	glm::mat4 getModelMatrix();
 
+	void setIndex(int idx) { index = idx; }
+	int getIndex(){ return index; }
+
 private:
 	Model model_;
 	std::unique_ptr<CompositeTransformation> transformation_;
 	Material material_;
+	int index = 0;
 };

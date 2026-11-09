@@ -21,6 +21,7 @@ public:
     void onCursorPos(double x, double y);  
     void switchScene(size_t index); 
     void processCameraInput(float deltaTime);
+    void rightPress();
 private:  
     GLFWwindow* window_ = nullptr;  
     std::vector<std::unique_ptr<Scene>> scenes_;  
