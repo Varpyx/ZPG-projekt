@@ -26,9 +26,13 @@ public:
 	void setIndex(int idx) { index = idx; }
 	int getIndex(){ return index; }
 
+	void setCanBePicked(bool canBePicked) { canBePicked_ = canBePicked; }
+	bool canBePicked() { return canBePicked_; }
+
 private:
 	Model model_;
 	std::unique_ptr<CompositeTransformation> transformation_;
 	Material material_;
 	int index = 0;
+	bool canBePicked_ = true;
 };

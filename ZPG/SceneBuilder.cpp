@@ -65,12 +65,18 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	scene1->addDrawableObject(
 		Model(SM_WhiteboardModel, SM_WhiteboardVertexCount, 8, true, false, false, true), boardMaterial,
 		0.1f, glm::vec3(-0.37f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	scene1->addDrawableObject(
+
+	//we set room to not pickable
+	DrawableObject& EB = scene1->addDrawableObject(
 		Model(SM_EB408Model, SM_EB408VertexCount, 8, true, false, false, true), ebMaterial,
 		0.1f, glm::vec3(0.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	scene1->addDrawableObject(
+	EB.setCanBePicked(false);
+
+	DrawableObject& Table = scene1->addDrawableObject(
 		Model(SM_TableModel, SM_TableVertexCount, 8, true, false, false, true), tableMaterial,
 		0.1f, glm::vec3(0.0f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	Table.setCanBePicked(false);
+	
 	scene1->addDrawableObject(
 		Model(SM_DoorModel, SM_DoorVertexCount, 8, true, false, false, true), doorMaterial,
 		0.001f, glm::vec3(-0.35f, 0.0f, 0.8f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));

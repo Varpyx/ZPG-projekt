@@ -1,4 +1,7 @@
 #include "Scene.h"
+#include "Models/tree.h"
+#include "Transformation/Rotation.h"
+#include "Transformation/Scale.h"
 
 Scene::~Scene()
 {
@@ -48,11 +51,12 @@ void Scene::draw()
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-	int i = 0;
+	int i = 1;
 	for (DrawableObject& object : objects_) {
-		glStencilFunc(GL_ALWAYS, static_cast<GLint>(i + 1), 0xFF); 
+		int id = object.canBePicked() ? i : 0;
+		glStencilFunc(GL_ALWAYS, static_cast<GLint>(id), 0xFF); 
 		glStencilMask(0xFF);
-		object.setIndex(i + 1);
+		object.setIndex(id);
 		object.draw();
 		i++;
 	}
@@ -79,5 +83,29 @@ void Scene::removeObject(size_t index)
 		objects_.erase(objects_.begin() + index);
 		printf("Object at index %zu removed.\n", index);
 	}
+}
+
+void Scene::addTree(glm::vec3 position)
+{
+	if(treeShader_ == nullptr) {
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/basic.frag");
+	}
+
+	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
+	addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, position);
+	//addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
+
+}
+
+void Scene::rotateObject(int index)
+{
+	if (index < objects_.size())
+		objects_[index].addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 45.0f));
+}
+
+void Scene::scaleObject(int index)
+{
+	if (index < objects_.size())
+		objects_[index].addTransformation(std::make_unique<Scale>(1.2f));
 }
 

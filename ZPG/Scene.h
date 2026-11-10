@@ -31,11 +31,15 @@ public:
 
 	void removeObject(size_t index);
 	Camera& getCamera() { return camera_; }
-
+	
+	void addTree(glm::vec3 position);
+	void rotateObject(int index);
+	void scaleObject(int index);
 private:
 	std::vector<std::unique_ptr<ShaderProgram>> programs_;
 	std::vector<DrawableObject> objects_;
 	std::vector<std::unique_ptr<Light>> lights_;
 	Camera camera_;
 	Skybox* skybox_ = nullptr;
+	ShaderProgram* treeShader_ = nullptr;
 };

@@ -9,6 +9,8 @@
 
 struct GLFWwindow;
 
+enum class EditMode{ Rotate, Scale, Delete};
+
 class Application  
 {  
 public:  
@@ -22,11 +24,14 @@ public:
     void switchScene(size_t index); 
     void processCameraInput(float deltaTime);
     void rightPress();
+	void setMode(EditMode mode) { editMode_ = mode; }   
 private:  
     GLFWwindow* window_ = nullptr;  
     std::vector<std::unique_ptr<Scene>> scenes_;  
     size_t activeScene_ = 0;  
 	SceneBuilder sceneBuilder_;
+
+	EditMode editMode_ = EditMode::Rotate;
 
 	float moveSpeed_ = 1.5f;
     double lastX_ = 400.0;  

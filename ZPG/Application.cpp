@@ -86,6 +86,12 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 	if (!application)
 		return;
 
+	if (action == GLFW_PRESS) {
+		if (key == GLFW_KEY_R) application->setMode(EditMode::Rotate);
+		if (key == GLFW_KEY_C) application->setMode(EditMode::Scale);
+		if (key == GLFW_KEY_X) application->setMode(EditMode::Delete);
+	}
+
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 
@@ -157,7 +163,18 @@ void Application::rightPress()
 
 	if (index > 0) {
 		printf("Selected object ID: %u\n", index);
-		currentScene.removeObject(index - 1);
+
+		switch (editMode_){
+		case EditMode::Rotate:
+			currentScene.rotateObject(index - 1);
+			break;
+		case EditMode::Scale:
+			currentScene.scaleObject(index - 1);
+			break;
+		case EditMode::Delete:
+			currentScene.removeObject(index - 1);
+			break;
+		}
 	}
 	else {
 		glm::vec3 screenX = glm::vec3(x, newy, depth);
@@ -165,11 +182,18 @@ void Application::rightPress()
 		glm::mat4 projection = camera.getProjectionMatrix();
 		glm::vec4 viewPort = glm::vec4(0, 0, width, height);
 
+
 		glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+
+		if (depth >= 0.9999f) {
+			glm::vec3 camPos = camera.getCameraPosition();
+			glm::vec3 dir = glm::normalize(pos - camPos);
+			pos = camPos + dir * 5.0f; // Place the tree 5 units away from the camera
+		}
 
 		printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
 
-		//add new
+		currentScene.addTree(pos);
 	}
 }
 
@@ -263,8 +287,8 @@ void Application::run()
 		scene.draw();
 
 		// Display the rendered frame and process events
-		glfwSwapBuffers(window_);
 		glfwPollEvents();
+		glfwSwapBuffers(window_);
 	}
 
 	// Clean up and terminate GLFW
