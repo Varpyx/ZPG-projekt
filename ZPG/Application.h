@@ -9,7 +9,7 @@
 
 struct GLFWwindow;
 
-enum class EditMode{ Rotate, Scale, Delete};
+enum class EditMode{ Rotate, Scale, Delete, Parameter};
 
 class Application  
 {  

@@ -90,6 +90,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 		if (key == GLFW_KEY_R) application->setMode(EditMode::Rotate);
 		if (key == GLFW_KEY_C) application->setMode(EditMode::Scale);
 		if (key == GLFW_KEY_X) application->setMode(EditMode::Delete);
+		if (key == GLFW_KEY_P) application->setMode(EditMode::Parameter);
 	}
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -173,6 +174,9 @@ void Application::rightPress()
 			break;
 		case EditMode::Delete:
 			currentScene.removeObject(index - 1);
+			break;
+		case EditMode::Parameter:
+			//do transofrm
 			break;
 		}
 	}
