@@ -109,3 +109,9 @@ void Scene::scaleObject(int index)
 		objects_[index].addTransformation(std::make_unique<Scale>(1.2f));
 }
 
+void Scene::startParametricLine(int index, glm::vec3 start, glm::vec3 end, float speed)
+{
+	if(index > 0 && index <= objects_.size())
+		objects_[index].setParametricLine(start, end, speed);
+}
+

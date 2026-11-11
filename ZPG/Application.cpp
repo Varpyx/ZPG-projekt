@@ -175,9 +175,6 @@ void Application::rightPress()
 		case EditMode::Delete:
 			currentScene.removeObject(index - 1);
 			break;
-		case EditMode::Parameter:
-			//do transofrm
-			break;
 		}
 	}
 	else {
@@ -196,6 +193,16 @@ void Application::rightPress()
 		}
 
 		printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+
+		if (editMode_ == EditMode::Parameter) {
+			parametricPoints_[parametricIndex_] = pos;
+			parametricIndex_++;
+
+			if (parametricIndex_ == 2) {
+				currentScene.startParametricLine(0, parametricPoints_[0], parametricPoints_[1], 0.2f);
+				parametricIndex_ = 0;
+			}
+		}
 
 		currentScene.addTree(pos);
 	}

@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Material.h"
 #include "Transformation/CompositeTransformation.h"
+#include "Transformation/ParametricLine.h"
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -29,9 +30,11 @@ public:
 	void setCanBePicked(bool canBePicked) { canBePicked_ = canBePicked; }
 	bool canBePicked() { return canBePicked_; }
 
+	void setParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
 private:
 	Model model_;
 	std::unique_ptr<CompositeTransformation> transformation_;
+	std::unique_ptr<ParametricLine> parametricLine_;
 	Material material_;
 	int index = 0;
 	bool canBePicked_ = true;

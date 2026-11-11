@@ -170,6 +170,9 @@
     <ClInclude Include="Models\bushes.h">
       <Filter>Models</Filter>
     </ClInclude>
+    <ClInclude Include="ParametricLine.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ambient.frag" />

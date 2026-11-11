@@ -182,6 +182,7 @@
     <ClInclude Include="Models\suzi_smooth.h" />
     <ClInclude Include="Models\tree.h" />
     <ClInclude Include="Models\ufo.h" />
+    <ClInclude Include="ParametricLine.h" />
     <ClInclude Include="SceneBuilder.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />

@@ -35,11 +35,26 @@ void DrawableObject::setTransformation(std::unique_ptr<CompositeTransformation> 
 void DrawableObject::update(float deltaTime)
 {
 	transformation_->update(deltaTime);
+
+	if (parametricLine_)
+		parametricLine_->update(deltaTime);
 }
 
 glm::mat4 DrawableObject::getModelMatrix()
 {
-	return transformation_->getModelMatrix();
+	glm::mat4 modelMatrix = transformation_->getModelMatrix();
+
+	if (parametricLine_) {
+		modelMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); //we dump the old pos to move on the line
+		return parametricLine_->getModelMatrix() * modelMatrix;
+	}
+
+	return modelMatrix;
+}
+
+void DrawableObject::setParametricLine(glm::vec3 start, glm::vec3 end, float speed)
+{
+	parametricLine_ = std::make_unique<ParametricLine>(start, end, speed);
 }
 
 void DrawableObject::draw()

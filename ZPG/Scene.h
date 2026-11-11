@@ -35,6 +35,7 @@ public:
 	void addTree(glm::vec3 position);
 	void rotateObject(int index);
 	void scaleObject(int index);
+	void startParametricLine(int index, glm::vec3 start, glm::vec3 end, float speed = 0.2f);
 private:
 	std::vector<std::unique_ptr<ShaderProgram>> programs_;
 	std::vector<DrawableObject> objects_;
