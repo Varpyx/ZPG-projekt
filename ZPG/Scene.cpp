@@ -88,7 +88,7 @@ void Scene::removeObject(size_t index)
 void Scene::addTree(glm::vec3 position)
 {
 	if(treeShader_ == nullptr) {
-		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/basic.frag");
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
 	}
 
 	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
@@ -109,9 +109,15 @@ void Scene::scaleObject(int index)
 		objects_[index].addTransformation(std::make_unique<Scale>(1.2f));
 }
 
-void Scene::startParametricLine(int index, glm::vec3 start, glm::vec3 end, float speed)
+void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 {
-	if(index > 0 && index <= objects_.size())
-		objects_[index].setParametricLine(start, end, speed);
+	if (treeShader_ == nullptr)
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/basic.frag");
+
+	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
+
+	DrawableObject& tree1 = addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, start);
+
+	tree1.setParametricLine(start, end, speed);
 }
 

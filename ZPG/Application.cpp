@@ -199,9 +199,10 @@ void Application::rightPress()
 			parametricIndex_++;
 
 			if (parametricIndex_ == 2) {
-				currentScene.startParametricLine(0, parametricPoints_[0], parametricPoints_[1], 0.2f);
+				currentScene.startParametricLine(parametricPoints_[0], parametricPoints_[1], 0.2f);
 				parametricIndex_ = 0;
 			}
+			return;
 		}
 
 		currentScene.addTree(pos);

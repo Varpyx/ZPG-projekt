@@ -65,6 +65,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	scene1->addDrawableObject(
 		Model(SM_WhiteboardModel, SM_WhiteboardVertexCount, 8, true, false, false, true), boardMaterial,
 		0.1f, glm::vec3(-0.37f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	scene1->addLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 	//we set room to not pickable
 	DrawableObject& EB = scene1->addDrawableObject(

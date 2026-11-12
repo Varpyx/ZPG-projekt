@@ -158,6 +158,7 @@
     <ClCompile Include="Transformation\Rotation.cpp" />
     <ClCompile Include="Transformation\Scale.cpp" />
     <ClCompile Include="Transformation\CompositeTransformation.cpp" />
+    <ClCompile Include="Transformation\ParametricLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -182,7 +183,6 @@
     <ClInclude Include="Models\suzi_smooth.h" />
     <ClInclude Include="Models\tree.h" />
     <ClInclude Include="Models\ufo.h" />
-    <ClInclude Include="ParametricLine.h" />
     <ClInclude Include="SceneBuilder.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
@@ -194,6 +194,7 @@
     <ClInclude Include="Transformation\Rotation.h" />
     <ClInclude Include="Transformation\Scale.h" />
     <ClInclude Include="Transformation\CompositeTransformation.h" />
+    <ClInclude Include="Transformation\ParametricLine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ambient.frag" />

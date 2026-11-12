@@ -54,6 +54,9 @@
     <ClCompile Include="Transformation\CompositeTransformation.cpp">
       <Filter>Transformation</Filter>
     </ClCompile>
+    <ClCompile Include="Transformation\ParametricLine.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
@@ -170,7 +173,7 @@
     <ClInclude Include="Models\bushes.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="ParametricLine.h">
+    <ClInclude Include="Transformation\ParametricLine.h">
       <Filter>Transformation</Filter>
     </ClInclude>
   </ItemGroup>
