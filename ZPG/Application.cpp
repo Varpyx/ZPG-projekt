@@ -13,7 +13,6 @@
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Models/sphere.h"
 
 //fuctions from example code
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
@@ -91,6 +90,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 		if (key == GLFW_KEY_C) application->setMode(EditMode::Scale);
 		if (key == GLFW_KEY_X) application->setMode(EditMode::Delete);
 		if (key == GLFW_KEY_P) application->setMode(EditMode::Parameter);
+		if (key == GLFW_KEY_F) application->toggleFlashlight();
 	}
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -105,6 +105,12 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 			return;
 		}
 	}
+}
+
+void Application::toggleFlashlight()
+{
+	if (!scenes_.empty())
+		scenes_[activeScene_]->toggleFlashlight();
 }
 
 void Application::switchScene(size_t index)
@@ -166,15 +172,15 @@ void Application::rightPress()
 		printf("Selected object ID: %u\n", index);
 
 		switch (editMode_){
-		case EditMode::Rotate:
-			currentScene.rotateObject(index - 1);
-			break;
-		case EditMode::Scale:
-			currentScene.scaleObject(index - 1);
-			break;
-		case EditMode::Delete:
-			currentScene.removeObject(index - 1);
-			break;
+			case EditMode::Rotate:
+				currentScene.rotateObject(index - 1);
+				break;
+			case EditMode::Scale:
+				currentScene.scaleObject(index - 1);
+				break;
+			case EditMode::Delete:
+				currentScene.removeObject(index - 1);
+				break;
 		}
 	}
 	else {
@@ -287,7 +293,7 @@ void Application::run()
 
 		processCameraInput(deltaTime);		     
 		
-		// Clear color and depth buffer
+		// Clear color and depth buffer and STENCIL!
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		Scene& scene = *scenes_[activeScene_];

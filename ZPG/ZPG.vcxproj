@@ -202,7 +202,6 @@
     <None Include="shaders\basic.vert" />
     <None Include="shaders\basic2.frag" />
     <None Include="shaders\blinn.frag" />
-    <None Include="shaders\blinn_use_color.frag" />
     <None Include="shaders\bush.vert" />
     <None Include="shaders\clock.frag" />
     <None Include="shaders\clock.vert" />
@@ -210,7 +209,6 @@
     <None Include="shaders\light.vert" />
     <None Include="shaders\login.frag" />
     <None Include="shaders\phong.frag" />
-    <None Include="shaders\phong_use_color.frag" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
     <None Include="shaders\tree.frag" />

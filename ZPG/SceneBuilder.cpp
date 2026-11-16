@@ -31,10 +31,10 @@
 #include "Transformation/Translation.h"
 
 
-Material SceneBuilder::createMaterial(ShaderProgram* shaderProgram, const char* path, int textureUnit, glm::vec3 color)
+Material SceneBuilder::createMaterial(ShaderProgram* shaderProgram, const char* path, int textureUnit, glm::vec3 color, bool useColor)
 {
 	Material material(shaderProgram, color);
-
+	material.setUseColor(useColor);
 	if(path != nullptr)
 	{
 		Texture texture(path);
@@ -65,7 +65,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	scene1->addDrawableObject(
 		Model(SM_WhiteboardModel, SM_WhiteboardVertexCount, 8, true, false, false, true), boardMaterial,
 		0.1f, glm::vec3(-0.37f, 0.0f, 0.5f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	scene1->addLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	scene1->addLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f), glm::vec4(1.0f));
 
 	//we set room to not pickable
 	DrawableObject& EB = scene1->addDrawableObject(
@@ -136,7 +136,8 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	Light* light3 = scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(0.02f, 0.02f, 0.02f, 1.0f));
+	Light* light3 = scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(1.0f));
+	scene3->setAmbient(glm::vec4(0.01f, 0.01f, 0.01f, 1.0f));
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -194,18 +195,18 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	//Scene 5: planets
 	Scene* scene5 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
-	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/light.vert", "shaders/phong_use_color.frag");
+	scene5->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(1.0f));
+	ShaderProgram* planets5 = scene5->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
 	ShaderProgram* planets_mesh = scene5->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* login5 = scene5->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 
 	DrawableObject& Sun = scene5->addDrawableObject(
-		Model(sun, 11520, 9), createMaterial(planets_mesh, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)),
+		Model(sun, 11520, 9), createMaterial(planets_mesh, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f), true),
 		0.2f, glm::vec3(0.0f, 0.0f, 0.0f), 10.0f);
 
 
 	DrawableObject& Earth = scene5->addDrawableObject(
-		Model(earth, 11520, 9, true, true, true), createMaterial(planets5, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)),
+		Model(earth, 11520, 9, true, true, true), createMaterial(planets5, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f), true),
 		0.1f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto et = std::make_unique<CompositeTransformation>();
@@ -216,7 +217,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	Earth.setTransformation(std::move(et));
 
 	DrawableObject& Moon = scene5->addDrawableObject(
-		Model(moon, 11520, 9, true, true, true), createMaterial(planets5, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)),
+		Model(moon, 11520, 9, true, true, true), createMaterial(planets5, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f), true),
 		0.05f, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	auto earthPom = std::make_unique<CompositeTransformation>();
@@ -263,7 +264,9 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	//scene 7: light
 	Scene* scene7 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f), glm::vec4(1.0f));
+	//scene7->addLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f), glm::vec4(1.0f));
+	scene7->setAmbient(glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	ShaderProgram* ball1 = scene7->addShaderProgram("shaders/light.vert", "shaders/diffuse.frag");
 	ShaderProgram* ball2 = scene7->addShaderProgram("shaders/light.vert", "shaders/phong.frag");
 	ShaderProgram* ball3 = scene7->addShaderProgram("shaders/light.vert", "shaders/ambient.frag");

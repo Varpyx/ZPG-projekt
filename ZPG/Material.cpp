@@ -27,4 +27,5 @@ void Material::bind()
 	}
 
 	shaderProgram_->setUniform("fragmentColor", color_);
+	shaderProgram_->setUniform("useColor", useColor_ ? 1 : 0);
 }

@@ -25,6 +25,7 @@ public:
     void processCameraInput(float deltaTime);
     void rightPress();
 	void setMode(EditMode mode) { editMode_ = mode; }   
+    void toggleFlashlight();
 private:  
     GLFWwindow* window_ = nullptr;  
     std::vector<std::unique_ptr<Scene>> scenes_;  

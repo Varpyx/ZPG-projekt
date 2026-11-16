@@ -22,7 +22,7 @@ public:
 
 	ShaderProgram* addShaderProgram(const char* vertexFile, const char* fragmentFile);
 	DrawableObject& addDrawableObject(Model model, Material material, float scale = 1.0f, glm::vec3 offset = glm::vec3(0.2f), float speed = 0.0f, glm::vec3 velocity = glm::vec3(0.0f));
-	Light* addLight(glm::vec3 position = glm::vec3(0.0f), glm::vec4 color = glm::vec4(1.0f), glm::vec4 ambient = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	Light* addLight(glm::vec3 position = glm::vec3(0.0f), glm::vec4 diffuse = glm::vec4(1.0f), glm::vec4 specular = glm::vec4(1.0f), int type = 1, glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f));
 
 	void update(float deltaTime);
 	void draw();
@@ -36,6 +36,8 @@ public:
 	void rotateObject(int index);
 	void scaleObject(int index);
 	void startParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
+	void setAmbient(glm::vec4 ambientColor) { ambient_ = ambientColor; }
+	void toggleFlashlight() { flashlightOn_ = !flashlightOn_; }
 private:
 	std::vector<std::unique_ptr<ShaderProgram>> programs_;
 	std::vector<DrawableObject> objects_;
@@ -43,4 +45,6 @@ private:
 	Camera camera_;
 	Skybox* skybox_ = nullptr;
 	ShaderProgram* treeShader_ = nullptr;
+	glm::vec4 ambient_ = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+	bool flashlightOn_ = false;
 };

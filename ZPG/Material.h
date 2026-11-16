@@ -15,9 +15,13 @@ public:
 	ShaderProgram* getShaderProgram() { return shaderProgram_; }
 	glm::vec3 getColor() { return color_; }
 
+	void setUseColor(bool useColor) { useColor_ = useColor; }
+	bool useColor() { return useColor_; }
+
 private:
 	ShaderProgram* shaderProgram_ = nullptr;
 	GLuint textureID_ = 0;
 	int textureUnit_ = 0;
 	glm::vec3 color_ = glm::vec3(1.0f);
+	bool useColor_ = false;
 };

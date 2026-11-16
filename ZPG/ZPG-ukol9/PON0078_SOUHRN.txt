@@ -1,0 +1,5 @@
+1 Splněno - každemu objektu se přiřadí unikatní ID, pokud nema nastaveno že je staticky (nejde smazat a daji se na něj vkladat další modely). Při kliknutí na objekt ktery lze měnit se podle režimu zvoli uprava (scale, rotate, delete)
+
+2 Splněno - pokud je stencil index 0, pak se na toto místo vloží model stromu. Dale pokud kliknu do dalky placnu ho 5.0f od kamery aby byl vidět.
+
+3 Splněno - přidana nova transformace. Používa parametrickou přimky, při dojezdu na konec se otočí směr. volba řežimu pomocí klaves R - rotate, C - scale, X - delete, P - parametrická přímka. Demonstrovano na sceně s EB408 viz video :)

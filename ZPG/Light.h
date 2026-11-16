@@ -3,18 +3,23 @@
 
 class Light {
 public:
-	Light(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4 ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f))
-		: position_(position), color_(color), ambient_(ambient) {}
+	Light(glm::vec3 position = glm::vec3(0.0f), glm::vec4 diffuse = glm::vec4(1.0f), glm::vec4 specular = glm::vec4(1.0f), int type = 1, glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f))
+		: position_(position), diffuse_(diffuse), specular_(specular), type_(type), direction_(direction) {}
 
 	void setPosition(glm::vec3 position) { position_ = position; }
-	void setColor(glm::vec4 color) { color_ = color; }
-	void setAmbient(glm::vec4 ambient) { ambient_ = ambient; }
+	void setDiffuse(glm::vec4 diffuse) { diffuse_ = diffuse; }
+	void setSpecular(glm::vec4 spec) { specular_ = spec; }
+	void setDirection(glm::vec3 direction) { direction_ = direction; }
 
 	glm::vec3 getPosition() { return position_; }
-	glm::vec4 getColor() { return color_; }
-	glm::vec4 getAmbient() { return ambient_; }
+	glm::vec4 getDiffuse() { return diffuse_; }
+	glm::vec4 getSpecular() { return specular_; }
+	glm::vec3 getDirection() { return direction_; }
+	int getType() { return type_; }
 private:
 	glm::vec3 position_;
-	glm::vec4 color_;
-	glm::vec4 ambient_;
+	glm::vec4 diffuse_;
+	glm::vec4 specular_;
+	int type_;
+	glm::vec3 direction_;
 };

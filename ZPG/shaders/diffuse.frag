@@ -1,23 +1,36 @@
 #version 330 core
 
+#define MAX_LIGHTS 10
+
+struct Light {
+    vec4 position;
+    vec4 diffuse;
+    vec4 specular;
+};
+
 in vec3 worldPos;
 in vec3 worldNorm;
 out vec4 fragColor;
 
-uniform vec3 lightPos;   
-uniform vec4 lightColor; 
+uniform Light lights[MAX_LIGHTS];
+uniform int numberOfLights;
+
 uniform vec4 ambient;
 uniform vec3 fragmentColor;
 
 void main(void)
 {
-    vec3 lightDir = lightPos - worldPos;
+    vec3 norm = normalize(worldNorm);
+    vec3 result = ambient.rgb;
     
-    float diff = max(dot(normalize(lightDir), normalize(worldNorm)), 0.0);
-    vec3 diffuse = diff * lightColor.rgb;
+    //Ia + sum(Id)
+    for(int i = 0; i < numberOfLights; i++) {
+        vec3 lightDir = normalize(lights[i].position.xyz - worldPos);
 
-    vec3 amb = ambient.rgb;
-    
-    vec3 result = (amb + diffuse) * fragmentColor;
-    fragColor = vec4(result, 1.0);
+        float diff = max(dot(lightDir, worldNorm), 0.0);
+        result += diff * lights[i].diffuse.rgb;
+        
+    }
+
+    fragColor = vec4(result * fragmentColor, 1.0);
 }

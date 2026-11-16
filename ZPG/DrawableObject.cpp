@@ -9,7 +9,6 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
-#include <ctime>
 
 DrawableObject::DrawableObject(Model model, Material material,
 	float scale, glm::vec3 offset, float speed, glm::vec3 velocity)
@@ -65,27 +64,6 @@ void DrawableObject::draw()
 	if (!shaderProgram) return;
 
 	shaderProgram->updateCameraUniforms();
-
-	//getting the time
-	std::time_t t = std::time(nullptr);
-	std::tm now;
-	localtime_s(&now, &t);
-
-	// calc for the smooth effect
-	float seconds = static_cast<float>(now.tm_sec);
-	float minutes = static_cast<float>(now.tm_min) + (seconds / 60.0f);
-	float hours = static_cast<float>(now.tm_hour % 12) + (minutes / 60.0f);
-
-	// calc the angles
-	float pi = glm::pi<float>();
-	float angleSeconds = seconds * (2.0f * pi / 60.0f);
-	float angleMinutes = minutes * (2.0f * pi / 60.0f);
-	float angleHours = hours * (2.0f * pi / 12.0f);
-
-	shaderProgram->setUniform("angleSeconds", angleSeconds);
-	shaderProgram->setUniform("angleMinutes", angleMinutes);
-	shaderProgram->setUniform("angleHours", angleHours);
-
 	shaderProgram->setUniform("modelMatrix", getModelMatrix());
 	model_.draw();
 }

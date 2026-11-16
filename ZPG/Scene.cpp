@@ -2,6 +2,9 @@
 #include "Models/tree.h"
 #include "Transformation/Rotation.h"
 #include "Transformation/Scale.h"
+#include <glm/ext/scalar_constants.hpp>
+#include <ctime>
+#include <string>
 
 Scene::~Scene()
 {
@@ -22,11 +25,12 @@ DrawableObject& Scene::addDrawableObject(Model model, Material material,
 	return objects_.back();
 }
 
-Light* Scene::addLight(glm::vec3 position, glm::vec4 color, glm::vec4 ambient)
+Light* Scene::addLight(glm::vec3 position, glm::vec4 diffuse, glm::vec4 specular, int type, glm::vec3 direction)
 {
-	lights_.push_back(std::make_unique<Light>(position, color, ambient));
+	lights_.push_back(std::make_unique<Light>(position, diffuse, specular, type, direction));
 	return lights_.back().get();
 }
+
 
 void Scene::update(float deltaTime)
 {
@@ -37,14 +41,54 @@ void Scene::update(float deltaTime)
 
 void Scene::draw()
 {
+	//getting the time
+	std::time_t t = std::time(nullptr);
+	std::tm now;
+	localtime_s(&now, &t);
+
+	// calc for the smooth effect
+	float seconds = static_cast<float>(now.tm_sec);
+	float minutes = static_cast<float>(now.tm_min) + (seconds / 60.0f);
+	float hours = static_cast<float>(now.tm_hour % 12) + (minutes / 60.0f);
+
+	// calc the angles
+	float pi = glm::pi<float>();
+	float angleSeconds = seconds * (2.0f * pi / 60.0f);
+	float angleMinutes = minutes * (2.0f * pi / 60.0f);
+	float angleHours = hours * (2.0f * pi / 12.0f);
+
 
 	for(auto& program : programs_) {
 		program->use();
-		
-		for(auto& light : lights_) {
-			program->setUniform("lightPos", light->getPosition());
-			program->setUniform("lightColor", light->getColor());
-			program->setUniform("ambient", light->getAmbient());
+		//clock
+		program->setUniform("angleSeconds", angleSeconds);
+		program->setUniform("angleMinutes", angleMinutes);
+		program->setUniform("angleHours", angleHours);
+
+		//lights
+		program->setUniform("ambient", ambient_);
+		if (flashlightOn_) {
+			program->setUniform("numberOfLights", static_cast<int>(lights_.size()+1));
+		} else {
+			program->setUniform("numberOfLights", static_cast<int>(lights_.size()));
+		}
+
+		for (int i = 0; i < lights_.size(); i++) {
+			std::string baseName = "lights[" + std::to_string(i) + "]";
+
+			//pos + type in vec4
+			program->setUniform((baseName + ".position").c_str(), glm::vec4(lights_[i]->getPosition(), lights_[i]->getType()));
+			program->setUniform((baseName + ".direction").c_str(), glm::vec4(lights_[i]->getDirection(), 0.0f));
+			program->setUniform((baseName + ".diffuse").c_str(), lights_[i]->getDiffuse());
+			program->setUniform((baseName + ".specular").c_str(), lights_[i]->getSpecular());
+		}
+
+		if (flashlightOn_) {
+			std::string baseName = "lights[" + std::to_string(lights_.size()) + "]";
+			program->setUniform((baseName + ".position").c_str(), glm::vec4(camera_.getCameraPosition(), 2.0f));      // 2 = spot
+			program->setUniform((baseName + ".direction").c_str(), glm::vec4(camera_.getCameraTarget(), 0.0f));  
+			program->setUniform((baseName + ".diffuse").c_str(), glm::vec4(1.0f));
+			program->setUniform((baseName + ".specular").c_str(), glm::vec4(1.0f));
 		}
 	}
 

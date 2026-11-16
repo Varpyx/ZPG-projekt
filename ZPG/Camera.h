@@ -26,6 +26,7 @@ public:
     void addObserver(ICameraObserver* observer);
 	void notifyObservers();
     glm::vec3 getCameraPosition() { return eye_; }
+	glm::vec3 getCameraTarget() { return target_; }
 private:
     glm::vec3 eye_;
     glm::vec3 target_;
