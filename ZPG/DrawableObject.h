@@ -31,6 +31,7 @@ public:
 	bool canBePicked() { return canBePicked_; }
 
 	void setParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
+	glm::vec3 getPosition() { return getModelMatrix()[3]; }
 private:
 	Model model_;
 	std::unique_ptr<CompositeTransformation> transformation_;

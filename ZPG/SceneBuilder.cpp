@@ -136,8 +136,13 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	// Scene 3: bushes and trees
 	Scene* scene3 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	Light* light3 = scene3->addLight(glm::vec3(3.0f, 0.2f, -3.0f), glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), glm::vec4(1.0f));
+
+	//reflector
+	scene3->addLight(glm::vec3(4.0f, 2.5f, -2.5f), glm::vec4(2.5f, 2.4f, 2.0f, 1.0f), glm::vec4(0.3f), 2, glm::vec3(0.1f, -1.0f, -0.3f));
+	//amb
 	scene3->setAmbient(glm::vec4(0.01f, 0.01f, 0.01f, 1.0f));
+
+	
 	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
@@ -146,8 +151,12 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	ShaderProgram* ambient = scene3->addShaderProgram("shaders/bush.vert", "shaders/diffuse.frag");
 	ShaderProgram* clock3 = scene3->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 
+	scene3->addDrawableObject(Model(sphere, 2880, 6, true, false),
+		createMaterial(flat3, nullptr, 0, glm::vec3(1.0f)), 0.03f,
+		glm::vec3(4.0f, 2.5f, -2.5f));
+
 	srand(3);
-	for (int i = 0; i < 180; i++)
+	for (int i = 0; i < 120; i++)
 	{
 		float bx = 7.0f * rand() / RAND_MAX;
 		float bz = 7.0f * rand() / RAND_MAX;
@@ -185,6 +194,24 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	DrawableObject& clock2 = scene3->addDrawableObject(Model(clockModel, 44826, 9), createMaterial(clock3, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)), 0.06f, glm::vec3(3.4f, 0.3f, -3.8f));
 	clock2.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f));
+
+	glm::vec3 fireflyColor(0.85f, 1.0f, 0.35f);
+
+	for (int i = 0; i < 8; i++) {
+		glm::vec3 start(0.5f + 6.0f * rand() / RAND_MAX, 0.1f + 0.3f * rand() / RAND_MAX, -0.5f - 6.0f * rand() / RAND_MAX);
+
+		glm::vec3 end = start + glm::vec3(2.0f * rand() / RAND_MAX - 1.0f, 0.6f * rand() / RAND_MAX - 0.3f, 2.0f * rand() / RAND_MAX - 1.0f);
+
+		float speed = 0.1f + 0.2f * rand() / RAND_MAX;
+
+		Light* fly = scene3->addLight(start, glm::vec4(0.2f, 0.25f, 0.08f, 1.0f), glm::vec4(0.0f));
+
+		DrawableObject& marker = scene3->addDrawableObject(Model(sphere, 2880, 6, true, false), createMaterial(flat3, nullptr, 0, fireflyColor), 0.015f, start);
+
+		marker.setParametricLine(start, end, speed);
+		//marker.setCanBePicked(false);
+		fly->setObject(&marker);
+	}
 
 	//Scene 4: login
 	Scene* scene4 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
@@ -265,6 +292,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	//scene 7: light
 	Scene* scene7 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
 	scene7->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f), glm::vec4(1.0f));
+	scene7->addLight(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec4(1.0f), glm::vec4(1.0f), 0, glm::vec3(0.0f, 0.0f, -3.0f));
 	//scene7->addLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f), glm::vec4(1.0f));
 	scene7->setAmbient(glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
 	ShaderProgram* ball1 = scene7->addShaderProgram("shaders/light.vert", "shaders/diffuse.frag");

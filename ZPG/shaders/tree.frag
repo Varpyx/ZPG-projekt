@@ -6,6 +6,7 @@ struct Light {
     vec4 position;
     vec4 diffuse;
     vec4 specular;
+    vec4 direction;
 };
 
 in vec3 worldPos;
@@ -44,12 +45,31 @@ void main(void)
     vec3 result = ambient.rgb * color;
 
     for(int i = 0; i < numberOfLights; i++) {
-        float dist = length(lights[i].position.xyz - worldPos);
-        //direction of light
-        vec3 lightDir = normalize(lights[i].position.xyz - worldPos);
+        vec3 lightDir;
+        float att;
 
-        float att = attenuation(dist, 1.0, 0.8, 0.2);
-    
+        // directional light - no attenuation
+        if(lights[i].position.w == 0.0) {
+            lightDir = normalize(-lights[i].direction.xyz);
+            att = 1.0;
+        } else {
+
+            float dist = length(lights[i].position.xyz - worldPos);
+            //direction of light
+            lightDir = normalize(lights[i].position.xyz - worldPos);
+
+            att = attenuation(dist, 1.0, 0.8, 0.2);
+        
+            //flashlight or reflector
+            if (lights[i].position.w == 2.0){
+                float alpha = 0.97;
+                float dotLF = dot(lightDir, normalize(-lights[i].direction.xyz));
+            
+                float intensity = clamp((dotLF - alpha) / (1.0 - alpha), 0.0, 1.0);
+                att *= intensity;
+            }
+        }
+
         // diffuse
         float diff = max(dot(norm, lightDir), 0.0);
         result += att* diff * lights[i].diffuse.rgb * color;

@@ -23,6 +23,12 @@ uniform vec4 ambient; // amb of the scene
 
 uniform vec3 fragmentColor;
 
+float attenuation(float d, float c, float l, float q)
+{
+    float att=1.0/ (c + l*d + q*d*d);
+    return clamp(att , 0.0 , 1.0);
+}
+
 void main(void)
 {
     // norm vectors
@@ -35,12 +41,33 @@ void main(void)
     vec3 result = ambient.rgb * color;
 
     for(int i = 0; i < numberOfLights; i++) {
-        //direction of light
-        vec3 lightDir = normalize(lights[i].position.xyz - worldPos);
-    
+        vec3 lightDir;
+        float att;
+
+        // directional light - no attenuation
+        if(lights[i].position.w == 0.0) {
+            lightDir = normalize(-lights[i].direction.xyz);
+            att = 1.0;
+        } else {
+            float dist = length(lights[i].position.xyz - worldPos);
+            //direction of light
+            lightDir = normalize(lights[i].position.xyz - worldPos);
+
+            att = attenuation(dist, 1.0, 0.8, 0.2);
+        
+            //flashlight or reflector
+            if (lights[i].position.w == 2.0){
+                float alpha = 0.97;
+                float dotLF = dot(lightDir, normalize(-lights[i].direction.xyz));
+            
+                float intensity = clamp((dotLF - alpha) / (1.0 - alpha), 0.0, 1.0);
+                att *= intensity;
+            }
+        }
+
         // diffuse
         float diff = max(dot(norm, lightDir), 0.0);
-        result += diff * lights[i].diffuse.rgb * color;
+        result += att*diff * lights[i].diffuse.rgb * color;
 
         // spec
         vec3 reflectDir = reflect(-lightDir, norm);
@@ -51,7 +78,7 @@ void main(void)
             spec = 0.0;
         }
 
-        result += spec * lights[i].specular.rgb; 
+        result += att*spec * lights[i].specular.rgb; 
     }
 
     //I = Ia + Id + Is

@@ -40,7 +40,7 @@ public:
 	void toggleFlashlight() { flashlightOn_ = !flashlightOn_; }
 private:
 	std::vector<std::unique_ptr<ShaderProgram>> programs_;
-	std::vector<DrawableObject> objects_;
+	std::vector<std::unique_ptr<DrawableObject>> objects_;
 	std::vector<std::unique_ptr<Light>> lights_;
 	Camera camera_;
 	Skybox* skybox_ = nullptr;

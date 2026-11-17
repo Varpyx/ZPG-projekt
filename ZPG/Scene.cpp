@@ -21,8 +21,8 @@ ShaderProgram* Scene::addShaderProgram(const char* vertexFile, const char* fragm
 DrawableObject& Scene::addDrawableObject(Model model, Material material,
 	float scale, glm::vec3 offset, float speed, glm::vec3 velocity)
 {
-	objects_.push_back(DrawableObject(model, material, scale, offset, speed, velocity));
-	return objects_.back();
+	objects_.push_back(std::make_unique<DrawableObject>(model, material, scale, offset, speed, velocity));
+	return *objects_.back();
 }
 
 Light* Scene::addLight(glm::vec3 position, glm::vec4 diffuse, glm::vec4 specular, int type, glm::vec3 direction)
@@ -34,8 +34,14 @@ Light* Scene::addLight(glm::vec3 position, glm::vec4 diffuse, glm::vec4 specular
 
 void Scene::update(float deltaTime)
 {
-	for (DrawableObject& object : objects_) {
-		object.update(deltaTime);
+	for (auto& object : objects_) {
+		object->update(deltaTime);
+	}
+
+	for(auto& light : lights_) { // update position of light if they have moving objects attached
+		if (light->getObject() != nullptr) {
+			light->setPosition(light->getObject()->getPosition());
+		}
 	}
 }
 
@@ -96,12 +102,12 @@ void Scene::draw()
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	int i = 1;
-	for (DrawableObject& object : objects_) {
-		int id = object.canBePicked() ? i : 0;
+	for (auto& object : objects_) {
+		int id = object->canBePicked() ? i : 0;
 		glStencilFunc(GL_ALWAYS, static_cast<GLint>(id), 0xFF); 
 		glStencilMask(0xFF);
-		object.setIndex(id);
-		object.draw();
+		object->setIndex(id);
+		object->draw();
 		i++;
 	}
 
@@ -144,13 +150,13 @@ void Scene::addTree(glm::vec3 position)
 void Scene::rotateObject(int index)
 {
 	if (index < objects_.size())
-		objects_[index].addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 45.0f));
+		objects_[index]->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 45.0f));
 }
 
 void Scene::scaleObject(int index)
 {
 	if (index < objects_.size())
-		objects_[index].addTransformation(std::make_unique<Scale>(1.2f));
+		objects_[index]->addTransformation(std::make_unique<Scale>(1.2f));
 }
 
 void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
