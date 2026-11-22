@@ -11,5 +11,5 @@ void main()
 {
     Pos = position;
 
-    gl_Position = projectionMatrix * mat4(mat3(viewMatrix)) * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mat4(mat3(viewMatrix)) * vec4(position, 1.0); //strip camera translation
 }

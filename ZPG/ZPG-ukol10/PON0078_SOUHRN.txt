@@ -1,0 +1,5 @@
+1. Splněno - Třída Light obsahuje nyní typ světla. V shaderech se pak podle typu svělla provadi vypočet 0 - directional, 1 - point, 2 - reflektor
+
+2. Splněno - stisknutím F se aktivuje baterku, která se pohybuje s hráčem a svítí před něj. (předavame pozici a směr kamery do shaderu)
+
+3. Splněno - vytvořena scena 8 - les v noci, s terénem a nočním skyboxem. Ve sceně je 8 světlušek, reflektor a možnsot zapnout baterku. Baterka má nastaven větší dosah než světlušky, reflektor nad shrekem má největší.

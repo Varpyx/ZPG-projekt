@@ -82,7 +82,6 @@ void Scene::draw()
 		for (int i = 0; i < lights_.size(); i++) {
 			std::string baseName = "lights[" + std::to_string(i) + "]";
 
-			//pos + type in vec4
 			program->setUniform((baseName + ".position").c_str(), glm::vec4(lights_[i]->getPosition(), 1.0));
 			program->setUniform((baseName + ".direction").c_str(), glm::vec4(lights_[i]->getDirection(), 0.0f));
 			program->setUniform((baseName + ".diffuse").c_str(), lights_[i]->getDiffuse());

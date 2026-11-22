@@ -356,7 +356,6 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	DrawableObject& plane = scene8->addDrawableObject(Model(PlaneModel, 2904, 8, true, false, false, true ), createMaterial(uvShader8, "Textures/grass.png", 0, glm::vec3(1.0f)));
 	plane.setCanBePicked(false);
 
-	scene8->addDrawableObject(Model(sphere, 2880), createMaterial(flat8, nullptr, 0, glm::vec3(1.0f, 0.6f, 0.0f)), 0.02f, glm::vec3(3.0f, 0.2f, -3.0f));
 	scene8->addDrawableObject(Model(login2, sizeof(login2) / (6 * sizeof(float))), createMaterial(loginShader8, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
 
 	for (int i = 0; i < 8; i++) {
@@ -371,12 +370,11 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 		DrawableObject& marker = scene8->addDrawableObject(Model(sphere, 2880, 6, true, false), createMaterial(flat8, nullptr, 0, fireflyColor), 0.015f, start);
 
 		marker.setParametricLine(start, end, speed);
-		//marker.setCanBePicked(false);
 		fly->setObject(&marker);
 	}
 
 	Material shrekMaterial8 = createMaterial(uvShader8, "Textures/shrek.png", 0, glm::vec3(1.0f));
-	scene8->addDrawableObject(Model(ShrekModel, ShrekVertexCount, 8, true, false, false, true), shrekMaterial8, 0.3f, glm::vec3(4.0f, 0.22f, -2.6f));
+	scene8->addDrawableObject(Model(ShrekModel, ShrekVertexCount, 8, true, false, false, true), shrekMaterial8, 0.3f, glm::vec3(4.0f, 0.3f, -2.6f));
 
 	scene8->createSkybox(
 		"Textures/skybox_night/left.png",    
