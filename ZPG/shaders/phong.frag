@@ -7,6 +7,8 @@ struct Light {
     vec4 diffuse;
     vec4 specular;
     vec4 direction;
+    vec3 att;
+    int type;
 };
 
 in vec3 worldPos;
@@ -45,7 +47,7 @@ void main(void)
         float att;
 
         // directional light - no attenuation
-        if(lights[i].position.w == 0.0) {
+        if(lights[i].type == 0) {
             lightDir = normalize(-lights[i].direction.xyz);
             att = 1.0;
         } else {
@@ -53,10 +55,10 @@ void main(void)
             //direction of light
             lightDir = normalize(lights[i].position.xyz - worldPos);
 
-            att = attenuation(dist, 1.0, 0.8, 0.2);
+            att = attenuation(dist, lights[i].att.x, lights[i].att.y, lights[i].att.z);
         
             //flashlight or reflector
-            if (lights[i].position.w == 2.0){
+            if (lights[i].type == 2){
                 float alpha = 0.97;
                 float dotLF = dot(lightDir, normalize(-lights[i].direction.xyz));
             

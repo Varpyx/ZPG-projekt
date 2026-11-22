@@ -24,6 +24,7 @@
 #include "Models/Fiona.h"
 #include "Models/Shrek.h"
 #include "Models/SM_Whiteboard.h"
+#include "Models/Plane.h"
 
 #include "Transformation/CompositeTransformation.h"
 #include "Transformation/Rotation.h"
@@ -176,7 +177,7 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 		float b = 0.1f + 0.2f * (rand() / (float)RAND_MAX); // 0.1 - 0.3
 		glm::vec3 randomGreen(r, g, b);
 
-		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814, 6, true, false), createMaterial(treeShader, nullptr, 0, randomGreen));
+		DrawableObject& trees = scene3->addDrawableObject(Model(tree, 92814, 6, true, false), createMaterial(treeShader, nullptr, 0, randomGreen, true));
 		auto tt = std::make_unique<CompositeTransformation>();
 		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.1f, -bz)));
 		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
@@ -306,6 +307,84 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	scene7->addDrawableObject(Model(sphere, 2880), createMaterial(ball3, nullptr, 0, glm::vec3(0.385, 0.647, 0.812)), 0.3f, glm::vec3(0.0f, -1.0f, 0.0f));
 	scene7->addDrawableObject(Model(sphere, 2880), createMaterial(ball4, nullptr, 0, glm::vec3(0.385, 0.647, 0.812)), 0.3f, glm::vec3(-1.0f, 0.0f, 0.0f));
 	scene7->addDrawableObject(Model(login2, sizeof(login2) / (6 * sizeof(float))), createMaterial(login7, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)), 0.3f, glm::vec3(1.8f, -0.8f, 0.0f));
+
+	//SCENE 8: fireflys in forest :)
+	Scene* scene8 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+
+	//reflector
+	scene8->addLight(glm::vec3(4.0f, 2.5f, -2.5f), glm::vec4(2.5f, 2.4f, 2.0f, 1.0f), glm::vec4(0.3f), 2, glm::vec3(0.1f, -1.0f, -0.3f));
+	//amb
+	scene8->setAmbient(glm::vec4(0.05f, 0.05f, 0.05f, 1.0f));
+
+	ShaderProgram* flat8 = scene8->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
+	ShaderProgram* loginShader8 = scene8->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
+	ShaderProgram* treeShader8 = scene8->addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+	ShaderProgram* bushShader8 = scene8->addShaderProgram("shaders/bush.vert", "shaders/tree.frag");
+	ShaderProgram* diffuse = scene8->addShaderProgram("shaders/bush.vert", "shaders/diffuse.frag");
+	ShaderProgram* uvShader8 = scene8->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
+
+
+	srand(3);
+	for (int i = 0; i < 100; i++)
+	{
+		float bx = 7.0f * rand() / RAND_MAX;
+		float bz = 7.0f * rand() / RAND_MAX;
+		DrawableObject& bush = scene8->addDrawableObject(Model(bushes, 8730, 6, true, false), createMaterial(bushShader8, nullptr, 0, glm::vec3(0.6f, 1.0f, 0.5f)));
+		auto bt = std::make_unique<CompositeTransformation>();
+		bt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.2f, -bz)));
+		bt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
+		bt->addTransformation(std::make_unique<Scale>(0.3f));
+		bush.setTransformation(std::move(bt));
+
+		bx = 7.0f * rand() / RAND_MAX;
+		bz = 7.0f * rand() / RAND_MAX;
+
+		//get random green
+		float r = 0.2f + 0.3f * (rand() / (float)RAND_MAX); // 0.2 - 0.5
+		float g = 0.6f + 0.4f * (rand() / (float)RAND_MAX); // 0.6 - 1.0
+		float b = 0.1f + 0.2f * (rand() / (float)RAND_MAX); // 0.1 - 0.3
+		glm::vec3 randomGreen(r, g, b);
+
+		DrawableObject& trees = scene8->addDrawableObject(Model(tree, 92814, 6, true, false), createMaterial(treeShader8, nullptr, 0, randomGreen, true));
+		auto tt = std::make_unique<CompositeTransformation>();
+		tt->addTransformation(std::make_unique<Translation>(glm::vec3(bx, 0.2f, -bz)));
+		tt->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 360.0f * rand() / RAND_MAX));
+		tt->addTransformation(std::make_unique<Scale>(0.05f));
+		trees.setTransformation(std::move(tt));
+
+	}
+	DrawableObject& plane = scene8->addDrawableObject(Model(PlaneModel, 2904, 8, true, false, false, true ), createMaterial(uvShader8, "Textures/grass.png", 0, glm::vec3(1.0f)));
+	plane.setCanBePicked(false);
+
+	scene8->addDrawableObject(Model(sphere, 2880), createMaterial(flat8, nullptr, 0, glm::vec3(1.0f, 0.6f, 0.0f)), 0.02f, glm::vec3(3.0f, 0.2f, -3.0f));
+	scene8->addDrawableObject(Model(login2, sizeof(login2) / (6 * sizeof(float))), createMaterial(loginShader8, nullptr, 0, glm::vec3(1.0f, 1.0f, 1.0f)), 0.5f, glm::vec3(0.8f, 1.0f, -3.0f));
+
+	for (int i = 0; i < 8; i++) {
+		glm::vec3 start(0.5f + 6.0f * rand() / RAND_MAX, 0.3f + 0.5f * rand() / RAND_MAX, 0.5f - 6.0f * rand() / RAND_MAX);
+
+		glm::vec3 end = start + glm::vec3(5.0f * rand() / RAND_MAX - 1.0f, 0.6f * rand() / RAND_MAX - 0.3f, 2.0f * rand() / RAND_MAX - 1.0f);
+
+		float speed = 0.1f + 0.2f * rand() / RAND_MAX;
+
+		Light* fly = scene8->addLight(start, glm::vec4(0.2f, 0.25f, 0.08f, 1.0f), glm::vec4(0.0f));
+
+		DrawableObject& marker = scene8->addDrawableObject(Model(sphere, 2880, 6, true, false), createMaterial(flat8, nullptr, 0, fireflyColor), 0.015f, start);
+
+		marker.setParametricLine(start, end, speed);
+		//marker.setCanBePicked(false);
+		fly->setObject(&marker);
+	}
+
+	Material shrekMaterial8 = createMaterial(uvShader8, "Textures/shrek.png", 0, glm::vec3(1.0f));
+	scene8->addDrawableObject(Model(ShrekModel, ShrekVertexCount, 8, true, false, false, true), shrekMaterial8, 0.3f, glm::vec3(4.0f, 0.22f, -2.6f));
+
+	scene8->createSkybox(
+		"Textures/skybox_night/left.png",    
+		"Textures/skybox_night/right.png",   
+		"Textures/skybox_night/top.png",     
+		"Textures/skybox_night/bottom.png",  
+		"Textures/skybox_night/front.png",   
+		"Textures/skybox_night/back.png");
 
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes.size(), scenes.size());
 
