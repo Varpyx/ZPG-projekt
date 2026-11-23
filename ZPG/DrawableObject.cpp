@@ -37,6 +37,8 @@ void DrawableObject::update(float deltaTime)
 
 	if (parametricLine_)
 		parametricLine_->update(deltaTime);
+	if (cubicLine_)
+		cubicLine_->update(deltaTime);
 }
 
 glm::mat4 DrawableObject::getModelMatrix()
@@ -47,6 +49,10 @@ glm::mat4 DrawableObject::getModelMatrix()
 		modelMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); //we dump the old pos to move on the line
 		return parametricLine_->getModelMatrix() * modelMatrix;
 	}
+	if (cubicLine_) {
+		modelMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); //we dump the old pos to move on the line
+		return cubicLine_->getModelMatrix() * modelMatrix;
+	}
 
 	return modelMatrix;
 }
@@ -54,6 +60,10 @@ glm::mat4 DrawableObject::getModelMatrix()
 void DrawableObject::setParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 {
 	parametricLine_ = std::make_unique<ParametricLine>(start, end, speed);
+}
+
+void DrawableObject::setCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed) {
+	cubicLine_ = std::make_unique<CubicLine>(p1, p2, p3, p4, speed);
 }
 
 void DrawableObject::draw()

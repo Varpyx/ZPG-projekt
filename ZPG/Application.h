@@ -9,7 +9,7 @@
 
 struct GLFWwindow;
 
-enum class EditMode{ Rotate, Scale, Delete, Parameter};
+enum class EditMode{ Rotate, Scale, Delete, Parameter, Curve};
 
 class Application  
 {  
@@ -41,4 +41,7 @@ private:
 
     glm::vec3 parametricPoints_[2];
 	int parametricIndex_ = 0;
+
+    glm::vec3 cubicPoints_[4];
+    int cubicIndex_ = 0;
 };

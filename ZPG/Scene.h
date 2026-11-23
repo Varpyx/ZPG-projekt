@@ -36,6 +36,7 @@ public:
 	void rotateObject(int index);
 	void scaleObject(int index);
 	void startParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
+	void startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed = 0.2f);
 	void setAmbient(glm::vec4 ambientColor) { ambient_ = ambientColor; }
 	void toggleFlashlight() { flashlightOn_ = !flashlightOn_; }
 private:

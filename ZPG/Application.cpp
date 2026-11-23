@@ -90,6 +90,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 		if (key == GLFW_KEY_C) application->setMode(EditMode::Scale);
 		if (key == GLFW_KEY_X) application->setMode(EditMode::Delete);
 		if (key == GLFW_KEY_P) application->setMode(EditMode::Parameter);
+		if (key == GLFW_KEY_V) application->setMode(EditMode::Curve);
 		if (key == GLFW_KEY_F) application->toggleFlashlight();
 	}
 
@@ -209,6 +210,18 @@ void Application::rightPress()
 				parametricIndex_ = 0;
 			}
 			return;
+		}
+		else if (editMode_ == EditMode::Curve) {
+			cubicPoints_[cubicIndex_] = pos;
+			cubicIndex_++;
+
+			if (cubicIndex_ == 4) {
+				
+				currentScene.startCubicLine(cubicPoints_[0], cubicPoints_[1], cubicPoints_[2], cubicPoints_[3]);
+				cubicIndex_ = 0;
+			}
+			return;
+				
 		}
 
 		currentScene.addTree(pos);

@@ -188,3 +188,16 @@ void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 	tree1.setParametricLine(start, end, speed);
 }
 
+void Scene::startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed)
+{
+	if (treeShader_ == nullptr)
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+
+	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
+	treeMaterial.setUseColor(true);
+
+	DrawableObject& tree1 = addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, p1);
+
+	tree1.setCubicLine(p1, p2, p3, p4, speed);
+}
+
