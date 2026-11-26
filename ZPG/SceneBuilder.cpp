@@ -384,6 +384,23 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 		"Textures/skybox_night/front.png",   
 		"Textures/skybox_night/back.png");
 
+	//SCENE 9 : Bezier!
+
+	Scene* scene9 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(1.0f, 0.5f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
+
+	scene9->startBezierSpline({
+	glm::vec3(-2.0f, 0.0f, 0.0f),
+	glm::vec3(-1.0f, 2.0f, 0.0f),
+	glm::vec3(1.0f, 2.0f, 0.0f),
+	glm::vec3(2.0f, 0.0f, 0.0f),   // sdílený bod
+	glm::vec3(3.0f,-2.0f, 0.0f),
+	glm::vec3(5.0f,-2.0f, 0.0f),
+	glm::vec3(6.0f, 0.0f, 0.0f)
+		}, 0.2f);
+
+	scene9->addLight(glm::vec3(2.0f, 3.0f, 3.0f), glm::vec4(1.0f), glm::vec4(1.0f));
+	scene9->setAmbient(glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+
 	printf("Created %zu scenes, change them with 1-%zu\n", scenes.size(), scenes.size());
 
 	return scenes;

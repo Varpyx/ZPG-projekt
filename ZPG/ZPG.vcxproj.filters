@@ -72,6 +72,12 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Zdrojové soubory</Filter>
     </ClCompile>
+    <ClCompile Include="Transformation\CubicLine.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformation\CubicSpline.cpp">
+      <Filter>Transformation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -174,6 +180,12 @@
       <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="Transformation\ParametricLine.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\CubicSpline.h">
+      <Filter>Transformation</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformation\CubicLine.h">
       <Filter>Transformation</Filter>
     </ClInclude>
   </ItemGroup>

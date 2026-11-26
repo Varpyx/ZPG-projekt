@@ -155,6 +155,7 @@
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transformation\CubicLine.cpp" />
+    <ClCompile Include="Transformation\CubicSpline.cpp" />
     <ClCompile Include="Transformation\Translation.cpp" />
     <ClCompile Include="Transformation\Rotation.cpp" />
     <ClCompile Include="Transformation\Scale.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transformation\CubicLine.h" />
+    <ClInclude Include="Transformation\CubicSpline.h" />
     <ClInclude Include="Transformation\Transformation.h" />
     <ClInclude Include="Transformation\Translation.h" />
     <ClInclude Include="Transformation\Rotation.h" />

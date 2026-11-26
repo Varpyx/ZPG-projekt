@@ -39,6 +39,8 @@ void DrawableObject::update(float deltaTime)
 		parametricLine_->update(deltaTime);
 	if (cubicLine_)
 		cubicLine_->update(deltaTime);
+	if (cubicSpline_)
+		cubicSpline_->update(deltaTime);
 }
 
 glm::mat4 DrawableObject::getModelMatrix()
@@ -53,6 +55,10 @@ glm::mat4 DrawableObject::getModelMatrix()
 		modelMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); //we dump the old pos to move on the line
 		return cubicLine_->getModelMatrix() * modelMatrix;
 	}
+	if (cubicSpline_) {
+		modelMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); //we dump the old pos to move on the line
+		return cubicSpline_->getModelMatrix() * modelMatrix;
+	}
 
 	return modelMatrix;
 }
@@ -62,8 +68,9 @@ void DrawableObject::setParametricLine(glm::vec3 start, glm::vec3 end, float spe
 	parametricLine_ = std::make_unique<ParametricLine>(start, end, speed);
 }
 
-void DrawableObject::setCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed) {
+CubicLine* DrawableObject::setCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed) {
 	cubicLine_ = std::make_unique<CubicLine>(p1, p2, p3, p4, speed);
+	return cubicLine_.get();
 }
 
 void DrawableObject::draw()
@@ -78,3 +85,11 @@ void DrawableObject::draw()
 	model_.draw();
 }
 
+void DrawableObject::setPosition(glm::vec3 pos) {
+	position_ = pos;
+}
+
+void DrawableObject::setCubicSpline(std::vector<glm::vec3> points, float speed)
+{
+	cubicSpline_ = std::make_unique<CubicSpline>(std::move(points), speed);
+}

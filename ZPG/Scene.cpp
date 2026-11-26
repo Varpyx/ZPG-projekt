@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Models/tree.h"
+#include "Models/sphere.h"
 #include "Transformation/Rotation.h"
 #include "Transformation/Scale.h"
 #include <glm/ext/scalar_constants.hpp>
@@ -199,5 +200,35 @@ void Scene::startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p
 	DrawableObject& tree1 = addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, p1);
 
 	tree1.setCubicLine(p1, p2, p3, p4, speed);
+
+	Material pointMaterial(treeShader_, glm::vec3(1.0f, 0.3f, 0.3f));
+	pointMaterial.setUseColor(true);
+
+	glm::vec3 points[4] = { p1, p2, p3, p4 };
+	for (const auto& p : points) {
+		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.01f, p);
+	}
+}
+
+void Scene::startBezierSpline(std::vector<glm::vec3> points, float speed)
+{
+	if (points.size() < 4 || (points.size() - 1) % 3 != 0) return;
+
+	if (treeShader_ == nullptr)
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+
+	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
+	treeMaterial.setUseColor(true);
+
+	DrawableObject& target = addDrawableObject(
+		Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, points.front());
+	target.setCubicSpline(points, speed);
+
+	Material pointMaterial(treeShader_, glm::vec3(1.0f, 0.3f, 0.3f));
+	pointMaterial.setUseColor(true);
+
+	for (const auto& p : points) {
+		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.01f, p);
+	}
 }
 

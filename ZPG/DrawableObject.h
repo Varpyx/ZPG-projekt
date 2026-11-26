@@ -5,6 +5,7 @@
 #include "Transformation/CompositeTransformation.h"
 #include "Transformation/ParametricLine.h"
 #include "Transformation/CubicLine.h"
+#include "Transformation/CubicSpline.h"
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -34,13 +35,21 @@ public:
 	void setParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
 	glm::vec3 getPosition() { return getModelMatrix()[3]; }
 
-	void setCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed);
+	CubicLine* setCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed);
+	CubicLine* getCubicLine() { return cubicLine_.get(); }
+
+	void setPosition(glm::vec3 pos);
+
+	void setCubicSpline(std::vector<glm::vec3> points, float speed);
+
 private:
 	Model model_;
 	std::unique_ptr<CompositeTransformation> transformation_;
 	std::unique_ptr<ParametricLine> parametricLine_;
 	std::unique_ptr<CubicLine> cubicLine_;
+	std::unique_ptr<CubicSpline> cubicSpline_;
 	Material material_;
 	int index = 0;
 	bool canBePicked_ = true;
+	glm::vec3 position_ = glm::vec3(0.0f);
 };
