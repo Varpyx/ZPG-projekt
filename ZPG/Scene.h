@@ -35,6 +35,7 @@ public:
 	void addTree(glm::vec3 position);
 	void rotateObject(int index);
 	void scaleObject(int index);
+	void moveObject(int index, glm::vec3 pos);
 	void startParametricLine(glm::vec3 start, glm::vec3 end, float speed = 0.2f);
 	void startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed = 0.2f);
 	void startBezierSpline(std::vector<glm::vec3> points, float speed = 0.2f);

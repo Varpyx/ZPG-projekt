@@ -44,4 +44,6 @@ private:
 
     glm::vec3 cubicPoints_[4];
     int cubicIndex_ = 0;
+
+    int selected_ = -1;
 };

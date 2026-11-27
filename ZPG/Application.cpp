@@ -91,6 +91,7 @@ static void keyCallback(GLFWwindow* window, int key, int scancodes, int action, 
 		if (key == GLFW_KEY_X) application->setMode(EditMode::Delete);
 		if (key == GLFW_KEY_P) application->setMode(EditMode::Parameter);
 		if (key == GLFW_KEY_V) application->setMode(EditMode::Curve);
+		if (key == GLFW_KEY_B) application->setMode(EditMode::MoveBezier);
 		if (key == GLFW_KEY_F) application->toggleFlashlight();
 	}
 
@@ -182,6 +183,9 @@ void Application::rightPress()
 			case EditMode::Delete:
 				currentScene.removeObject(index - 1);
 				break;
+			case EditMode::MoveBezier:
+				selected_ = index - 1;   
+				break;
 		}
 	}
 	else {
@@ -200,6 +204,12 @@ void Application::rightPress()
 		}
 
 		printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+
+		if (editMode_ == EditMode::MoveBezier) {
+			if (selected_ >= 0) currentScene.moveObject(selected_, pos);   // 2. click: move
+			selected_ = -1;
+			return;
+		}
 
 		if (editMode_ == EditMode::Parameter) {
 			parametricPoints_[parametricIndex_] = pos;

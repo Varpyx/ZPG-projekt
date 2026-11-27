@@ -1,6 +1,7 @@
 #include "CubicLine.h"
 #include "../DrawableObject.h"   // <-- tohle přidat
 #include <glm/gtc/matrix_transform.hpp>
+#include <cmath>
 
 CubicLine::CubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed)
 	: speed_(speed), t_(0.0f), direction(1) // Inicializace členských proměnných
@@ -19,7 +20,18 @@ glm::mat4 CubicLine::getModelMatrix()
 
 	glm::vec3 position = parameters * A_ * glm::transpose(B_);
 
-	return glm::translate(glm::mat4(1.0f), position);
+	// direction P'(t), multiplied out
+	float mu = 1.0f - t_;
+	glm::vec3 tangent = -3.0f * mu * mu * B_[0]
+		+ (3.0f * mu * mu - 6.0f * mu * t_) * B_[1]
+		+ (6.0f * mu * t_ - 3.0f * t_ * t_) * B_[2]
+		+ 3.0f * t_ * t_ * B_[3];
+
+	// rotation angle phi = atan2(P'y, P'x)
+	float angle = std::atan2(tangent.y, tangent.x);
+
+	glm::mat4 m = glm::translate(glm::mat4(1.0f), position);
+	return glm::rotate(m, angle, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void CubicLine::update(float deltaTime)

@@ -10,4 +10,5 @@ public:
 	virtual ~Transformation() = default;
 	virtual glm::mat4 getModelMatrix() = 0;
 	virtual void update(float deltaTime) {}
+	virtual void setPoint(int index, glm::vec3 pos) {}
 };

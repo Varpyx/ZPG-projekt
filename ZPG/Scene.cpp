@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Models/tree.h"
 #include "Models/sphere.h"
+#include "Models/suzi_flat.h"
 #include "Transformation/Rotation.h"
 #include "Transformation/Scale.h"
 #include <glm/ext/scalar_constants.hpp>
@@ -176,6 +177,12 @@ void Scene::scaleObject(int index)
 		objects_[index]->addTransformation(std::make_unique<Scale>(1.2f));
 }
 
+void Scene::moveObject(int index, glm::vec3 pos)
+{
+	if (index < objects_.size())
+		objects_[index]->setPosition(pos);
+}
+
 void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 {
 	if (treeShader_ == nullptr)
@@ -199,15 +206,14 @@ void Scene::startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p
 
 	DrawableObject& tree1 = addDrawableObject(Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, p1);
 
-	tree1.setCubicLine(p1, p2, p3, p4, speed);
+	CubicLine* line = tree1.setCubicLine(p1, p2, p3, p4, speed);
 
 	Material pointMaterial(treeShader_, glm::vec3(1.0f, 0.3f, 0.3f));
 	pointMaterial.setUseColor(true);
 
 	glm::vec3 points[4] = { p1, p2, p3, p4 };
-	for (const auto& p : points) {
-		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.01f, p);
-	}
+	for (int k = 0; k < 4; k++)
+		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.05f, points[k]).setCurvePoint(line, k);
 }
 
 void Scene::startBezierSpline(std::vector<glm::vec3> points, float speed)
@@ -221,14 +227,14 @@ void Scene::startBezierSpline(std::vector<glm::vec3> points, float speed)
 	treeMaterial.setUseColor(true);
 
 	DrawableObject& target = addDrawableObject(
-		Model(tree, 92814, 6, true, false), treeMaterial, 0.01f, points.front());
-	target.setCubicSpline(points, speed);
+		Model(suziFlat, 2904, 6, true, false), treeMaterial, 0.2f, points.front());
+	target.addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 90.0f)); // face +Z -> +X (tangent)
+	CubicSpline* spline = target.setCubicSpline(points, speed);
 
 	Material pointMaterial(treeShader_, glm::vec3(1.0f, 0.3f, 0.3f));
 	pointMaterial.setUseColor(true);
 
-	for (const auto& p : points) {
-		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.01f, p);
-	}
+	for (int k = 0; k < static_cast<int>(points.size()); k++)
+		addDrawableObject(Model(sphere, 2880, 6, true, false), pointMaterial, 0.05f, points[k]).setCurvePoint(spline, k);
 }
 

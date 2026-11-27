@@ -16,7 +16,9 @@ DrawableObject::DrawableObject(Model model, Material material,
 {
 	transformation_ = std::make_unique<CompositeTransformation>();
 	//transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, speed));
-	transformation_->addTransformation(std::make_unique<Translation>(offset, velocity));
+	auto translation = std::make_unique<Translation>(offset, velocity);
+	translation_ = translation.get();
+	transformation_->addTransformation(std::move(translation));
 	transformation_->addTransformation(std::make_unique<Rotation>(glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, speed));
 	transformation_->addTransformation(std::make_unique<Scale>(scale));
 }
@@ -29,6 +31,7 @@ void DrawableObject::addTransformation(std::unique_ptr<Transformation> transform
 void DrawableObject::setTransformation(std::unique_ptr<CompositeTransformation> transformation)
 {
 	transformation_ = std::move(transformation);
+	translation_ = nullptr;
 }
 
 void DrawableObject::update(float deltaTime)
@@ -86,10 +89,12 @@ void DrawableObject::draw()
 }
 
 void DrawableObject::setPosition(glm::vec3 pos) {
-	position_ = pos;
+	if (translation_) translation_->setOffset(pos);
+	if (curve_) curve_->setPoint(curveIndex_, pos);
 }
 
-void DrawableObject::setCubicSpline(std::vector<glm::vec3> points, float speed)
+CubicSpline* DrawableObject::setCubicSpline(std::vector<glm::vec3> points, float speed)
 {
 	cubicSpline_ = std::make_unique<CubicSpline>(std::move(points), speed);
+	return cubicSpline_.get();
 }

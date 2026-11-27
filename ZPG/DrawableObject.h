@@ -6,6 +6,7 @@
 #include "Transformation/ParametricLine.h"
 #include "Transformation/CubicLine.h"
 #include "Transformation/CubicSpline.h"
+#include "Transformation/Translation.h"
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -40,7 +41,8 @@ public:
 
 	void setPosition(glm::vec3 pos);
 
-	void setCubicSpline(std::vector<glm::vec3> points, float speed);
+	CubicSpline* setCubicSpline(std::vector<glm::vec3> points, float speed);
+	void setCurvePoint(Transformation* curve, int index) { curve_ = curve; curveIndex_ = index; }
 
 private:
 	Model model_;
@@ -51,5 +53,7 @@ private:
 	Material material_;
 	int index = 0;
 	bool canBePicked_ = true;
-	glm::vec3 position_ = glm::vec3(0.0f);
+	Translation* translation_ = nullptr;
+	Transformation* curve_ = nullptr;
+	int curveIndex_ = -1;
 };
