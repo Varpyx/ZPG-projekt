@@ -1,10 +1,7 @@
 #pragma once
-#include <array>
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Transformation.h"
-
-class DrawableObject;
 
 class CubicLine : public Transformation
 {
@@ -15,9 +12,6 @@ public:
 	void update(float deltaTime) override;
 	void setPoint(int index, glm::vec3 pos);
 
-	void setMarkers(std::array<DrawableObject*, 4> markers);
-	void movePoint(int index, glm::vec3 pos);
-	int findMarkerIndex(DrawableObject* obj);
 private:
 	
 	float speed_;
@@ -25,5 +19,4 @@ private:
 	int direction = 1;
 	glm::mat4 A_;
 	glm::mat4x3 B_;
-	std::array<DrawableObject*, 4> markers_{};
 };

@@ -202,7 +202,6 @@
     <None Include="shaders\light.vert" />
     <None Include="shaders\login.frag" />
     <None Include="shaders\phong.frag" />
-    <None Include="shaders\tree.frag" />
     <None Include="shaders\tree.vert" />
     <None Include="shaders\uv.frag" />
     <None Include="shaders\uv.vert" />

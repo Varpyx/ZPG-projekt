@@ -51,7 +51,6 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	// Scene 1: EB408 with textures!
 	Scene* scene1 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	ShaderProgram* mesh1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader1 = scene1->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	ShaderProgram* uvShader1 = scene1->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
 
@@ -108,7 +107,6 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	// Scene 2: textures on plain!
 	Scene* scene2 = scenes.emplace_back(std::make_unique<Scene>(Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), aspect))).get();
-	ShaderProgram* mesh2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* loginShader2 = scene2->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
 	//scene2->addDrawableObject(Model(sphere, 2880), createMaterial(mesh2, nullptr, 0, glm::vec3(0.4f, 0.6f, 1.0f)), 0.4f, glm::vec3(0.3f, 0.0f, 0.0f));
 	scene2->addDrawableObject(
@@ -144,11 +142,10 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 	scene3->setAmbient(glm::vec4(0.01f, 0.01f, 0.01f, 1.0f));
 
 	
-	ShaderProgram* mesh3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic.frag");
 	ShaderProgram* flat3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader3 = scene3->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
-	ShaderProgram* treeShader = scene3->addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
-	ShaderProgram* bushShader = scene3->addShaderProgram("shaders/bush.vert", "shaders/tree.frag");
+	ShaderProgram* treeShader = scene3->addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
+	ShaderProgram* bushShader = scene3->addShaderProgram("shaders/bush.vert", "shaders/phong.frag");
 	ShaderProgram* ambient = scene3->addShaderProgram("shaders/bush.vert", "shaders/diffuse.frag");
 	ShaderProgram* clock3 = scene3->addShaderProgram("shaders/clock.vert", "shaders/clock.frag");
 
@@ -318,8 +315,8 @@ std::vector<std::unique_ptr<Scene>> SceneBuilder::buildScenes(float aspect)
 
 	ShaderProgram* flat8 = scene8->addShaderProgram("shaders/basic.vert", "shaders/basic2.frag");
 	ShaderProgram* loginShader8 = scene8->addShaderProgram("shaders/basic.vert", "shaders/login.frag");
-	ShaderProgram* treeShader8 = scene8->addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
-	ShaderProgram* bushShader8 = scene8->addShaderProgram("shaders/bush.vert", "shaders/tree.frag");
+	ShaderProgram* treeShader8 = scene8->addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
+	ShaderProgram* bushShader8 = scene8->addShaderProgram("shaders/bush.vert", "shaders/phong.frag");
 	ShaderProgram* diffuse = scene8->addShaderProgram("shaders/bush.vert", "shaders/diffuse.frag");
 	ShaderProgram* uvShader8 = scene8->addShaderProgram("shaders/uv.vert", "shaders/uv.frag");
 

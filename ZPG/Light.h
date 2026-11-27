@@ -6,7 +6,7 @@ class DrawableObject;
 class Light {
 public:
 	Light(glm::vec3 position = glm::vec3(0.0f), glm::vec4 diffuse = glm::vec4(1.0f), glm::vec4 specular = glm::vec4(1.0f), int type = 1, glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3 att = glm::vec3(1.0f, 0.8f, 0.2f))
-		: position_(position), diffuse_(diffuse), specular_(specular), type_(type), direction_(direction) , att_(att){}
+		: position_(position), att_(att), diffuse_(diffuse), specular_(specular), type_(type), direction_(direction) {}
 
 	void setPosition(glm::vec3 position) { position_ = position; }
 	void setDiffuse(glm::vec4 diffuse) { diffuse_ = diffuse; }

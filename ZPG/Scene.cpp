@@ -155,7 +155,7 @@ void Scene::removeObject(size_t index)
 void Scene::addTree(glm::vec3 position)
 {
 	if(treeShader_ == nullptr) {
-		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
 	}
 
 	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
@@ -186,7 +186,7 @@ void Scene::moveObject(int index, glm::vec3 pos)
 void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 {
 	if (treeShader_ == nullptr)
-		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
 
 	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
 	treeMaterial.setUseColor(true);
@@ -199,7 +199,7 @@ void Scene::startParametricLine(glm::vec3 start, glm::vec3 end, float speed)
 void Scene::startCubicLine(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, float speed)
 {
 	if (treeShader_ == nullptr)
-		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
 
 	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
 	treeMaterial.setUseColor(true);
@@ -221,7 +221,7 @@ void Scene::startBezierSpline(std::vector<glm::vec3> points, float speed)
 	if (points.size() < 4 || (points.size() - 1) % 3 != 0) return;
 
 	if (treeShader_ == nullptr)
-		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/tree.frag");
+		treeShader_ = addShaderProgram("shaders/tree.vert", "shaders/phong.frag");
 
 	Material treeMaterial(treeShader_, glm::vec3(0.3f, 0.8f, 0.2f));
 	treeMaterial.setUseColor(true);

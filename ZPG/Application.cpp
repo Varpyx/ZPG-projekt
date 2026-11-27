@@ -124,6 +124,7 @@ void Application::switchScene(size_t index)
 	}
 
 	activeScene_ = index;
+	selected_ = -1;
 	printf("Scene %zu\n", activeScene_ + 1);
 }
 
@@ -182,6 +183,7 @@ void Application::rightPress()
 				break;
 			case EditMode::Delete:
 				currentScene.removeObject(index - 1);
+				selected_ = -1;
 				break;
 			case EditMode::MoveBezier:
 				selected_ = index - 1;   
